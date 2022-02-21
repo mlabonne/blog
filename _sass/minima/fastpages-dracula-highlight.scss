@@ -35,8 +35,8 @@ $dt-green-light: rgb(172, 229, 145);
 .input_area pre, .input_area div {
     margin-bottom:1.0rem !important;
     margin-top:1.5rem !important;
-    padding-bottom:0 !important;
-    padding-top:0 !important;
+    // padding-bottom:0 !important;
+    // padding-top:0 !important;
     background: #323443 !important;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -47,15 +47,15 @@ $dt-green-light: rgb(172, 229, 145);
 .output_area pre, .output_area div {
     margin-bottom:1rem !important;
     margin-top:0rem !important;
-    padding-bottom:0 !important;
-    padding-top:0 !important;
+    // padding-bottom:0 !important;
+    // padding-top:0 !important;
 }
-.input_area pre {
-    border-left: 1px solid lightcoral;
-}
+// .input_area pre {
+//     border-left: 1px solid lightcoral;
+// }
 .output_area pre {
-    border-left: 1px solid grey;
-    margin-left: 1rem !important;
+    // border-left: 1px solid grey;
+    // margin-left: 1rem !important;
     font-size: 16px;
 }
 
@@ -77,7 +77,7 @@ $dt-green-light: rgb(172, 229, 145);
     pre, code {
      background: $dt-code-cell-background;
      color: $dt-gray-light;
-     font-size: 110%;
+    //  font-size: 110%;
     }
    
     .hll,
