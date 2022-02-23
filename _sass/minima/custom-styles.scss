@@ -27,12 +27,18 @@ body {
     color: #efeeea !important;
 }
 
+.site-nav {
+    background-color: #24292e !important;
+}
 .site-nav .page-link {
     color: #efeeea !important;
     font-size: 1.25rem;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: 600;
     vertical-align: middle;
+}
+.site-nav .menu-icon > svg path {
+    fill: #efeeea;
 }
 
 .post-header {
@@ -271,6 +277,12 @@ tt, code {
     display: inline-block !important;
     vertical-align: baseline !important;
     margin-right: 2px !important;
+}
+
+@media (max-width: 700px) {
+    .col-8.d-table-cell.p-3 {
+        display: none !important;
+    }
 }
 
 /*-----------------------------------*/
