@@ -333,7 +333,11 @@ body { font-size: inherit !important; background-image: url(data:image/png;base6
 
 .site-title:link, .site-title:visited, .site-title:hover, .site-title:active { text-decoration: none; color: #efeeea !important; }
 
+.site-nav { background-color: #24292e !important; }
+
 .site-nav .page-link { color: #efeeea !important; font-size: 1.25rem; font-family: Arial, Helvetica, sans-serif; font-weight: 600; vertical-align: middle; }
+
+.site-nav .menu-icon > svg path { fill: #efeeea; }
 
 .post-header { margin-bottom: 0; }
 
@@ -418,6 +422,8 @@ tt, code { font-size: inherit !important; }
 .credits { font-family: Menlo, Monaco, Consolas, "Lucida Console", Roboto, Ubuntu, monospace; }
 
 .icon-watch { width: 14px; display: inline-block !important; vertical-align: baseline !important; margin-right: 2px !important; }
+
+@media (max-width: 700px) { .col-8.d-table-cell.p-3 { display: none !important; } }
 
 /*-----------------------------------*/
 /*--- IMPORT STYLES FOR FASTPAGES ---*/

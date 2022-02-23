@@ -5,8 +5,12 @@
 <lastmod>2022-02-13T00:00:00-06:00</lastmod>
 </url>
 <url>
-<loc>https://mlabonne.github.io/blog/graph%20neural%20networks/gnn/message%20passing/tutorial/2022/02/20/Graph_Neural_Networks_A_Practical_Introduction.html</loc>
+<loc>https://mlabonne.github.io/blog/intrognn/</loc>
 <lastmod>2022-02-20T00:00:00-06:00</lastmod>
+</url>
+<url>
+<loc>https://mlabonne.github.io/blog/ortools/</loc>
+<lastmod>2022-02-24T00:00:00-06:00</lastmod>
 </url>
 <url>
 <loc>https://mlabonne.github.io/blog/about/</loc>
@@ -16,8 +20,5 @@
 </url>
 <url>
 <loc>https://mlabonne.github.io/blog/search/</loc>
-</url>
-<url>
-<loc>https://mlabonne.github.io/blog/categories/</loc>
 </url>
 </urlset>
