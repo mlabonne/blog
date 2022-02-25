@@ -165,7 +165,9 @@ window.onload = wrap_img;
         
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<center><div id="anim_container"><img alt="Illustration of linear optimization" src="//mlabonne.github.io/blog/images/ortools/units.png" loading="lazy" id="anim_inner" /></div></center><p>In real warfare and strategy games, strategists are faced with a common problem: how to <strong>allocate their resources to be the most efficient possible</strong>? Let's take an example, we have three resources: 🌾<strong>food</strong>, 🪵<strong>wood</strong>, and 🪙<strong>gold</strong>. We can produce three types of units: 🗡️<strong>swordsmen</strong>, 🏹<strong>bowmen</strong>, and 🐎<strong>horsemen</strong>. 🐎Horsemen are <strong>better than 🏹bowmen</strong>, who are in turn <strong>better than 🗡️swordsmen</strong>. The following table provides the <strong>cost and power of each unit</strong> (they're freely inspired by a real strategy game, Age of Empires IV):</p>
+<center><div id="anim_container"><img alt="Illustration of linear optimization" src="https://mlabonne.github.io/blog/images/ortools/units.png" loading="lazy" id="anim_inner" /></div></center><p>In real warfare and strategy games, strategists are faced with a common problem: how to <strong>allocate their resources to be the most efficient possible</strong>? Let's take an example, we have three resources: 🌾<strong>food</strong>, 🪵<strong>wood</strong>, and 🪙<strong>gold</strong>. We can produce three types of units: 🗡️<strong>swordsmen</strong>, 🏹<strong>bowmen</strong>, and 🐎<strong>horsemen</strong>. 🐎Horsemen are <strong>better than 🏹bowmen</strong>, who are in turn <strong>better than 🗡️swordsmen</strong>. The following table provides the <strong>cost and power of each unit</strong> (they're freely inspired by a real strategy game, Age of Empires IV):
+<br />
+<br /></p>
 <table>
 <thead><tr>
 <th style="text-align:left">Unit</th>
@@ -199,6 +201,7 @@ window.onload = wrap_img;
 </tr>
 </tbody>
 </table>
+<p><br /></p>
 <p>Imagine that we have 1200 🌾<strong>food</strong>, 800 🪵<strong>wood</strong>, and 600 🪙<strong>gold</strong>. How to <strong>maximize the power of our army</strong> considering these resources? We could simply find the unit with the <strong>best power/cost ratio</strong>, <strong>take as many of them as possible</strong>, and repeat the process with the other two units. But this "guess and check" solution <strong>might not even be optimal</strong>. Now imagine we have <strong>millions of units and resources and other constraints</strong>: this greedy strategy is very likely to <strong>completely miss the optimal solution</strong>. It is possible to <strong>use a machine learning</strong> (ML) algorithm (a metaheuristic like a genetic algorithm) to solve this problem, but we have <strong>no guarantee that the solution will be optimal either</strong>.</p>
 <p>Fortunately for us, there is a method that can <strong>solve our problem in an optimal way</strong>: linear optimization (or linear programming), which is part of the field of <a href="https://en.wikipedia.org/wiki/Operations_research">operations research</a> (OR). In this article, we're going to <strong>find the best solution possible to this problem</strong>. We'll use OR-Tools, a <strong>powerful Python library</strong> specialized in optimization. It will help us to <strong>model this problem</strong> in linear optimization terms and <strong>output an optimal solution</strong> with a solver. Finally, we will write a <strong>model and a function</strong> that can <strong>take on a bigger challenge</strong> and actually <strong>solve a whole class of optimization problems</strong>.</p>
 <h2 id="&#129351;-I.-Finding-the-optimal-solution">&#129351; I. Finding the optimal solution<a class="anchor-link" href="#&#129351;-I.-Finding-the-optimal-solution"> </a></h2><p>Okay, let's play with linear optimization in Python. There are <strong>different libraries</strong> such as the multi-purposed <code>SciPy</code>, the beginner-friendly <code>PuLP</code>, the exhaustive <code>pyomo</code>, and many others. Today, we are going to use <a href="https://developers.google.com/optimization">Google OR-Tools</a>, which is quite <strong>user-friendly</strong>, comes with several <strong>prepackaged solvers</strong>, and has by far the <strong>most stars</strong> on <a href="https://github.com/google/or-tools">GitHub</a>. If the installation doesn't work, please <strong>restart the kernel and try again</strong>: it can fail sometimes. ¯\_(ツ)_/¯</p>
@@ -228,7 +231,7 @@ window.onload = wrap_img;
 <p>All these libraries have a <strong>hidden benefit</strong>: they act as <strong>interfaces</strong> to <strong>use the same model with different solvers</strong>. Solvers like <a href="https://www.gurobi.com/">Gurobi</a>, <a href="https://www.ibm.com/analytics/cplex-optimizer">Cplex</a>, or <a href="https://www.scipopt.org/">SCIP</a> have their own APIs, but the models they create are <strong>linked to a specific solver</strong>. OR-Tools allows us to use an abstract and quite pythonic way of <strong>modeling our problems</strong>, and then choose <strong>one or several solvers</strong> to find an optimal solution.</p>
 <center class="dark-bg">
     <video autoplay="" loop="" muted="" width="800" class="no-margin">
-        <source src="//mlabonne.github.io/blog/images/ortools/ortools_solvers.mp4" type="video/mp4" />&lt;/source&gt;
+        <source src="https://mlabonne.github.io/blog/images/ortools/ortools_solvers.mp4" type="video/mp4" />&lt;/source&gt;
     </video>
 </center><p>OR-Tools comes with its <strong>own linear programming solver</strong>, called <strong>GLOP</strong> for Google Linear Optimization Package. It is an open source project created by Google's Operations Research Team and written in C++. According to Google, it is used to <a href="https://ai.googleblog.com/2014/09/sudoku-linear-optimization-and-ten-cent.html">stabilize YouTube videos</a> and in various projects such a <a href="https://proceedings.neurips.cc/paper/2019/hash/3c3c139bd8467c1587a41081ad78045e-Abstract.html">cooperative multi-agent reinforcement learning architecture</a>. Other solvers are available, such as <strong>SCIP</strong>, an excellent <strong>non-commercial solver</strong> created in 2005 and <strong>updated and maintained</strong> to this day. We could use other options like Gurobi and Cplex but we would need to <strong>install them on top of OR-Tools</strong> and get the <strong>appropriate licenses</strong> (which can be quite costly). For now, let's try GLOP.</p>
 
@@ -352,9 +355,9 @@ $$60\times swordsmen + 80\times bowmen + 140\times horsemen \leq 1200 \\
 <li><strong>1 bowman</strong> = 💪95;</li>
 <li><strong>1 horseman</strong> = 💪230.</li>
 </ul>
-<p>Maximizing the power of the army amounts to <strong>maximizing the sum of the power of each unit</strong>. Our objective function to maximize can be written as:</p>
+<p>Maximizing the power of the army amounts to <strong>maximizing the sum of the power of each unit</strong>. Let's call $units$ the set of our three parameters $\{swordsmen, bowmen, horsemen\}$. Our objective function can be written as:</p>
 <p>
-$$f(swordsmen, bowmen, horsemen) = 70\times swordsmen + 95\times bowmen + 230\times horsemen$$
+$$max \ f(units) = 70\times swordsmen + 95\times bowmen + 230\times horsemen$$
 </p>
 <p>In general, there are two types of objective functions: <strong>minimizing</strong> and <strong>maximizing</strong>. In OR-Tools, we declare this goal with <code>solver.Maximize()</code> or <code>solver.Minimize()</code>.</p>
 
@@ -523,7 +526,7 @@ Army:
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Strictly speaking, our variables are still floats (<code>type(swordsmen.solution_value()) = float</code>) but we can see that <strong>they don't have weird decimals anymore</strong>: the CBC solver really considered them as <strong>integers</strong>. In general, we can just <strong>round up these values</strong> since the error is insignificant, but it is important to remember to choose the appropriate solver according to the <strong>studied problem</strong>: <strong>LP</strong> (continuous variables) or <strong>MIP</strong> (combination of continuous and discrete variables). There are other types such as <strong>quadratic</strong> (QP) or <strong>nonlinear</strong> (NLP or MINLP, with an <strong>exponential objective function or constraints</strong> for instance).</p>
-<center><div id="anim_container"><img alt="LP, MIP, etc." src="//mlabonne.github.io/blog/images/ortools/continuousvsdiscrete.png" loading="lazy" id="anim_inner" /></div></center><h2 id="&#129521;-III.-Building-a-general-model">&#129521; III. Building a general model<a class="anchor-link" href="#&#129521;-III.-Building-a-general-model"> </a></h2><p>But what if our <strong>resources change</strong>? Or if the cost of a unit is <strong>not the same</strong>? What if we upgraded horsemen and <strong>their power increased</strong>? One of the <strong>best perks</strong> of OR-Tools is that it uses a <strong>general-purpose programming language</strong> like Python. Instead of <strong>static numbers</strong>, we can store our parameters in <strong>objects like dictionaries or arrays</strong>. The code won't be <strong>as readable</strong>, but it becomes <strong>much more flexible</strong>: actually, it can be so flexible than we can <strong>solve an entire class of optimization problems without changing the model</strong> (just the parameters).</p>
+<center><div id="anim_container"><img alt="LP, MIP, etc." src="https://mlabonne.github.io/blog/images/ortools/continuousvsdiscrete.png" loading="lazy" id="anim_inner" /></div></center><h2 id="&#129521;-III.-Building-a-general-model">&#129521; III. Building a general model<a class="anchor-link" href="#&#129521;-III.-Building-a-general-model"> </a></h2><p>But what if our <strong>resources change</strong>? Or if the cost of a unit is <strong>not the same</strong>? What if we upgraded horsemen and <strong>their power increased</strong>? One of the <strong>best perks</strong> of OR-Tools is that it uses a <strong>general-purpose programming language</strong> like Python. Instead of <strong>static numbers</strong>, we can store our parameters in <strong>objects like dictionaries or arrays</strong>. The code won't be <strong>as readable</strong>, but it becomes <strong>much more flexible</strong>: actually, it can be so flexible than we can <strong>solve an entire class of optimization problems without changing the model</strong> (just the parameters).</p>
 <p>Let's transform our <strong>input parameters into arrays</strong> and feed them to the solver <strong>through a function</strong>.</p>
 
 </div>
@@ -696,7 +699,7 @@ Army:
 </table>
 <p>Notice that we transformed the 💪<strong>power</strong> into two values: 💪<strong>attack</strong> and ❤️ <strong>health</strong>, which is closer to reality. Health values <strong>are higher than attack values</strong>, which is why we want to <strong>add a weight to make them more comparable</strong>. Let's take 10 as an example, so $power = 10 \times attack + health$. We call the set of variables to optimize $units = \{swordsmen,  \dots, springalds\}$, where every element is the number of the corresponding unit. Our objective function becomes:</p>
 <p>
-$$f(units) = \sum_{u \in units} (10\times power + health) \cdot u$$
+$$max \ f(units) = \sum_{u \in units} (10\times power + health) \cdot u$$
 </p>
 <p>Adapting our code to this new problem is actually quite simple: we just have to <strong>change the input parameters</strong> and update the <strong>objective function</strong>.</p>
 
@@ -817,7 +820,7 @@ $$\sum_{u \in units} (10\times attack + health) \cdot u &gt; 1\,000\,000$$
 <p>In code, we can <strong>loop through our units and resources</strong> to design this constraint.</p>
 <p>The <strong>objective function</strong> also has to change. Our goal is to <strong>minimize the sum of resources spent to build the army</strong>.</p>
 <p>
-$$f(units) = \sum_{u \in units} (food + wood + gold) \cdot u$$
+$$min \ f(units) = \sum_{u \in units} (food + wood + gold) \cdot u$$
 </p>
 <p>Once again, we can loop <strong>through our resources</strong> to implement it in OR-Tools.</p>
 

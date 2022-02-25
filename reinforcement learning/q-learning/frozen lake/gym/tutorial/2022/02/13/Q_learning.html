@@ -10,8 +10,8 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Beginner-friendly reinforcement learning on Frozen Lake" />
 <meta property="og:description" content="Beginner-friendly reinforcement learning on Frozen Lake" />
-<link rel="canonical" href="https://mlabonne.github.io/blog/qlearning/" />
-<meta property="og:url" content="https://mlabonne.github.io/blog/qlearning/" />
+<link rel="canonical" href="https://mlabonne.github.io/blog/reinforcement%20learning/q-learning/frozen%20lake/gym/tutorial/2022/02/13/Q_learning.html" />
+<meta property="og:url" content="https://mlabonne.github.io/blog/reinforcement%20learning/q-learning/frozen%20lake/gym/tutorial/2022/02/13/Q_learning.html" />
 <meta property="og:site_name" content="Maxime Labonne" />
 <meta property="og:image" content="https://mlabonne.github.io/blog/images/qlearning/frozenlake_thumbnail.png" />
 <meta property="og:type" content="article" />
@@ -20,7 +20,7 @@
 <meta property="twitter:image" content="https://mlabonne.github.io/blog/images/qlearning/frozenlake_thumbnail.png" />
 <meta property="twitter:title" content="Reinventing Q-learning from scratch" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-02-13T00:00:00-06:00","datePublished":"2022-02-13T00:00:00-06:00","description":"Beginner-friendly reinforcement learning on Frozen Lake","headline":"Reinventing Q-learning from scratch","image":"https://mlabonne.github.io/blog/images/qlearning/frozenlake_thumbnail.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://mlabonne.github.io/blog/qlearning/"},"url":"https://mlabonne.github.io/blog/qlearning/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-02-13T00:00:00-06:00","datePublished":"2022-02-13T00:00:00-06:00","description":"Beginner-friendly reinforcement learning on Frozen Lake","headline":"Reinventing Q-learning from scratch","image":"https://mlabonne.github.io/blog/images/qlearning/frozenlake_thumbnail.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://mlabonne.github.io/blog/reinforcement%20learning/q-learning/frozen%20lake/gym/tutorial/2022/02/13/Q_learning.html"},"url":"https://mlabonne.github.io/blog/reinforcement%20learning/q-learning/frozen%20lake/gym/tutorial/2022/02/13/Q_learning.html"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://mlabonne.github.io/blog/feed.xml" title="Maxime Labonne" /><!-- the google_analytics_id gets auto inserted from the config file -->
 
@@ -165,7 +165,7 @@ window.onload = wrap_img;
         
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<center><div id="anim_container"><img alt="Illustration of the Frozen Lake Environment" src="//mlabonne.github.io/blog/images/qlearning/frozenlake.png" loading="lazy" class="aura" id="anim_inner" /></div></center><p>The goal of this article is to <strong>teach an AI how to solve the ❄️Frozen Lake environment using reinforcement learning</strong>. Instead of reading Wikipedia articles and explaining formulas, we're going to <strong>start from scratch and try to recreate the 🤖Q-learning</strong> algorithm by ourselves. We'll not just understand <strong>how it works</strong>, but more importantly <strong>why it works</strong>: why was it designed that way? What are the hidden assumptions, the details that are never explained in regular courses and tutorials?</p>
+<center><div id="anim_container"><img alt="Illustration of the Frozen Lake Environment" src="https://mlabonne.github.io/blog/images/qlearning/frozenlake.png" loading="lazy" class="aura" id="anim_inner" /></div></center><p>The goal of this article is to <strong>teach an AI how to solve the ❄️Frozen Lake environment using reinforcement learning</strong>. Instead of reading Wikipedia articles and explaining formulas, we're going to <strong>start from scratch and try to recreate the 🤖Q-learning</strong> algorithm by ourselves. We'll not just understand <strong>how it works</strong>, but more importantly <strong>why it works</strong>: why was it designed that way? What are the hidden assumptions, the details that are never explained in regular courses and tutorials?</p>
 <p>At the end of this article, you'll <strong>master the Q-learning algorithm</strong> and be able to <strong>apply it to other environments and real-world problems</strong>. It's a cool mini-project that gives a <strong>better insight into how reinforcement learning works</strong> and <strong>can hopefully inspire ideas for original and creative applications</strong>.</p>
 <p>Let's start by installing the ❄️<strong>Frozen Lake</strong> environment and importing the necessary libraries: <code>gym</code> for the game, <code>random</code> to generate random numbers, and <code>numpy</code> to do some math.</p>
 
@@ -203,13 +203,13 @@ F F F H       (H: hole, stuck forever)
 H F F G       (G: goal, safe)</code></pre>
 <center class="dark-bg">
     <video autoplay="" loop="" muted="" width="483" height="483" class="drop-shadow">
-        <source src="//mlabonne.github.io/blog/images/qlearning/frozenlake_blink.mp4" type="video/mp4" />&lt;/source&gt;
+        <source src="https://mlabonne.github.io/blog/images/qlearning/frozenlake_blink.mp4" type="video/mp4" />&lt;/source&gt;
     </video>
 </center><p>We can try to manually solve the example above to understand the game. Let's see if the following sequence of actions is a correct solution: <strong>RIGHT</strong> $\to$ <strong>RIGHT</strong> $\to$ <strong>RIGHT</strong> $\to$ <strong>DOWN</strong> $\to$ <strong>DOWN</strong> $\to$ <strong>DOWN</strong>. Our agent starts on tile <strong>S</strong>, so we move right on a frozen surface ✅, then again ✅, then once more ✅, then we go down and find a hole ❌.</p>
 <p>Actually, it's really easy to find several correct solutions: <strong>RIGHT</strong> $\to$ <strong>RIGHT</strong> $\to$ <strong>DOWN</strong> $\to$ <strong>DOWN</strong> $\to$ <strong>DOWN</strong> $\to$ <strong>RIGHT</strong> is an obvious one. But we could make a sequence of actions that loops around a hole 10 times before reaching the goal. This sequence is valid, but it doesn't meet our final requirement: <strong>the agent needs to meet the goal in a minimum number of actions</strong>. In this example, the minimum number of actions to complete the game is <strong>6</strong>. We need to remember this fact to check if our agent really masters ❄️<strong>Frozen Lake</strong> or not.</p>
 <center class="dark-bg">
     <video autoplay="" loop="" muted="" width="483" height="483" class="drop-shadow">
-        <source src="//mlabonne.github.io/blog/images/qlearning/frozenlake_move.mp4" type="video/mp4" />&lt;/source&gt;
+        <source src="https://mlabonne.github.io/blog/images/qlearning/frozenlake_move.mp4" type="video/mp4" />&lt;/source&gt;
     </video>
 </center><p>Let's initialize the environment thanks to the <code>gym</code> library. There are two versions of the game: one with <strong>slippery ice</strong>, where selected actions have a <strong>random chance of being disregarded by the agent</strong>; and a <strong>non-slippery one</strong>, where <strong>actions cannot be ignored</strong>. We'll use the <strong>non-slippery</strong> one to begin with because it's easier to understand.</p>
 
@@ -479,7 +479,7 @@ HFFG
 🔼 UP = 3</code></pre>
 <center class="dark-bg">
     <video autoplay="" loop="" muted="" width="483" height="483" class="drop-shadow">
-        <source src="//mlabonne.github.io/blog/images/qlearning/frozenlake_qtable.mp4" type="video/mp4" />&lt;/source&gt;
+        <source src="https://mlabonne.github.io/blog/images/qlearning/frozenlake_qtable.mp4" type="video/mp4" />&lt;/source&gt;
     </video>
 </center><p>Okay, now that <strong>we understand how <code>gym</code> connects numbers to directions</strong>, let's try to use it to <strong>move our agent to the right</strong> ▶️. This time, it can be performed using the <code>step(action)</code> method. We can try to <strong>directly provide it the number 2</strong>, corresponding to the direction we chose (right), and check if the agent moved.</p>
 
@@ -590,7 +590,7 @@ Reward = 0.0
 <h2 id="&#129302;-III.-Q-learning">&#129302; III. Q-learning<a class="anchor-link" href="#&#129302;-III.-Q-learning"> </a></h2><p>Let's go back to our problem. Okay, we need to be lucky enough to find the goal <strong>G</strong> by accident. But once it's done, how to backpropagate the information to the initial state? The 🤖<strong>Q-learning algorithm offers a clever solution</strong> to this issue. We need to update the value of our state-action pairs (each cell in the Q-table) considering 1/ the <strong>reward</strong> for reaching the next state, and 2/ the <strong>highest possible value in the next state</strong>.</p>
 <center class="dark-bg">
     <video autoplay="" loop="" muted="" width="483" height="483" class="drop-shadow">
-        <source src="//mlabonne.github.io/blog/images/qlearning/frozenlake_spread.mp4" type="video/mp4" />&lt;/source&gt;
+        <source src="https://mlabonne.github.io/blog/images/qlearning/frozenlake_spread.mp4" type="video/mp4" />&lt;/source&gt;
     </video>
 </center><p>We know we get a reward of 1 when we move to <strong>G</strong>. As we just said, the value of <strong>the state next to G</strong> (let's call it <strong>G-1</strong>) with <strong>the relevant action to reach G</strong> is increased thanks to the reward. Okay good, end of the episode: the agent won and we restart the game. Now, the next time the agent is in <strong>a state next to G-1</strong>, it will increase the value of this state (let's call it <strong>G-2</strong>) with <strong>the relevant action to reach G-1</strong>. The next time the agent is in a state next to <strong>G-2</strong>, it will do the same. Rince and repeat, until the update reaches the initial state <strong>S</strong>.</p>
 <p>Let's try to find the <strong>update formula</strong> to backpropagate the values from <strong>G</strong> to <strong>S</strong>. Remember: values denote the <strong>quality</strong> of <strong>an action in a specific state</strong> (0 if it's terrible, 1 if it's the best action possible in this state). We try to <strong>update the value</strong> of the action $a_t$ (for example, $a_t = 0$ if the action is left) in the state $s_t$ (for example, $s_t = 0$ when the agent is in the initial state <strong>S</strong>). This <strong>value is just a cell in our Q-table</strong>, corresponding to the <strong>row number $s_t$ and the column number $a_t$</strong>: this value is formally called $Q((s_t, a_t)$.</p>
@@ -611,7 +611,7 @@ $$Q_{new}(s_t, a_t) = Q(s_t, a_t) + \alpha \cdot (r_t + \gamma \cdot max_aQ(s_{t
 <p>Okay, let's try this new formula before implementing it. Once again, we can pretend that our agent is <strong>next to the goal G for the first time</strong>. We can update the state-action pair to win the game using our formula: $Q_{new}(G-1, a_t) = 0 + \alpha \cdot (1 + \gamma \cdot 0 - 0)$. We can assign arbitrary values to $\alpha$ and $\gamma$ to calculate the result. With $\alpha = 0.5$ and $\gamma = 0.9$, we get $Q_{new}(G-1, a_t) = 0 + 0.5 \cdot (1 + 0.9 \cdot 0 - 0) = 0.5$. The second time the agent is in this state, we would get: $Q_{new}(G-1, a_t) = 0.5 + 0.5 \cdot (1 + 0.9 \cdot 0 - 0.5) = 0.75$, then $0.875$, $0.9375$, $0.96875$, etc.</p>
 <center class="dark-bg">
     <video autoplay="" loop="" muted="" width="483" height="483" class="drop-shadow">
-        <source src="//mlabonne.github.io/blog/images/qlearning/frozenlake_update.mp4" type="video/mp4" />&lt;/source&gt;
+        <source src="https://mlabonne.github.io/blog/images/qlearning/frozenlake_update.mp4" type="video/mp4" />&lt;/source&gt;
     </video>
 </center><p>So training our agent in code means:</p>
 <ol>
@@ -916,10 +916,10 @@ Sequence = [2, 2, 1, 1, 1, 2]
 <p>This technique is commonly called the <strong>epsilon-greedy algorithm</strong>, where epsilon is our parameter. It is a <strong>simple but extremely efficient</strong> method to find a good tradeoff. Every time the agent has to take an action, it has a <strong>probability $ε$ of choosing a random one</strong>, and a <strong>probability $1-ε$ of choosing the one with the highest value</strong>. We can decrease the value of epsilon <strong>at the end of each episode</strong> by a fixed amount (<strong>linear decay</strong>), or based on the current value of epsilon (<strong>exponential decay</strong>).</p>
 <center class="dark-bg">
     <video autoplay="" loop="" muted="" width="800" class="no-margin">
-        <source src="//mlabonne.github.io/blog/images/qlearning/frozenlake_epsilon.mp4" type="video/mp4" />&lt;/source&gt;
+        <source src="https://mlabonne.github.io/blog/images/qlearning/frozenlake_epsilon.mp4" type="video/mp4" />&lt;/source&gt;
     </video>
 </center><p>Let's implement a <strong>linear decay</strong>. Beforehand, I'd like to see how the curve looks like with arbitrary parameters. We'll start with $ε = 1$ to be in full exploration mode, and decrease this value by $0.001$ after each episode.</p>
-<center><img alt="Illustration of linear decay" src="//i.imgur.com/F7hXEyY.png" loading="lazy" class="figure" /></center><p>Okay now that we have a sound understanding of it, we can implement it for real and see <strong>how it changes the agent's behavior</strong>.</p>
+<center><img alt="Illustration of linear decay" src="https://i.imgur.com/F7hXEyY.png" loading="lazy" class="figure" /></center><p>Okay now that we have a sound understanding of it, we can implement it for real and see <strong>how it changes the agent's behavior</strong>.</p>
 
 </div>
 </div>
@@ -1340,7 +1340,7 @@ Q-table after training:
         theme="github-light"
         crossorigin="anonymous"
         async>
-</script><a class="u-url" href="/blog/qlearning/" hidden></a>
+</script><a class="u-url" href="/blog/reinforcement%20learning/q-learning/frozen%20lake/gym/tutorial/2022/02/13/Q_learning.html" hidden></a>
 </article>
 
       </div>
