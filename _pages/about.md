@@ -16,5 +16,6 @@ I hope we can have fun together and learn a few things along the way. :)
 
 *Credits:*
 
-* *Emojis used in figures are designed by [OpenMoji](https://openmoji.org/), the open-source emoji and icon project. License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/#)*.
-* *Vector icons are provided by Streamline ([https://streamlinehq.com](https://streamlinehq.com))*
+* *Thanks to Hamel Husain and all the contributors of [fastpages](https://github.com/fastai/fastpages) that powers this blog. License: [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).*
+* *Emojis used in figures are designed by [OpenMoji](https://openmoji.org/), the open-source emoji and icon project. License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/#).*
+* *Vector icons are provided by Streamline ([https://streamlinehq.com](https://streamlinehq.com)). License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/#).*
