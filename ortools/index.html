@@ -352,9 +352,9 @@ $$60\times swordsmen + 80\times bowmen + 140\times horsemen \leq 1200 \\
 <li><strong>1 bowman</strong> = 💪95;</li>
 <li><strong>1 horseman</strong> = 💪230.</li>
 </ul>
-<p>Maximizing the power of the army amounts to <strong>maximizing the sum of the power of each unit</strong>. Our objective function can be written as:</p>
+<p>Maximizing the power of the army amounts to <strong>maximizing the sum of the power of each unit</strong>. Our objective function to maximize can be written as:</p>
 <p>
-$$max \ f(swordsmen, bowmen, horsemen) = 70\times swordsmen + 95\times bowmen + 230\times horsemen$$
+$$f(swordsmen, bowmen, horsemen) = 70\times swordsmen + 95\times bowmen + 230\times horsemen$$
 </p>
 <p>In general, there are two types of objective functions: <strong>minimizing</strong> and <strong>maximizing</strong>. In OR-Tools, we declare this goal with <code>solver.Maximize()</code> or <code>solver.Minimize()</code>.</p>
 
@@ -696,7 +696,7 @@ Army:
 </table>
 <p>Notice that we transformed the 💪<strong>power</strong> into two values: 💪<strong>attack</strong> and ❤️ <strong>health</strong>, which is closer to reality. Health values <strong>are higher than attack values</strong>, which is why we want to <strong>add a weight to make them more comparable</strong>. Let's take 10 as an example, so $power = 10 \times attack + health$. We call the set of variables to optimize $units = \{swordsmen,  \dots, springalds\}$, where every element is the number of the corresponding unit. Our objective function becomes:</p>
 <p>
-$$max \ f(units) = \sum_{u \in units} (10\times power + health) \cdot u$$
+$$f(units) = \sum_{u \in units} (10\times power + health) \cdot u$$
 </p>
 <p>Adapting our code to this new problem is actually quite simple: we just have to <strong>change the input parameters</strong> and update the <strong>objective function</strong>.</p>
 
@@ -817,7 +817,7 @@ $$\sum_{u \in units} (10\times attack + health) \cdot u &gt; 1\,000\,000$$
 <p>In code, we can <strong>loop through our units and resources</strong> to design this constraint.</p>
 <p>The <strong>objective function</strong> also has to change. Our goal is to <strong>minimize the sum of resources spent to build the army</strong>.</p>
 <p>
-$$min \ f(units) = \sum_{u \in units} (food + wood + gold) \cdot u$$
+$$f(units) = \sum_{u \in units} (food + wood + gold) \cdot u$$
 </p>
 <p>Once again, we can loop <strong>through our resources</strong> to implement it in OR-Tools.</p>
 
