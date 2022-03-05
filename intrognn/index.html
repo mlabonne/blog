@@ -15,12 +15,12 @@
 <meta property="og:site_name" content="Maxime Labonne" />
 <meta property="og:image" content="https://mlabonne.github.io/blog/images/gnn/gnn_thumbnail.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2022-03-04T00:00:00-06:00" />
+<meta property="article:published_time" content="2022-02-20T00:00:00-06:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta property="twitter:image" content="https://mlabonne.github.io/blog/images/gnn/gnn_thumbnail.png" />
 <meta property="twitter:title" content="A Practical Introduction to Graph Neural Networks" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-03-04T00:00:00-06:00","datePublished":"2022-03-04T00:00:00-06:00","description":"Message passing explained with examples","headline":"A Practical Introduction to Graph Neural Networks","image":"https://mlabonne.github.io/blog/images/gnn/gnn_thumbnail.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://mlabonne.github.io/blog/intrognn/"},"url":"https://mlabonne.github.io/blog/intrognn/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-02-20T00:00:00-06:00","datePublished":"2022-02-20T00:00:00-06:00","description":"Message passing explained with examples","headline":"A Practical Introduction to Graph Neural Networks","image":"https://mlabonne.github.io/blog/images/gnn/gnn_thumbnail.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://mlabonne.github.io/blog/intrognn/"},"url":"https://mlabonne.github.io/blog/intrognn/"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://mlabonne.github.io/blog/feed.xml" title="Maxime Labonne" /><!-- the google_analytics_id gets auto inserted from the config file -->
 
@@ -106,8 +106,8 @@ window.onload = wrap_img;
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title p-name" itemprop="name headline">A Practical Introduction to Graph Neural Networks</h1><p class="page-description">Message passing explained with examples</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-03-04T00:00:00-06:00" itemprop="datePublished">
-        <img src="/blog/images/icons/icon-watch.svg" class="icon-watch"> Mar 4, 2022
+    <h1 class="post-title p-name" itemprop="name headline">A Practical Introduction to Graph Neural Networks</h1><p class="page-description">Message passing explained with examples</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-02-20T00:00:00-06:00" itemprop="datePublished">
+        <img src="/blog/images/icons/icon-watch.svg" class="icon-watch"> Feb 20, 2022
       </time>
        • <span class="read-time" title="Estimated read time">
     
@@ -126,25 +126,25 @@ window.onload = wrap_img;
           </div>
           <div class="d-flex flex-justify-center">
             <div class="px-2">
-  <a href="https://deepnote.com/launch?url=https%3A%2F%2Fgithub.com%2Fmlabonne%2Fblog%2Fblob%2Fmaster%2F_notebooks%2F2022_02_20_Graph_Neural_Networks_A_Practical_Introduction.ipynb" target="_blank">
+  <a href="https://deepnote.com/launch?url=https%3A%2F%2Fgithub.com%2Fmlabonne%2Fblog%2Fblob%2Fmaster%2F_notebooks%2F2022-02-20-Graph_Neural_Networks_A_Practical_Introduction.ipynb" target="_blank">
       <img class="notebook-badge-image" src="/blog/assets/badges/deepnote.svg" alt="Launch in Deepnote"/>
   </a>
 </div>
 
             <div class="px-2">
-    <a href="https://colab.research.google.com/github/mlabonne/blog/blob/master/_notebooks/2022_02_20_Graph_Neural_Networks_A_Practical_Introduction.ipynb" target="_blank">
+    <a href="https://colab.research.google.com/github/mlabonne/blog/blob/master/_notebooks/2022-02-20-Graph_Neural_Networks_A_Practical_Introduction.ipynb" target="_blank">
         <img class="notebook-badge-image" src="/blog/assets/badges/colab.svg" alt="Open In Colab"/>
     </a>
 </div>
             <div class="px-2">
-    <a href="https://mybinder.org/v2/gh/mlabonne/blog/master?filepath=_notebooks%2F2022_02_20_Graph_Neural_Networks_A_Practical_Introduction.ipynb" target="_blank">
+    <a href="https://mybinder.org/v2/gh/mlabonne/blog/master?filepath=_notebooks%2F2022-02-20-Graph_Neural_Networks_A_Practical_Introduction.ipynb" target="_blank">
         <img class="notebook-badge-image" src="/blog/assets/badges/binder.svg" alt="Open In Binder"/>
     </a>
 </div>
 
             <div class="px-2">
 
-    <a href="https://github.com/mlabonne/blog/tree/master/_notebooks/2022_02_20_Graph_Neural_Networks_A_Practical_Introduction.ipynb" role="button" target="_blank">
+    <a href="https://github.com/mlabonne/blog/tree/master/_notebooks/2022-02-20-Graph_Neural_Networks_A_Practical_Introduction.ipynb" role="button" target="_blank">
 <img class="notebook-badge-image" src="/blog/assets/badges/github.svg" alt="View On GitHub">
     </a>
 </div>
@@ -158,7 +158,7 @@ window.onload = wrap_img;
 #################################################
 ### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
 #################################################
-# file to edit: _notebooks/2022_02_20_Graph_Neural_Networks_A_Practical_Introduction.ipynb
+# file to edit: _notebooks/2022-02-20-Graph_Neural_Networks_A_Practical_Introduction.ipynb
 -->
 
 <div class="container" id="notebook-container">
@@ -20054,8 +20054,8 @@ AAAAAExhdmY1Ny44My4xMDA=
 <li>We <strong>implemented a real GNN with a GCN layer</strong> that is very close to our own design;</li>
 <li>We <strong>visualized what and how our GNN learns</strong> with the clustering of the node embeddings.</li>
 </ul>
-<p>Zachary's karate club is <strong>not the best graph dataset</strong> (feature vectors are useless), but it is good enough to <strong>understand the most important concepts</strong> in graph data and GNNs. We only talked about <strong>node classification</strong> in this work, but there are other tasks GNNs can accomplish: <strong>link prediction</strong> (e.g., to recommend a friend), <strong>graph classification</strong> (e.g., to label molecules), etc. Beyond GCN, <strong>other GNN layers and architectures were proposed</strong> by researchers. For instance, <a href="https://arxiv.org/abs/1710.10903">Graph Attention Networks</a> (GATs) <strong>implicitly compute GCN's normalization factor</strong> with an attention mechanism, and <a href="https://arxiv.org/abs/1706.02216">GraphSAGE</a> <strong>randomly samples sets of nodes</strong> to improve scalability.</p>
-<p>If you enjoyed this article, <strong>please share this article</strong> and <strong><a href="https://twitter.com/maximelabonne">follow me on Twitter</a></strong> for more cool visualizations. Thank you and have a great day! 📣</p>
+<p>Zachary's karate club is <strong>not the best graph dataset</strong> (feature vectors are useless), but it is good enough to <strong>understand the most important concepts</strong> in graph data and GNNs. We only talked about <strong>node classification</strong> in this work, but there are other tasks GNNs can accomplish: <strong>link prediction</strong> (e.g., to recommend a friend), <strong>graph classification</strong> (e.g., to label molecules), etc. Beyond GCN, <strong>other GNN layers and architectures were proposed</strong> by researchers. In the next article, we're gonna talk about <a href="https://mlabonne.github.io/blog/gat/">Graph Attention Networks</a> (GATs), which <strong>implicitly compute GCN's normalization factor and the importance of each connection</strong> with an attention mechanism.</p>
+<p>If you enjoyed this article, <strong>please share it with your colleagues</strong> and <strong><a href="https://twitter.com/maximelabonne">follow me on Twitter</a></strong> for more cool visualizations. Thank you and have a great day! 📣</p>
 
 </div>
 </div>
