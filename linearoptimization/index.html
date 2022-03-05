@@ -13,14 +13,14 @@
 <link rel="canonical" href="https://mlabonne.github.io/blog/linearoptimization/" />
 <meta property="og:url" content="https://mlabonne.github.io/blog/linearoptimization/" />
 <meta property="og:site_name" content="Maxime Labonne" />
-<meta property="og:image" content="https://mlabonne.github.io/blog/images/ortools/ortools_thumbnail.png" />
+<meta property="og:image" content="https://mlabonne.github.io/blog/images/ortools/thumbnail.png" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2022-03-02T00:00:00-06:00" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="https://mlabonne.github.io/blog/images/ortools/ortools_thumbnail.png" />
+<meta property="twitter:image" content="https://mlabonne.github.io/blog/images/ortools/thumbnail.png" />
 <meta property="twitter:title" content="Optimize an Army with OR-Tools" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-03-02T00:00:00-06:00","datePublished":"2022-03-02T00:00:00-06:00","description":"Discover linear optimization in Python","headline":"Optimize an Army with OR-Tools","image":"https://mlabonne.github.io/blog/images/ortools/ortools_thumbnail.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://mlabonne.github.io/blog/linearoptimization/"},"url":"https://mlabonne.github.io/blog/linearoptimization/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-03-02T00:00:00-06:00","datePublished":"2022-03-02T00:00:00-06:00","description":"Discover linear optimization in Python","headline":"Optimize an Army with OR-Tools","image":"https://mlabonne.github.io/blog/images/ortools/thumbnail.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://mlabonne.github.io/blog/linearoptimization/"},"url":"https://mlabonne.github.io/blog/linearoptimization/"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://mlabonne.github.io/blog/feed.xml" title="Maxime Labonne" /><!-- the google_analytics_id gets auto inserted from the config file -->
 
@@ -355,13 +355,10 @@ $$60\times swordsmen + 80\times bowmen + 140\times horsemen \leq 1200 \\
 <li><strong>1 horseman</strong> = 💪230.</li>
 </ul>
 <p>Maximizing the power of the army amounts to <strong>maximizing the sum of the power of each unit</strong>. Let's call $units$ the tuple $(swordsmen, bowmen, horsemen)$, where every element is the number of the corresponding unit. Our objective function can be written as:</p>
-$$
-\begin{split}
-max \ f(units) &amp; = 70\times swordsmen \\
-&amp; + 95\times bowmen \\
-&amp; + 230\times horsemen
-\end{split}
-$$<p>In general, there are two types of objective functions: <strong>minimizing</strong> and <strong>maximizing</strong>. In OR-Tools, we declare this goal with <code>solver.Maximize()</code> or <code>solver.Minimize()</code>.</p>
+<p>
+$$max \ f(units) = 70\times swordsmen + 95\times bowmen + 230\times horsemen$$
+</p>
+<p>In general, there are two types of objective functions: <strong>minimizing</strong> and <strong>maximizing</strong>. In OR-Tools, we declare this goal with <code>solver.Maximize()</code> or <code>solver.Minimize()</code>.</p>
 
 </div>
 </div>
