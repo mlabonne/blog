@@ -4,10 +4,10 @@ title: Publications
 permalink: /publications/
 ---
 
-<h2>Thesis</h2>
+<h2>📜 Thesis</h2>
 *  **[Anomaly-based network intrusion detection using machine learning](https://tel.archives-ouvertes.fr/tel-02988296/document) (Maxime Labonne)**<br/>*Polytechnic Institute of Paris (Institut Polytechnique de Paris), 2020*
 
-<h2>Proceedings</h2>
+<h2>📝 Proceedings</h2>
 * **[Anomaly detection in vehicle-to-infrastructure communications](https://hal-cea.archives-ouvertes.fr/cea-01888831/file/Russo2018.pdf) (Michele Russo, Maxime Labonne, Alexis Olivereau, Mohammad Rmayti)**<br/>*2018 IEEE 87th Vehicular Technology Conference (VTC Spring)*
 * **[A Cascade-structured Meta-Specialists Approach for Neural Network-based Intrusion Detection](https://ieeexplore.ieee.org/abstract/document/8651856) (Maxime Labonne, Alexis Olivereau, Baptiste Polvé, Djamal Zeghlache)**<br/>*2019 16th IEEE Annual Consumer Communications & Networking Conference (CCNC)*
 * **[Unsupervised protocol-based intrusion detection for real-world networks](https://ieeexplore.ieee.org/abstract/document/9049796/) (Maxime Labonne, Alexis Olivereau, Baptise Polvé, Djamal Zeghlache)**<br/>*2020 International Conference on Computing, Networking and Communications (ICNC)*
