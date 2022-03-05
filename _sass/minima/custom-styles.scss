@@ -290,6 +290,15 @@ tt, code {
     }
 }
 
+#newest-articles {
+    margin-top: 1rem !important;
+}
+
+.search-input {
+    padding: 12px 18px;
+    font-size: 18px;
+}
+
 /*-----------------------------------*/
 /*--- IMPORT STYLES FOR FASTPAGES ---*/
 @import "minima/fastpages-styles";   
