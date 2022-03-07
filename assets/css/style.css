@@ -429,7 +429,11 @@ tt, code { font-size: inherit !important; }
 
 #newest-articles { margin-top: 1rem !important; }
 
-.search-input { padding: 14px 20px !important; font-size: 20px !important; }
+.search-input { padding: 12px 18px !important; font-size: 20px !important; }
+
+.search-results-list-item .search-result-title { font-size: 20px !important; color: #3B70FE !important; }
+
+.search-result-preview { color: #555 !important; font-size: 18px !important; }
 
 /*-----------------------------------*/
 /*--- IMPORT STYLES FOR FASTPAGES ---*/
