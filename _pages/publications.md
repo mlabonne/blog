@@ -5,7 +5,7 @@ permalink: /publications/
 ---
 
 <h2>📜 Thesis</h2>
-*  **[Anomaly-based network intrusion detection using machine learning](https://tel.archives-ouvertes.fr/tel-02988296/document)<br/>Maxime Labonne<br/>*Polytechnic Institute of Paris (Institut Polytechnique de Paris), 2020*
+*  **[Anomaly-based network intrusion detection using machine learning](https://tel.archives-ouvertes.fr/tel-02988296/document)**<br/>Maxime Labonne<br/>*Polytechnic Institute of Paris (Institut Polytechnique de Paris), 2020*
 
 <h2>📝 Proceedings</h2>
 * **[Anomaly detection in vehicle-to-infrastructure communications](https://hal-cea.archives-ouvertes.fr/cea-01888831/file/Russo2018.pdf)<br/>Michele Russo, Maxime Labonne, Alexis Olivereau, Mohammad Rmayti**<br/>*2018 IEEE 87th Vehicular Technology Conference (VTC Spring)*
