@@ -7,8 +7,8 @@
 # https://learnxinyminutes.com/docs/yaml/
 
 title: Maxime Labonne
-tagline: Practical AI tutorials for programmers
-description: Practical tutorials about machine learning and deep learning for programmers, designed by a research scientist working at Airbus.
+tagline: Machine Learning Tutorials with Python and PyTorch
+description: Illustrated tutorials and courses about machine learning and deep learning with Python and PyTorch for programmers. 🤖
 github_username: mlabonne
 # you can comment the below line out if your repo name is not different than your baseurl
 github_repo: "blog"
@@ -37,14 +37,33 @@ url: "https://mlabonne.github.io" # the base hostname & protocol for your site, 
 #
 baseurl: "/blog" # the subpath of your site, e.g. "/blog".
 
+# Author
+author:
+  name: Maxime Labonne
+  url: https://mlabonne.github.io/blog/
+  twitter: maximelabonne
+  linkedin: maxime-labonne
+  github: mlabonne
+
+social:
+  name: Maxime Labonne
+  links:
+    - https://twitter.com/maximelabonne
+    - https://github.com/mlabonne
+    - https://www.linkedin.com/in/maxime-labonne/
+    - https://medium.com/@mlabonne
+    - https://scholar.google.com/citations?user=r4PsgrcAAAAJ&hl=en
+
 # Github and twitter are optional:
 minima:
   social_links:
     twitter: maximelabonne
-    github: mlabonne
     linkedin: maxime-labonne
+    github: mlabonne
     medium: mlabonne
     scholar: r4PsgrcAAAAJ
+
+google-site-verification: W_M3g3x7aTd55vniqJOsueC2ZrWPKCPKkWcQCIVcyuk
 
 # Set this to true to get LaTeX math equation support
 use_math: true
