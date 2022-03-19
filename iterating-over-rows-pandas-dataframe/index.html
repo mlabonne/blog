@@ -753,9 +753,9 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Even this basic for loop with <code>.iloc</code> is <strong>3 times faster than the first method</strong>!</p>
-<h2 id="&#10060;-3.-Apply-(4&#215;-faster)">&#10060; 3. Apply (4&#215; faster)<a class="anchor-link" href="#&#10060;-3.-Apply-(4&#215;-faster)"> </a></h2><p>The <code>apply()</code> method is <strong>another popular choice</strong> to iterate over rows. It creates code that is <strong>easy to understand</strong> but at a cost: performance are <strong>nearly as bad as the previous for loop</strong>.</p>
+<h2 id="&#10060;-3.-Apply-(4&#215;-faster)">&#10060; 3. Apply (4&#215; faster)<a class="anchor-link" href="#&#10060;-3.-Apply-(4&#215;-faster)"> </a></h2><p>The <code>apply()</code> method is <strong>another popular choice</strong> to iterate over rows. It creates code that is <strong>easy to understand</strong> but at a cost: performance is <strong>nearly as bad as the previous for loop</strong>.</p>
 <p>This is why I would strongly advise you to <strong>avoid this function for this specific purpose</strong> (it's fine for other applications).</p>
-<p>Note that I <strong>convert the dataframe into a list</strong> using the <code>to_list()</code> method to obtain <strong>identical results</strong>.</p>
+<p>Note that I <strong>convert the DataFrame into a list</strong> using the <code>to_list()</code> method to obtain <strong>identical results</strong>.</p>
 
 </div>
 </div>
@@ -795,7 +795,7 @@ window.onload = wrap_img;
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The <code>apply()</code> method is a <strong>for loop in disguise</strong>, which is why the performance don't improve that much: it's <strong>only 4 times faster</strong> than the first technique.</p>
+<p>The <code>apply()</code> method is a <strong>for loop in disguise</strong>, which is why the performance doesn't improve that much: it's <strong>only 4 times faster</strong> than the first technique.</p>
 <h2 id="&#10060;-4.-Itertuples-(10&#215;-faster)">&#10060; 4. Itertuples (10&#215; faster)<a class="anchor-link" href="#&#10060;-4.-Itertuples-(10&#215;-faster)"> </a></h2><p>If you know about <code>iterrows()</code>, you probably know about <code>itertuples()</code>. According to the <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.itertuples.html">official documentation</a>, it iterates "over the rows of a DataFrame as namedtuples of the values". In practice, it means that <strong>rows are converted into tuples</strong>, which are <strong>much lighter objects</strong> than Pandas Series.</p>
 <p>This is why <code>itertuples()</code> are a <strong>better version</strong> of <code>iterrows()</code>. The only issue is that we need to <strong>select columns based on their index</strong>, which is <strong>not as user-friendly</strong> as previous techniques.</p>
 
@@ -925,7 +925,7 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>This code is <strong>1500 times faster</strong> than <code>iterrows()</code> and it is even simpler to write.</p>
-<h2 id="&#9989;&#9989;-7.-NumPy-vectorization-(1900&#215;-faster)">&#9989;&#9989; 7. NumPy vectorization (1900&#215; faster)<a class="anchor-link" href="#&#9989;&#9989;-7.-NumPy-vectorization-(1900&#215;-faster)"> </a></h2><p>NumPy is designed to <strong>handle scientific computing</strong>. It has <strong>less overhead</strong> than Pandas' methods, since rows and dataframes all become <code>np.array</code>. It <strong>relies on the same optimizations</strong> than Pandas vectorization.</p>
+<h2 id="&#9989;&#9989;-7.-NumPy-vectorization-(1900&#215;-faster)">&#9989;&#9989; 7. NumPy vectorization (1900&#215; faster)<a class="anchor-link" href="#&#9989;&#9989;-7.-NumPy-vectorization-(1900&#215;-faster)"> </a></h2><p>NumPy is designed to <strong>handle scientific computing</strong>. It has <strong>less overhead</strong> than Pandas methods since rows and dataframes all become <code>np.array</code>. It <strong>relies on the same optimizations</strong> as Pandas vectorization.</p>
 <p>There are <strong>two ways of converting a Series into a <code>np.array</code></strong>: using <code>.values</code> or <code>.to_numpy()</code>. The former has been <strong>deprecated for years</strong>, which is why we're gonna use <code>.to_numpy()</code> in this example.</p>
 
 </div>
