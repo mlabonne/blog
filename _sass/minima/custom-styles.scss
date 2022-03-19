@@ -309,6 +309,15 @@ tt, code {
     font-size: 18px !important;
 }
 
+#newest-articles {
+    margin-top: 0rem !important;
+    margin-bottom: 1rem !important;
+}
+
+.post-list > li {
+    margin-bottom: 20px;
+}
+
 /*-----------------------------------*/
 /*--- IMPORT STYLES FOR FASTPAGES ---*/
 @import "minima/fastpages-styles";   
