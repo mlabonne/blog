@@ -435,6 +435,10 @@ tt, code { font-size: inherit !important; }
 
 .search-result-preview { color: #555 !important; font-size: 18px !important; }
 
+#newest-articles { margin-top: 0rem !important; margin-bottom: 1rem !important; }
+
+.post-list > li { margin-bottom: 20px; }
+
 /*-----------------------------------*/
 /*--- IMPORT STYLES FOR FASTPAGES ---*/
 .post img { display: block; vertical-align: top; margin-left: auto; margin-right: auto; }
