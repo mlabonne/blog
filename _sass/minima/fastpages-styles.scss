@@ -115,6 +115,10 @@ details.description:not([open]) summary::after {
   }
 }
 
+.blockquote {
+  border-left: 4px solid #0A047A !important;
+}
+
 // Make Anchor Links Appear Only on Hover
 
 .anchor-link {
