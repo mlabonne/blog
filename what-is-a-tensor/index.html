@@ -27,8 +27,8 @@
 <meta property="og:title" content="What is a Tensor in Deep Learning?" />
 <meta name="author" content="Maxime Labonne" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="A definitive answer in 5 minutes" />
-<meta property="og:description" content="A definitive answer in 5 minutes" />
+<meta name="description" content="A definition in simple terms with examples" />
+<meta property="og:description" content="A definition in simple terms with examples" />
 <link rel="canonical" href="https://mlabonne.github.io/blog/what-is-a-tensor/" />
 <meta property="og:url" content="https://mlabonne.github.io/blog/what-is-a-tensor/" />
 <meta property="og:site_name" content="Maxime Labonne" />
@@ -39,7 +39,7 @@
 <meta property="twitter:image" content="https://mlabonne.github.io/blog/images/tensor/thumbnail.png" />
 <meta property="twitter:title" content="What is a Tensor in Deep Learning?" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Maxime Labonne","url":"https://mlabonne.github.io/blog/"},"dateModified":"2022-03-28T00:00:00-05:00","datePublished":"2022-03-28T00:00:00-05:00","description":"A definitive answer in 5 minutes","headline":"What is a Tensor in Deep Learning?","image":"https://mlabonne.github.io/blog/images/tensor/thumbnail.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://mlabonne.github.io/blog/what-is-a-tensor/"},"url":"https://mlabonne.github.io/blog/what-is-a-tensor/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Maxime Labonne","url":"https://mlabonne.github.io/blog/"},"dateModified":"2022-03-28T00:00:00-05:00","datePublished":"2022-03-28T00:00:00-05:00","description":"A definition in simple terms with examples","headline":"What is a Tensor in Deep Learning?","image":"https://mlabonne.github.io/blog/images/tensor/thumbnail.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://mlabonne.github.io/blog/what-is-a-tensor/"},"url":"https://mlabonne.github.io/blog/what-is-a-tensor/"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://mlabonne.github.io/blog/feed.xml" title="Maxime Labonne" /><!-- the google_analytics_id gets auto inserted from the config file -->
 
@@ -125,7 +125,7 @@ window.onload = wrap_img;
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title p-name" itemprop="name headline">What is a Tensor in Deep Learning?</h1><p class="page-description">A definitive answer in 5 minutes</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-03-28T00:00:00-05:00" itemprop="datePublished">
+    <h1 class="post-title p-name" itemprop="name headline">What is a Tensor in Deep Learning?</h1><p class="page-description">A definition in simple terms with examples</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-03-28T00:00:00-05:00" itemprop="datePublished">
         <img src="/blog/images/icons/icon-watch.svg" class="icon-watch"> Mar 28, 2022
       </time>
        • <span class="read-time" title="Estimated read time">
@@ -184,25 +184,25 @@ window.onload = wrap_img;
         
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<center><div id="anim_container"><img alt="Thumbnail" src="https://mlabonne.github.io/blog/images/tensor/thumbnail.png" loading="lazy" id="anim_inner" width="800" /></div></center><p><strong>What is a tensor, exactly?</strong></p>
-<p>Most <strong>deep learning practictioners</strong> know about them, but <strong>can't pinpoint an exact definition</strong>.</p>
-<p>TensorFlow, PyTorch: every deep learning framework <strong>relies on the same basic object</strong>: tensors. They're <strong>used to store almost everything</strong> in deep learning: input data, weights, biases, predictions...</p>
-<p>And yet, their <strong>definition is incredibly fuzzy</strong>: the <a href="https://en.wikipedia.org/wiki/Category:Tensors">Wikipedia category</a> has <strong>over 100 pages</strong> related to tensors.</p>
-<p>In this article, we'll give <strong>a definitive answer</strong> to the following question: what is a tensor in deep learning?</p>
+<center><div id="anim_container"><img alt="Thumbnail" src="https://mlabonne.github.io/blog/images/tensor/thumbnail.png" loading="lazy" id="anim_inner" /></div></center><p><strong>What is a tensor, exactly?</strong></p>
+<p>Most <strong>deep learning practitioners</strong> know about them but <strong>can't pinpoint an exact definition</strong>.</p>
+<p>TensorFlow, PyTorch: every deep learning framework <strong>relies on the same basic object</strong>: tensors. They're <strong>used to store almost everything</strong> in deep learning: input data, weights, biases, predictions, etc.</p>
+<p>And yet, their <strong>definition is incredibly fuzzy</strong>: the <a href="https://en.wikipedia.org/wiki/Category:Tensors">Wikipedia category</a> alone has <strong>over 100 pages</strong> related to tensors.</p>
+<p>In this article, we'll give <strong>a definitive answer</strong> to the following question: what is a tensor in neural networks?</p>
 <h2 id="&#128187;-Tensors-in-computer-science">&#128187; Tensors in computer science<a class="anchor-link" href="#&#128187;-Tensors-in-computer-science"> </a></h2><p>So why are there <strong>so many definitions</strong>?</p>
-<p>It's quite simple: <strong>different fields have different definitions</strong>. Tensors in <strong>mathematics</strong> are not quite the same than tensors in <strong>physics</strong>, which are different from tensors in <strong>computer science</strong>.</p>
-<center><div id="anim_container"><img alt="Data structure vs. Objects" src="https://mlabonne.github.io/blog/images/tensor/datastructure.png" loading="lazy" id="anim_inner" width="800" /></div></center><p>These definitions can be <strong>divided into two categories</strong>: tensors as a data structure or as objects in an <a href="https://en.wikipedia.org/wiki/Object-oriented_programming">object-oriented programming</a> (OOP) sense.</p>
+<p>It's quite simple: <strong>different fields have different definitions</strong>. Tensors in <strong>mathematics</strong> are not quite the same as tensors in <strong>physics</strong>, which are different from tensors in <strong>computer science</strong>.</p>
+<center><div id="anim_container"><img alt="Data structure vs. Objects" src="https://mlabonne.github.io/blog/images/tensor/datastructure.png" loading="lazy" id="anim_inner" /></div></center><p>These definitions can be <strong>divided into two categories</strong>: tensors as a data structure or as objects (in an <a href="https://en.wikipedia.org/wiki/Object-oriented_programming">object-oriented programming</a> sense).</p>
 <ul>
-<li><strong>Data structure</strong>: this is the definition we use <strong>in computer science</strong>. Tensors are <a href="https://en.wikipedia.org/wiki/Array_data_type#Multi-dimensional_arrays"><strong>multi-dimensional arrays</strong></a> that store a <strong>specific type</strong> of values.</li>
+<li><strong>Data structure</strong>: this is the definition we use <strong>in computer science</strong>. Tensors are <a href="https://en.wikipedia.org/wiki/Array_data_type#Multi-dimensional_arrays"><strong>multidimensional arrays</strong></a> that store a <strong>specific type</strong> of value.</li>
 <li><strong>Objects</strong>: this is the definition used <strong>in other fields</strong>. In <a href="https://en.wikipedia.org/wiki/Tensor_(intrinsic_definition)">mathematics</a> and <a href="https://en.wikipedia.org/wiki/Infinitesimal_strain_theory">physics</a>, tensors are <strong>not just</strong> a data structure: they also have a <strong>list of properties</strong>, like a specific product.</li>
 </ul>
 <p>This is why you see a lot of people (sometimes quite pedantically) saying "<em>tensors are <strong>not</strong> n-dimensional arrays/matrices</em>": <strong>they don't talk about data structures</strong>, but <strong>about objects with properties</strong>.</p>
-<p>Even the vocabulary differs: for instance, in computer science, a <strong>2D tensor is a matrix</strong> (it's a tensor of rank 2). In linear algebra, a tensor with 2 dimensions means <strong>it only stores two values</strong>. The <strong>rank</strong> also has a completely <strong>different definition</strong>: it is the maximum number of its linearly independent column (or row) vectors.</p>
-<p>In computer science, we're only interested in a definition <strong>focused on the data structure</strong>. From this point of view, tensors <strong>truly are</strong> a generalization in n dimensions of <strong>matrices</strong>.</p>
+<p>Even the <strong>same words</strong> have <strong>different meanings</strong>. For instance, in computer science, a <strong>2D tensor is a matrix</strong> (it's a tensor of rank 2). In linear algebra, a tensor with 2 dimensions means <strong>it only stores two values</strong>. The <strong>rank</strong> also has a completely <strong>different definition</strong>: it is the maximum number of its linearly independent column (or row) vectors.</p>
+<p>In computer science, we're only interested in a definition <strong>focused on the data structure</strong>. From this point of view, tensors <strong>truly are</strong> a generalization in $n$ dimensions of <strong>matrices</strong>.</p>
 <p>But we're still <strong>missing an important nuance</strong> when talking about tensors specifically in the context of <strong>deep learning</strong>...</p>
 <h2 id="&#129504;-Tensors-in-deep-learning">&#129504; Tensors in deep learning<a class="anchor-link" href="#&#129504;-Tensors-in-deep-learning"> </a></h2><center><div id="anim_container"><img alt="Array vs. Tensor" src="https://mlabonne.github.io/blog/images/tensor/arrayvstensor.png" loading="lazy" id="anim_inner" width="800" /></div>
-<i>Icons created by Freepik and smashingstocks - <a href="https://www.flaticon.com/free-icons/">Flaticon</a></i></center><p>So <strong>why are they called "tensors" instead of "multi-dimensional arrays"</strong>? Ok it's shorter, but is it all there is to it? Actually, people make an <strong>implicit assumption when they talk about tensors</strong>.</p>
-<p>PyTorch <a href="https://pytorch.org/tutorials/beginner/examples_tensor/polynomial_tensor.html#:~:text=PyTorch%3A%20Tensors,-A%20third%20order&amp;text=A%20PyTorch%20Tensor%20is%20basically,used%20for%20arbitrary%20numeric%20computation.">official documentation</a> gives us a practical answer:</p>
+<i>Icons created by Freepik and smashingstocks - <a href="https://www.flaticon.com/free-icons/">Flaticon</a></i></center><p>So <strong>why are they called "tensors" instead of "multidimensional arrays"</strong>? Ok, it is shorter, but is it all there is to it? Actually, people make an <strong>implicit assumption when they talk about tensors</strong>.</p>
+<p>PyTorch's <a href="https://pytorch.org/tutorials/beginner/examples_tensor/polynomial_tensor.html#:~:text=PyTorch%3A%20Tensors,-A%20third%20order&amp;text=A%20PyTorch%20Tensor%20is%20basically,used%20for%20arbitrary%20numeric%20computation.">official documentation</a> gives us a practical answer:</p>
 <blockquote><p>The biggest difference between a <strong>numpy array and a PyTorch Tensor</strong> is that a PyTorch Tensor can run on either <strong>CPU or GPU</strong>.</p>
 </blockquote>
 <p>In deep learning, we need <strong>performance</strong> to compute a lot of <strong>matrix multiplications</strong> in a <strong>highly parallel</strong> way. These matrices (and n-dimensional arrays in general) are generally <strong>stored and processed on GPUs</strong> to speed up training and inference times.</p>
@@ -402,13 +402,18 @@ tensor([[1, 2, 3],
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>As we can see, PyTorch tensors completed outperformed NumPy arrays: they completed the multiplication <strong>52 times faster</strong>!</p>
-<p>This is the true power of tensors: they're <strong>blazingly fast</strong>! Performance might vary depending on the <strong>dimensions</strong>, the <strong>implemention</strong> and the <strong>hardware</strong>, but this speed is the reason why tensors (and not arrays) are <strong>so common</strong> in deep learning.</p>
-<h2 id="&#128221;-Conclusion">&#128221; Conclusion<a class="anchor-link" href="#&#128221;-Conclusion"> </a></h2><p>In this article, we built a definition of tensors based on their <strong>use in computer science</strong> (data structure), and more specifically <strong>in deep learning</strong> (they can run on GPUs). Here's how we can <strong>summarize</strong> it in one sentence:</p>
+<p>This is the true power of tensors: they're <strong>blazingly fast</strong>! Performance might vary depending on the <strong>dimensions</strong>, the <strong>implementation</strong>, and the <strong>hardware</strong>, but this speed is the reason why tensors (and not arrays) are <strong>so common</strong> in deep learning.</p>
+<h2 id="&#128221;-Conclusion">&#128221; Conclusion<a class="anchor-link" href="#&#128221;-Conclusion"> </a></h2><p>In this article, we wrote a <strong>definition</strong> of tensors based on:</p>
+<ol>
+<li>Their use in <strong>computer science</strong> (data structure);</li>
+<li>More specifically, in <strong>deep learning</strong> (they can run on GPUs).</li>
+</ol>
+<p>Here's how we can <strong>summarize</strong> it in one sentence:</p>
 <blockquote><p>Tensors are <strong>n-dimensional arrays</strong> with the <strong>implicit assumption</strong> that they can <strong>run on a GPU</strong>.</p>
 </blockquote>
 <p>Finally, we saw the <strong>difference of performance</strong> between tensors and arrays, which motivates the <strong>need for tensors in deep learning</strong>.</p>
 <p>So next time someone tries to explain to you that <strong>tensors are not exactly a generalization of matrices</strong>, you'll know that they're <strong>right in a particular definition</strong> of tensors, but not in the computer science/deep learning one.</p>
-<p>If you're looking for more <strong>data science</strong> and <strong>machine learning</strong> content in n-dimensions, please <strong>follow me on twitter <a href="https://twitter.com/maximelabonne">@maximelabonne</a></strong>. 📣</p>
+<p>If you're looking for more <strong>data science</strong> and <strong>machine learning</strong> content in n-dimensions, please <strong>follow me on twitter <a href="https://twitter.com/maximelabonne">@maximelabonne</a></strong>. You can find the code used in this article <a href="https://github.com/mlabonne/how-to-data-science/blob/main/What_is_a_Tensor_in_Deep_Learning.ipynb">at this address</a>. 📣</p>
 
 </div>
 </div>
