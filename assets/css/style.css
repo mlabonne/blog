@@ -365,6 +365,8 @@ pre, code { background-color: #efeeea; }
 
 .katex-display { overflow-x: auto; overflow-y: hidden; margin: 2.5rem 0 !important; }
 
+blockquote { border-left: 4px solid #0A047A !important; }
+
 .post-content img, .post-content video { display: block; margin-left: auto; margin-right: auto; margin-bottom: 3.5rem; margin-top: 3.5rem; max-width: 100%; }
 
 .post-content .output img, .post-content .output video { margin-top: 1rem !important; margin-bottom: 1rem !important; }
