@@ -355,7 +355,7 @@ Transductive learning can feel **a bit like cheating**, this is why it's better 
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="&#129497;&#8205;&#9794;&#65039;-II.-GraphSAGE-in-theory">&#129497;&#8205;&#9794;&#65039; II. GraphSAGE in theory<a class="anchor-link" href="#&#129497;&#8205;&#9794;&#65039;-II.-GraphSAGE-in-theory"> </a></h2><center><div id="anim_container"><img alt="GraphSAGE's architecture" src="https://mlabonne.github.io/blog/images/graphsage/architecture.png" loading="lazy" id="anim_inner" width="800" /></div></center><p>The <strong>GraphSAGE</strong> algorithm can be divided into two steps: 1/ <strong>neighbor sampling</strong> and 2/ <strong>aggregation</strong>.</p>
+<h2 id="&#129497;&#8205;&#9794;&#65039;-II.-GraphSAGE-in-theory">&#129497;&#8205;&#9794;&#65039; II. GraphSAGE in theory<a class="anchor-link" href="#&#129497;&#8205;&#9794;&#65039;-II.-GraphSAGE-in-theory"> </a></h2><center><div id="anim_container"><img alt="GraphSAGE's architecture" src="https://mlabonne.github.io/blog/images/graphsage/architecture.png" loading="lazy" id="anim_inner" /></div></center><p>The <strong>GraphSAGE</strong> algorithm can be divided into two steps: 1/ <strong>neighbor sampling</strong> and 2/ <strong>aggregation</strong>.</p>
 <h3 id="&#127920;-A.-Neighbor-sampling">&#127920; A. Neighbor sampling<a class="anchor-link" href="#&#127920;-A.-Neighbor-sampling"> </a></h3><p>Mini-batching is a <strong>common technique</strong> used in machine learning. It works by <strong>breaking down a dataset into smaller batches</strong>, which allows us to train models more effectively. So <strong>what are the benefits</strong> of using mini-batching?</p>
 <ol>
 <li><strong>Improved accuracy</strong> - mini-batches help to reduce overfitting (gradients are averaged), as well as variance in error rates; </li>
@@ -532,17 +532,17 @@ Subgraph 3: Data(x=[189, 500], edge_index=[2, 229], y=[189], train_mask=[189], v
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>In this example, the <strong>maximum node degree</strong> of our subgraphs is <strong>5</strong>, which is <strong>much lower</strong> than the original max value. It's important to remember this <strong>tradeoff</strong> when talking about GraphSAGE.</p>
 <p>PinSAGE offers another sampling solution. In this architecture, <strong>random walks</strong> are simulated to 1/ sample a <strong>fixed number of neighbors</strong> (like GraphSAGE) and 2/ obtain their <strong>relative importance</strong> (important nodes are seen more frequently than others). This strategy feels a bit like an <strong>attention mechanism</strong> since it assigns <strong>weights</strong> to nodes and increases the relevance of the <strong>most popular ones</strong>.</p>
-<h2 id="&#128165;-B.-Aggregation">&#128165; B. Aggregation<a class="anchor-link" href="#&#128165;-B.-Aggregation"> </a></h2><center class="dark-bg">
-    <video autoplay="" loop="" muted="" width="800" class="no-margin">
-        <source src="https://mlabonne.github.io/blog/images/graphsage/aggregation.mp4" type="video/mp4" />&lt;/source&gt;
-    </video>
-</center><p>The aggregation process determines <strong>how to combine the feature vectors</strong> to produce the <strong>node embeddings</strong>. The original paper presents three ways of aggregating features:</p>
+<h2 id="&#128165;-B.-Aggregation">&#128165; B. Aggregation<a class="anchor-link" href="#&#128165;-B.-Aggregation"> </a></h2><p>The aggregation process determines <strong>how to combine the feature vectors</strong> to produce the <strong>node embeddings</strong>. The original paper presents three ways of aggregating features:</p>
 <ul>
 <li>Mean aggregator</li>
 <li>LSTM aggregator</li>
 <li>Pooling aggregator</li>
 </ul>
-<p>The <strong>mean aggregator</strong> is the simplest one. The idea is close to a GCN approach:</p>
+<center class="dark-bg">
+    <video autoplay="" loop="" muted="" width="800" class="no-margin">
+        <source src="https://mlabonne.github.io/blog/images/graphsage/aggregation.mp4" type="video/mp4" />&lt;/source&gt;
+    </video>
+</center><p>The <strong>mean aggregator</strong> is the simplest one. The idea is close to a GCN approach:</p>
 <ol>
 <li>The hidden features of the target node $\textbf{h}_v$ are <strong>concatenated with the hidden features of its neighbors</strong> $\textbf{h}_u$;</li>
 <li>The resulting vector is <strong>averaged</strong>;</li>
