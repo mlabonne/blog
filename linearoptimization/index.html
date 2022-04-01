@@ -7,7 +7,7 @@
   <!-- Twitter cards -->
     <meta name="twitter:site"    content="@">
     <meta name="twitter:creator" content="@Maxime Labonne">
-    <meta name="twitter:title"   content="Optimize an Army with OR-Tools">
+    <meta name="twitter:title"   content="Introduction to Linear Programming in Python">
 
     
     <meta name="twitter:description" content="Illustrated machine learning and deep learning tutorials with Python and PyTorch for programmers.">
@@ -22,13 +22,13 @@
   <!-- Pinterest -->
   <meta name="p:domain_verify" content="e8bbc84dbf0895d9267aad84438e86df"/>
   <!-- end of Pinterest--><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Optimize an Army with OR-Tools | Maxime Labonne</title>
+<title>Introduction to Linear Programming in Python | Maxime Labonne</title>
 <meta name="generator" content="Jekyll v4.1.1" />
-<meta property="og:title" content="Optimize an Army with OR-Tools" />
+<meta property="og:title" content="Introduction to Linear Programming in Python" />
 <meta name="author" content="Maxime Labonne" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Discover linear optimization in Python" />
-<meta property="og:description" content="Discover linear optimization in Python" />
+<meta name="description" content="Mathematical optimization with Google OR-Tools" />
+<meta property="og:description" content="Mathematical optimization with Google OR-Tools" />
 <link rel="canonical" href="https://mlabonne.github.io/blog/linearoptimization/" />
 <meta property="og:url" content="https://mlabonne.github.io/blog/linearoptimization/" />
 <meta property="og:site_name" content="Maxime Labonne" />
@@ -37,9 +37,9 @@
 <meta property="article:published_time" content="2022-03-02T00:00:00-06:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta property="twitter:image" content="https://mlabonne.github.io/blog/images/ortools/thumbnail.png" />
-<meta property="twitter:title" content="Optimize an Army with OR-Tools" />
+<meta property="twitter:title" content="Introduction to Linear Programming in Python" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Maxime Labonne"},"dateModified":"2022-03-02T00:00:00-06:00","datePublished":"2022-03-02T00:00:00-06:00","description":"Discover linear optimization in Python","headline":"Optimize an Army with OR-Tools","image":"https://mlabonne.github.io/blog/images/ortools/thumbnail.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://mlabonne.github.io/blog/linearoptimization/"},"url":"https://mlabonne.github.io/blog/linearoptimization/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Maxime Labonne"},"dateModified":"2022-03-02T00:00:00-06:00","datePublished":"2022-03-02T00:00:00-06:00","description":"Mathematical optimization with Google OR-Tools","headline":"Introduction to Linear Programming in Python","image":"https://mlabonne.github.io/blog/images/ortools/thumbnail.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://mlabonne.github.io/blog/linearoptimization/"},"url":"https://mlabonne.github.io/blog/linearoptimization/"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://mlabonne.github.io/blog/feed.xml" title="Maxime Labonne" /><!-- the google_analytics_id gets auto inserted from the config file -->
 
@@ -125,7 +125,7 @@ window.onload = wrap_img;
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title p-name" itemprop="name headline">Optimize an Army with OR-Tools</h1><p class="page-description">Discover linear optimization in Python</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-03-02T00:00:00-06:00" itemprop="datePublished">
+    <h1 class="post-title p-name" itemprop="name headline">Introduction to Linear Programming in Python</h1><p class="page-description">Mathematical optimization with Google OR-Tools</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-03-02T00:00:00-06:00" itemprop="datePublished">
         <img src="/blog/images/icons/icon-watch.svg" class="icon-watch"> Mar 2, 2022
       </time>• 
           <span itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -224,8 +224,8 @@ window.onload = wrap_img;
 </table>
 <p><br /></p>
 <p>Imagine that we have 1200 🌾<strong>food</strong>, 800 🪵<strong>wood</strong>, and 600 🪙<strong>gold</strong>. How to <strong>maximize the power of our army</strong> considering these resources? We could simply find the unit with the <strong>best power/cost ratio</strong>, <strong>take as many of them as possible</strong>, and repeat the process with the other two units. But this "guess and check" solution <strong>might not even be optimal</strong>. Now imagine we have <strong>millions of units and resources</strong>: this greedy strategy is very likely to <strong>completely miss the optimal solution</strong>. It is possible to <strong>use a machine learning</strong> (ML) algorithm (a metaheuristic like a genetic algorithm) to solve this problem, but we have <strong>no guarantee that the solution will be optimal either</strong>.</p>
-<p>Fortunately for us, there is a method that can <strong>solve our problem in an optimal way</strong>: linear optimization (or linear programming), which is part of the field of <a href="https://en.wikipedia.org/wiki/Operations_research">operations research</a> (OR). In this article, we're going to <strong>find the best solution possible to this problem</strong>. We'll use OR-Tools, a <strong>powerful Python library</strong> specialized in optimization. It will help us to <strong>model this problem</strong> in linear optimization terms and <strong>output an optimal solution</strong>. Finally, we will write a <strong>model that can take on a bigger challenge</strong> and actually <strong>solve a whole class of optimization problems</strong>.</p>
-<h2 id="&#129351;-I.-Finding-the-optimal-solution">&#129351; I. Finding the optimal solution<a class="anchor-link" href="#&#129351;-I.-Finding-the-optimal-solution"> </a></h2><p>Okay, let's play with linear optimization in Python. There are <strong>different libraries</strong> such as the multi-purposed <code>SciPy</code>, the beginner-friendly <code>PuLP</code>, the exhaustive <code>pyomo</code>, and many others. Today, we are going to use <a href="https://developers.google.com/optimization">Google OR-Tools</a>, which is quite <strong>user-friendly</strong>, comes with several <strong>prepackaged solvers</strong>, and has by far the <strong>most stars</strong> on <a href="https://github.com/google/or-tools">GitHub</a>. If the installation doesn't work, please <strong>restart the kernel and try again</strong>: it can fail sometimes. ¯\_(ツ)_/¯</p>
+<p>Fortunately for us, there is a method that can <strong>solve our problem in an optimal way</strong>: linear programming (or linear optimization), which is part of the field of <a href="https://en.wikipedia.org/wiki/Operations_research">operations research</a> (OR). In this article, we're going to <strong>find the best solution possible to this problem</strong>. We'll use OR-Tools, a <strong>powerful Python library</strong> specialized in optimization. It will help us to <strong>model this problem</strong> in linear programming terms and <strong>output an optimal solution</strong>. Finally, we will write a <strong>model that can take on a bigger challenge</strong> and actually <strong>solve a whole class of optimization problems</strong>.</p>
+<h2 id="&#129351;-I.-Finding-the-optimal-solution">&#129351; I. Finding the optimal solution<a class="anchor-link" href="#&#129351;-I.-Finding-the-optimal-solution"> </a></h2><p>Okay, let's play with linear programming in Python. There are <strong>different libraries</strong> such as the multi-purposed <code>SciPy</code>, the beginner-friendly <code>PuLP</code>, the exhaustive <code>pyomo</code>, and many others. Today, we are going to use <a href="https://developers.google.com/optimization">Google OR-Tools</a>, which is quite <strong>user-friendly</strong>, comes with several <strong>prepackaged solvers</strong>, and has by far the <strong>most stars</strong> on <a href="https://github.com/google/or-tools">GitHub</a>. If the installation doesn't work, please <strong>restart the kernel and try again</strong>: it can fail sometimes. ¯\_(ツ)_/¯</p>
 
 </div>
 </div>
@@ -369,7 +369,7 @@ $$60\times swordsmen + 80\times bowmen + 140\times horsemen \leq 1200 \\
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Now that we have our variables and constraints, we want to <strong>define our goal</strong> (or <strong>objective function</strong>). In linear optimization, this function <strong>has to be linear</strong>, so of the form $f(x, y, z) = ax + by + cz + d$. In our example, the objective is quite clear: we want to <strong>recruit the army with the highest power</strong>. The table gives us the following power values:</p>
+<p>Now that we have our variables and constraints, we want to <strong>define our goal</strong> (or <strong>objective function</strong>). In linear programming, this function <strong>has to be linear</strong>, so of the form $f(x, y, z) = ax + by + cz + d$. In our example, the objective is quite clear: we want to <strong>recruit the army with the highest power</strong>. The table gives us the following power values:</p>
 <ul>
 <li><strong>1 swordsman</strong> = 💪70;</li>
 <li><strong>1 bowman</strong> = 💪95;</li>
@@ -1049,7 +1049,7 @@ Resources:
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Since we now have a limited resource of 🪵wood, the number of 🐏battering rams <strong>sadly dropped from 371 to 301</strong>. In exchange, we got <strong>681 🛡️men-at-arms and 1 lost 🗡️swordsman</strong> (welcome to them). The total cost of the army is <strong>172,100</strong>, which is <strong>much higher</strong> than the 111,300 we previously found (+65% increase) but it <strong>truly is the optimal solution under these constraints</strong>. It shows that <strong>we should produce more wood</strong> because these 🐏battering rams are extremely cost-efficient!</p>
-<h2 id="&#128282;-V.-Conclusion">&#128282; V. Conclusion<a class="anchor-link" href="#&#128282;-V.-Conclusion"> </a></h2><p>Optimization is often <strong>neglected in favor of machine learning techniques</strong>, but both have their merits: linear optimization can produce an <strong>optimal solution in an undetermined amount of time</strong>, while machine learning can <strong>approximate complex functions in no time</strong>. There is no training in LP, but an <strong>expert is required to build a mathematical model</strong>. Machine learning needs data, but the models can be <strong>used as black boxes</strong> to solve a problem. As a rule of thumb, problems that <strong>do not have a particular time constraint and/or are not extremely complex</strong> can be advantageously solved with <strong>linear programming</strong>.</p>
+<h2 id="&#128282;-V.-Conclusion">&#128282; V. Conclusion<a class="anchor-link" href="#&#128282;-V.-Conclusion"> </a></h2><p>Optimization is often <strong>neglected in favor of machine learning techniques</strong>, but both have their merits: linear programming can produce an <strong>optimal solution in an undetermined amount of time</strong>, while machine learning can <strong>approximate complex functions in no time</strong>. There is no training in LP, but an <strong>expert is required to build a mathematical model</strong>. Machine learning needs data, but the models can be <strong>used as black boxes</strong> to solve a problem. As a rule of thumb, problems that <strong>do not have a particular time constraint and/or are not extremely complex</strong> can be advantageously solved with <strong>linear programming</strong>.</p>
 <p>In this article,</p>
 <ul>
 <li>We learned about <strong>interfaces for optimization</strong>, and especially about Google <strong>OR-Tools</strong>;</li>

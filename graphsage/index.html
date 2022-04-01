@@ -536,13 +536,17 @@ Subgraph 3: Data(x=[189, 500], edge_index=[2, 229], y=[189], train_mask=[189], v
 <ul>
 <li>Mean aggregator</li>
 <li>LSTM aggregator</li>
-<li>Pooling aggregator</li>
-</ul>
+<li>Pooling aggregator
+<br />
 <center class="dark-bg">
-    <video autoplay="" loop="" muted="" width="800" class="no-margin">
-        <source src="https://mlabonne.github.io/blog/images/graphsage/aggregation.mp4" type="video/mp4" />&lt;/source&gt;
-    </video>
-</center><p>The <strong>mean aggregator</strong> is the simplest one. The idea is close to a GCN approach:</p>
+  <video autoplay="" loop="" muted="" width="800" class="no-margin">
+<pre><code>  &lt;source src="https://mlabonne.github.io/blog/images/graphsage/aggregation.mp4" type="video/mp4"&gt;&lt;/source&gt;
+</code></pre>
+  &lt;/video&gt;
+&lt;/center&gt;
+<br />
+The <strong>mean aggregator</strong> is the simplest one. The idea is close to a GCN approach:&lt;/li&gt;
+&lt;/ul&gt;
 <ol>
 <li>The hidden features of the target node $\textbf{h}_v$ are <strong>concatenated with the hidden features of its neighbors</strong> $\textbf{h}_u$;</li>
 <li>The resulting vector is <strong>averaged</strong>;</li>
@@ -555,9 +559,9 @@ $$\textbf{h}_v' = \textbf{W} \cdot mean([\textbf{h}_v||\textbf{h}_u])$$
 <p>The <strong>LSTM aggregator</strong> can seem like a <strong>weird idea</strong> because this architecture is <strong>sequential</strong>: it assigns an <strong>order to our unordered</strong> nodes. This is why the authors <strong>randomly shuffle them</strong> to force the LSTM to only <strong>consider the hidden features</strong>. It is the <strong>best performing technique</strong> in their benchmarks.</p>
 <p>The <strong>pooling aggregator</strong> feeds each neighbor's hidden vector to a feedforward neural network. A <strong>max-pooling</strong> operation is applied to the result.</p>
 
-</div>
-</div>
-</div>
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="&#129504;-III.-GraphSAGE-in-PyTorch-Geometric">&#129504; III. GraphSAGE in PyTorch Geometric<a class="anchor-link" href="#&#129504;-III.-GraphSAGE-in-PyTorch-Geometric"> </a></h1><p>We can easily implement a GraphSAGE architecture in <strong>PyTorch Geometric</strong> with the <code>SAGEConv</code> layer. This implementation is not <strong>exactly the same</strong> as in the paper since it uses <strong>2 matrices instead of one</strong>:</p>
@@ -982,8 +986,10 @@ Wall time: 18min 7s
 </div>
 </div>
 </div>
-</div>
+&lt;/div&gt;
+ 
 
+</video></center></li></ul></div></div></div></div>
 
 
   </div><!-- from https://github.com/utterance/utterances -->
