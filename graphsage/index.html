@@ -214,14 +214,9 @@ window.onload = wrap_img;
 <span class="o">!</span>pip install -q torch-sparse -f https://data.pyg.org/whl/torch-<span class="o">{</span>torchversion<span class="o">}</span>.html
 <span class="o">!</span>pip install -q git+https://github.com/pyg-team/pytorch_geometric.git
 
-<span class="c1"># Numpy for matrices</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-
 <span class="c1"># Visualization</span>
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">sklearn.manifold</span> <span class="kn">import</span> <span class="n">TSNE</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.dpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">300</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">24</span><span class="p">})</span>
 </pre></div>
@@ -253,8 +248,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">from</span> <span class="nn">torch_geometric.datasets</span> <span class="kn">import</span> <span class="n">Planetoid</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">torch_geometric.datasets</span> <span class="kn">import</span> <span class="n">Planetoid</span>
 
 <span class="n">dataset</span> <span class="o">=</span> <span class="n">Planetoid</span><span class="p">(</span><span class="n">root</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Pubmed&quot;</span><span class="p">)</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -544,9 +538,15 @@ Subgraph 3: Data(x=[189, 500], edge_index=[2, 229], y=[189], train_mask=[189], v
 </code></pre>
   &lt;/video&gt;
 &lt;/center&gt;
-<br />
-The <strong>mean aggregator</strong> is the simplest one. The idea is close to a GCN approach:&lt;/li&gt;
+<br />&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The <strong>mean aggregator</strong> is the simplest one. The idea is close to a GCN approach:</p>
 <ol>
 <li>The hidden features of the target node $\textbf{h}_v$ are <strong>concatenated with the hidden features of its neighbors</strong> $\textbf{h}_u$;</li>
 <li>The resulting vector is <strong>averaged</strong>;</li>
@@ -559,9 +559,9 @@ $$\textbf{h}_v' = \textbf{W} \cdot mean([\textbf{h}_v||\textbf{h}_u])$$
 <p>The <strong>LSTM aggregator</strong> can seem like a <strong>weird idea</strong> because this architecture is <strong>sequential</strong>: it assigns an <strong>order to our unordered</strong> nodes. This is why the authors <strong>randomly shuffle them</strong> to force the LSTM to only <strong>consider the hidden features</strong>. It is the <strong>best performing technique</strong> in their benchmarks.</p>
 <p>The <strong>pooling aggregator</strong> feeds each neighbor's hidden vector to a feedforward neural network. A <strong>max-pooling</strong> operation is applied to the result.</p>
 
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="&#129504;-III.-GraphSAGE-in-PyTorch-Geometric">&#129504; III. GraphSAGE in PyTorch Geometric<a class="anchor-link" href="#&#129504;-III.-GraphSAGE-in-PyTorch-Geometric"> </a></h1><p>We can easily implement a GraphSAGE architecture in <strong>PyTorch Geometric</strong> with the <code>SAGEConv</code> layer. This implementation is not <strong>exactly the same</strong> as in the paper since it uses <strong>2 matrices instead of one</strong>:</p>
@@ -581,9 +581,9 @@ $$\textbf{h}_v' = \textbf{W}_1\textbf{h}_v + \textbf{W}_2 \cdot mean(\textbf{h}_
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
-<span class="kn">from</span> <span class="nn">torch.nn</span> <span class="kn">import</span> <span class="n">Linear</span><span class="p">,</span> <span class="n">Dropout</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">torch.nn</span> <span class="kn">import</span> <span class="n">Linear</span><span class="p">,</span> <span class="n">Dropout</span>
 <span class="kn">from</span> <span class="nn">torch_geometric.nn</span> <span class="kn">import</span> <span class="n">SAGEConv</span><span class="p">,</span> <span class="n">GATv2Conv</span><span class="p">,</span> <span class="n">GCNConv</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
 
 
 <span class="k">class</span> <span class="nc">GraphSAGE</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
@@ -760,6 +760,7 @@ $$\textbf{h}_v' = \textbf{W}_1\textbf{h}_v + \textbf{W}_2 \cdot mean(\textbf{h}_
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>
+
 <span class="c1"># Create GraphSAGE</span>
 <span class="n">graphsage</span> <span class="o">=</span> <span class="n">GraphSAGE</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">num_features</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">num_classes</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">graphsage</span><span class="p">)</span>
@@ -899,6 +900,7 @@ Wall time: 52.6 s
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>
+
 <span class="c1"># Create GAT</span>
 <span class="n">gat</span> <span class="o">=</span> <span class="n">GAT</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">num_features</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">num_classes</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">gat</span><span class="p">)</span>
