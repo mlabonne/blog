@@ -370,7 +370,7 @@ Transductive learning can feel **a bit like cheating**, this is why it's better 
 </ol>
 <p>This process is <strong>repeated for every node</strong> in a list or the entirety of the graph. However, creating a subgraph for each node is not efficient, that is why we can <strong>process them in batches</strong> instead. In this case, each subgraph is shared by <strong>multiple target nodes</strong>.</p>
 <p>Neighbor sampling has an <strong>added benefit</strong>. Sometimes, we observe <strong>extremely popular nodes</strong> that act like hubs, such as celebrities on social media. Obtaining the <strong>hidden vectors</strong> of these nodes can be <strong>computationally very expensive</strong> since it requires calculating the hidden vectors of thousands or even millions of neighbors. GraphSAGE fixes this issue by simply <strong>ignoring most of the nodes</strong>!</p>
-<p>In PyG, <strong>neighbor sampling</strong> is implemented through the <code>NeighborLoader</code> object. Let's say we want <strong>5 neighbors and 10 of their neighbors</strong> (<code>num_neighbors</code>). As we discussed, we can also specify the <code>batch_size</code> to speed up the process by creating subgraphs for <strong>multiple target nodes</strong>.</p>
+<p>In PyG, <strong>neighbor sampling</strong> is implemented through the <code>NeighborLoader</code> object. Let's say we want <strong>5 neighbors and 10 of their neighbors</strong> (<code>num_neighbors</code>). As we discussed, we can also specify a <code>batch_size</code> to speed up the process by creating subgraphs for <strong>multiple target nodes</strong>.</p>
 
 </div>
 </div>
@@ -475,7 +475,7 @@ Subgraph 3: Data(x=[189, 500], edge_index=[2, 229], y=[189], train_mask=[189], v
   <span class="n">numbers</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">degrees</span><span class="p">)</span>
 
   <span class="c1"># Bar plot</span>
-  <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+  <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
   <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Node degree&#39;</span><span class="p">)</span>
   <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Number of nodes&#39;</span><span class="p">)</span>
   <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">numbers</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>

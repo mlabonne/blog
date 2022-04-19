@@ -722,7 +722,7 @@ Army:
 <p><br /></p>
 <p>Notice that we transformed the 💪<strong>power</strong> into two values: 💪<strong>attack</strong> and ❤️ <strong>health</strong>, which is a little more detailed. Health values <strong>are higher than attack values</strong>, which is why we want to <strong>add a weighting factor to make them more comparable</strong>. Let's take 10 as an example, so $power = 10 \times attack + health$. We call the tuple of variables to optimize $units = (swordsmen,  \dots, springalds)$, where every element is the number of the corresponding unit. Our objective function becomes:</p>
 <p>
-$$max \ f(units) = \sum_{u \in units} (10\times power + health) \cdot u$$
+$$max \ f(units) = \sum_{u \in units} (10\times attack + health) \cdot u$$
 </p>
 <p>Adapting our code to this new problem is actually quite simple: we just have to <strong>change the input parameters</strong> and update the <strong>objective function</strong>.</p>
 
