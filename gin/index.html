@@ -7,7 +7,7 @@
   <!-- Twitter cards -->
     <meta name="twitter:site"    content="@">
     <meta name="twitter:creator" content="@">
-    <meta name="twitter:title"   content="Graph Isomorphism Networks for Graph Classification">
+    <meta name="twitter:title"   content="How to Design the Most Powerful Graph Neural Network">
 
     
     <meta name="twitter:description" content="Illustrated machine learning and deep learning tutorials with Python and PyTorch for programmers.">
@@ -22,13 +22,13 @@
   <!-- Pinterest -->
   <meta name="p:domain_verify" content="e8bbc84dbf0895d9267aad84438e86df"/>
   <!-- end of Pinterest--><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Graph Isomorphism Networks for Graph Classification | Maxime Labonne</title>
+<title>How to Design the Most Powerful Graph Neural Network | Maxime Labonne</title>
 <meta name="generator" content="Jekyll v4.1.1" />
-<meta property="og:title" content="Graph Isomorphism Networks for Graph Classification" />
+<meta property="og:title" content="How to Design the Most Powerful Graph Neural Network" />
 <meta name="author" content="Maxime Labonne" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Understand and implement the most powerful aggregator" />
-<meta property="og:description" content="Understand and implement the most powerful aggregator" />
+<meta name="description" content="Graph classification with Graph Isomorphism Networks" />
+<meta property="og:description" content="Graph classification with Graph Isomorphism Networks" />
 <link rel="canonical" href="https://mlabonne.github.io/blog/gin/" />
 <meta property="og:url" content="https://mlabonne.github.io/blog/gin/" />
 <meta property="og:site_name" content="Maxime Labonne" />
@@ -37,9 +37,9 @@
 <meta property="article:published_time" content="2022-04-25T00:00:00-05:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta property="twitter:image" content="https://mlabonne.github.io/blog/images/gin/thumbnail.png" />
-<meta property="twitter:title" content="Graph Isomorphism Networks for Graph Classification" />
+<meta property="twitter:title" content="How to Design the Most Powerful Graph Neural Network" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Maxime Labonne","url":"https://mlabonne.github.io/blog/"},"dateModified":"2022-04-25T00:00:00-05:00","datePublished":"2022-04-25T00:00:00-05:00","description":"Understand and implement the most powerful aggregator","headline":"Graph Isomorphism Networks for Graph Classification","image":"https://mlabonne.github.io/blog/images/gin/thumbnail.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://mlabonne.github.io/blog/gin/"},"url":"https://mlabonne.github.io/blog/gin/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Maxime Labonne","url":"https://mlabonne.github.io/blog/"},"dateModified":"2022-04-25T00:00:00-05:00","datePublished":"2022-04-25T00:00:00-05:00","description":"Graph classification with Graph Isomorphism Networks","headline":"How to Design the Most Powerful Graph Neural Network","image":"https://mlabonne.github.io/blog/images/gin/thumbnail.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://mlabonne.github.io/blog/gin/"},"url":"https://mlabonne.github.io/blog/gin/"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://mlabonne.github.io/blog/feed.xml" title="Maxime Labonne" /><!-- the google_analytics_id gets auto inserted from the config file -->
 
@@ -125,7 +125,7 @@ window.onload = wrap_img;
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title p-name" itemprop="name headline">Graph Isomorphism Networks for Graph Classification</h1><p class="page-description">Understand and implement the most powerful aggregator</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-04-25T00:00:00-05:00" itemprop="datePublished">
+    <h1 class="post-title p-name" itemprop="name headline">How to Design the Most Powerful Graph Neural Network</h1><p class="page-description">Graph classification with Graph Isomorphism Networks</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-04-25T00:00:00-05:00" itemprop="datePublished">
         <img src="/blog/images/icons/icon-watch.svg" class="icon-watch"> Apr 25, 2022
       </time>
        • <span class="read-time" title="Estimated read time">
@@ -194,7 +194,7 @@ window.onload = wrap_img;
 </li>
 </ul>
 <p>We'll detail the advantages of GIN in terms of <strong>discriminative power</strong> compared to GCNs or GraphSAGE, and its connection to the <strong>Weisfeiler-Lehman</strong> graph isomorphism test. Beyond its <strong>powerful aggregator</strong>, GIN brings <strong>exciting takeaways</strong> about GNNs in general.</p>
-<p>As per usual, let's <strong>install and import</strong> the required libraries first.</p>
+<p>You can run the code with the following <a href="https://colab.research.google.com/drive/1b6SWugNKnxsI0L9auX1zwszlXf3rRZyS?usp=sharing">Google Colab notebook</a>. As per usual, let's <strong>install and import</strong> the required libraries first.</p>
 
 </div>
 </div>
@@ -230,7 +230,7 @@ window.onload = wrap_img;
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="&#127760;-I.-PROTEINS-dataset">&#127760; I. PROTEINS dataset<a class="anchor-link" href="#&#127760;-I.-PROTEINS-dataset"> </a></h1><center><div id="anim_container"><img src="https://mlabonne.github.io/blog/images/gin/proteinimager.png" loading="lazy" id="anim_inner" /></div><i>Protein illustration from <a href="https://3dproteinimaging.com/">3D Protein Imaging</a>.</i></center><p>PROTEINS is a <strong>popular</strong> dataset in <strong>bioinformatics</strong>. It is a collection of <strong>1113 graphs</strong> representing proteins, where nodes are <strong>amino acids</strong>. Two nodes are <strong>connected</strong> by an edge when they are <strong>close enough</strong> (&lt; 0.6 nanometers). The goal is to classify each protein as an <strong>enzyme</strong> or <strong>not</strong>.</p>
+<h1 id="&#127760;-I.-PROTEINS-dataset">&#127760; I. PROTEINS dataset<a class="anchor-link" href="#&#127760;-I.-PROTEINS-dataset"> </a></h1><center><div id="anim_container"><img src="https://mlabonne.github.io/blog/images/gin/proteinimager.png" loading="lazy" id="anim_inner" /></div><i>3D plot of a protein by DeepMind.</i></center><p>PROTEINS is a <strong>popular</strong> dataset in <strong>bioinformatics</strong>. It is a collection of <strong>1113 graphs</strong> representing proteins, where nodes are <strong>amino acids</strong>. Two nodes are <strong>connected</strong> by an edge when they are <strong>close enough</strong> (&lt; 0.6 nanometers). The goal is to classify each protein as an <strong>enzyme</strong> or <strong>not</strong>.</p>
 <p>Enzymes are a particular <strong>type of proteins</strong> that act as <strong>catalysts</strong> to <strong>speed up chemical reactions</strong> in the cell. They are essential for <strong>digestion</strong> (e.g., lipases), <strong>respiration</strong> (e.g., oxidases), and other <strong>crucial functions</strong> of the human body. They are also used in <strong>commercial applications</strong>, like the production of <strong>antibiotics</strong>.</p>
 <p>This dataset is also available on <strong>TUDataset</strong> and implemented in PyTorch Geometric.</p>
 
@@ -448,8 +448,7 @@ Test loader:
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>PROTEINS is <strong>not a huge dataset</strong>, but mini-batching will <strong>speed up the training</strong> nonetheless. We could use a GCN or a GAT, but there's a <strong>new architecture</strong> I'd like to introduce: the <strong>Graph Isomorphism Network</strong>.</p>
-<h1 id="&#127870;-II.-Graph-Isomorphism-Network-(GIN)">&#127870; II. Graph Isomorphism Network (GIN)<a class="anchor-link" href="#&#127870;-II.-Graph-Isomorphism-Network-(GIN)"> </a></h1><p>What is <strong>GIN</strong> and why is it <strong>important</strong>?</p>
-<p>GIN was designed by researchers trying to <strong>maximize the representational/discriminative power</strong> of a GNN. But how do you <strong>define</strong> a "representational power"?</p>
+<h1 id="&#127870;-II.-Graph-Isomorphism-Network-(GIN)">&#127870; II. Graph Isomorphism Network (GIN)<a class="anchor-link" href="#&#127870;-II.-Graph-Isomorphism-Network-(GIN)"> </a></h1><p>GIN was designed by researchers trying to <strong>maximize the representational/discriminative power</strong> of a GNN. But how do you <strong>define</strong> a "representational power"?</p>
 <h2 id="A.-Weisfeiler-Lehman-test">A. Weisfeiler-Lehman test<a class="anchor-link" href="#A.-Weisfeiler-Lehman-test"> </a></h2><p>A way to characterize the "power" of a GNN is to use the <strong>Weisfeiler-Lehman (WL) graph isomorphism test</strong>. <a href="https://en.wikipedia.org/wiki/Graph_isomorphism">Isomorphic graphs</a> mean that they have the <strong>same structure</strong>: <strong>identical connections</strong> but a <strong>permutation of nodes</strong>. The WL test is able to tell <strong>if two graphs are non-isomorphic</strong>, but it cannot guarantee that <strong>they are isomorphic</strong>.</p>
 <center><div id="anim_container"><img src="https://mlabonne.github.io/blog/images/gin/isomorphic_graphs.png" loading="lazy" id="anim_inner" /></div><i>Two isomorphic graphs.</i></center><p>This might not seem like much, but it can be <strong>extremely difficult</strong> to tell two large graphs apart. In fact, this problem is <strong>not known</strong> to be solvable in <strong>polynomial time</strong>, nor to be <strong>NP-complete</strong>. It might even be somewhere in between, in the computational complexity class <a href="https://en.wikipedia.org/wiki/Graph_isomorphism_problem">NP-intermediate</a> (if it only exists).</p>
 <p>Okay, but how is it <strong>related</strong> to GNNs? Some researchers in graph learning noticed that <strong>this test and the way GNNs learn are oddly similar</strong>. In the WL test,</p>
@@ -575,15 +574,16 @@ $$h_G = \sum_{i=0}^N{h_i^0}\ || \ \dots \ || \ \sum_{i=0}^N{h_i^k}\$$
         <span class="n">h2</span> <span class="o">=</span> <span class="n">global_add_pool</span><span class="p">(</span><span class="n">h2</span><span class="p">,</span> <span class="n">batch</span><span class="p">)</span>
         <span class="n">h3</span> <span class="o">=</span> <span class="n">global_add_pool</span><span class="p">(</span><span class="n">h3</span><span class="p">,</span> <span class="n">batch</span><span class="p">)</span>
 
+        <span class="c1"># Concatenate graph embeddings</span>
         <span class="n">h</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">h1</span><span class="p">,</span> <span class="n">h2</span><span class="p">,</span> <span class="n">h3</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lin1</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
-        <span class="n">h</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">relu</span><span class="p">()</span>
 
         <span class="c1"># Classifier</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lin1</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">h</span><span class="o">.</span><span class="n">relu</span><span class="p">()</span>
         <span class="n">h</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span>
         <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lin2</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
         
-        <span class="k">return</span> <span class="n">h3</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">h</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="n">gcn</span> <span class="o">=</span> <span class="n">GCN</span><span class="p">(</span><span class="n">dim_h</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
 <span class="n">gin</span> <span class="o">=</span> <span class="n">GIN</span><span class="p">(</span><span class="n">dim_h</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
