@@ -7,7 +7,7 @@
   <!-- Twitter cards -->
     <meta name="twitter:site"    content="@">
     <meta name="twitter:creator" content="@">
-    <meta name="twitter:title"   content="Introduction to GraphSAGE in Python">
+    <meta name="twitter:title"   content="GraphSAGE: Scaling GNNs to Billions of Connections">
 
     
     <meta name="twitter:description" content="Illustrated machine learning and deep learning tutorials with Python and PyTorch for programmers.">
@@ -22,13 +22,13 @@
   <!-- Pinterest -->
   <meta name="p:domain_verify" content="e8bbc84dbf0895d9267aad84438e86df"/>
   <!-- end of Pinterest--><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Introduction to GraphSAGE in Python | Maxime Labonne</title>
+<title>GraphSAGE: Scaling GNNs to Billions of Connections | Maxime Labonne</title>
 <meta name="generator" content="Jekyll v4.1.1" />
-<meta property="og:title" content="Introduction to GraphSAGE in Python" />
+<meta property="og:title" content="GraphSAGE: Scaling GNNs to Billions of Connections" />
 <meta name="author" content="Maxime Labonne" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="What is the difference between GCN and GraphSAGE?" />
-<meta property="og:description" content="What is the difference between GCN and GraphSAGE?" />
+<meta name="description" content="Graph Neural Network Course: Chapter 3" />
+<meta property="og:description" content="Graph Neural Network Course: Chapter 3" />
 <link rel="canonical" href="https://mlabonne.github.io/blog/graphsage/" />
 <meta property="og:url" content="https://mlabonne.github.io/blog/graphsage/" />
 <meta property="og:site_name" content="Maxime Labonne" />
@@ -37,9 +37,9 @@
 <meta property="article:published_time" content="2022-04-06T00:00:00-05:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta property="twitter:image" content="https://mlabonne.github.io/blog/images/graphsage/thumbnail.png" />
-<meta property="twitter:title" content="Introduction to GraphSAGE in Python" />
+<meta property="twitter:title" content="GraphSAGE: Scaling GNNs to Billions of Connections" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Maxime Labonne","url":"https://mlabonne.github.io/blog/"},"dateModified":"2022-04-06T00:00:00-05:00","datePublished":"2022-04-06T00:00:00-05:00","description":"What is the difference between GCN and GraphSAGE?","headline":"Introduction to GraphSAGE in Python","image":"https://mlabonne.github.io/blog/images/graphsage/thumbnail.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://mlabonne.github.io/blog/graphsage/"},"url":"https://mlabonne.github.io/blog/graphsage/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Maxime Labonne","url":"https://mlabonne.github.io/blog/"},"dateModified":"2022-04-06T00:00:00-05:00","datePublished":"2022-04-06T00:00:00-05:00","description":"Graph Neural Network Course: Chapter 3","headline":"GraphSAGE: Scaling GNNs to Billions of Connections","image":"https://mlabonne.github.io/blog/images/graphsage/thumbnail.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://mlabonne.github.io/blog/graphsage/"},"url":"https://mlabonne.github.io/blog/graphsage/"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://mlabonne.github.io/blog/feed.xml" title="Maxime Labonne" /><!-- the google_analytics_id gets auto inserted from the config file -->
 
@@ -125,13 +125,13 @@ window.onload = wrap_img;
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title p-name" itemprop="name headline">Introduction to GraphSAGE in Python</h1><p class="page-description">What is the difference between GCN and GraphSAGE?</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-04-06T00:00:00-05:00" itemprop="datePublished">
+    <h1 class="post-title p-name" itemprop="name headline">GraphSAGE: Scaling GNNs to Billions of Connections</h1><p class="page-description">Graph Neural Network Course: Chapter 3</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-04-06T00:00:00-05:00" itemprop="datePublished">
         <img src="/blog/images/icons/icon-watch.svg" class="icon-watch"> Apr 6, 2022
       </time>
        • <span class="read-time" title="Estimated read time">
     
     
-      22 min read
+      21 min read
     
 </span></p>
 
@@ -184,17 +184,14 @@ window.onload = wrap_img;
         
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<center><div id="anim_container"><img alt="GraphSAGE" src="https://mlabonne.github.io/blog/images/graphsage/thumbnail.png" loading="lazy" id="anim_inner" /></div></center><p>In the real world, <strong>graphs can quickly become very large</strong>.</p>
-<p>In the <a href="https://mlabonne.github.io/blog/intrognn/">first article</a>, Zachary's karate club only had <strong>34 nodes and 156 directed edges</strong>. In the <a href="https://mlabonne.github.io/blog/gat/">second article</a>, Citeseer had <strong>3312 nodes and 4732 directed edges</strong>. This raises the question of <strong>how many nodes and connections</strong> a Graph Neural Network (GNN) can handle.</p>
-<p>Could we feed a graph with <strong>millions or billions</strong> of edges to a GNN? The good news is: yes we can. However, it <strong>requires a few improvements</strong> to properly handle this amount of data. In this article, we'll introduce a <strong>new GNN architecture called <a href="https://arxiv.org/abs/1706.02216">GraphSAGE</a></strong>, specifically designed for large graphs.</p>
-<p>We don't want to <strong>improve scalability just for the love of science</strong>. GraphSAGE is one of the <strong>most used architectures</strong> in GNNs, and for a good reason: it has become <strong>quite popular with big tech companies</strong>. As they process <strong>huge amounts of data</strong>, the contribution of this architecture has become obvious to them. 💰</p>
-<p>We can cite two public examples of GraphSAGE-like systems in production:</p>
+<center><img src="https://mlabonne.github.io/blog/images/graphsage/thumbnail.png" /></center><p>What do <strong>UberEats</strong> and <strong>Pinterest</strong> have in common?</p>
+<p>They both use GraphSAGE to power their recommender system on a massive scale: <strong>millions and billions</strong> of nodes and edges.</p>
 <ul>
-<li><strong>Pinterest</strong> developed its own version called <a href="https://medium.com/pinterest-engineering/pinsage-a-new-graph-convolutional-neural-network-for-web-scale-recommender-systems-88795a107f48">PinSAGE</a> to recommend the <strong>most relevant images</strong> (pins) to its users. According to the authors, this system operates on a graph comprising <strong>18 billion connections and 3 billion nodes</strong>. And from my personal experience, their recommender system <strong>works really well</strong> (think Spotify, not Linkedin).</li>
-<li><strong>UberEats</strong> also reported using a <a href="https://eng.uber.com/uber-eats-graph-learning/">modified version of GraphSAGE</a> to <strong>suggest dishes, restaurants, and cuisines</strong>. We don't know the exact size of this graph, but UberEats proudly claims to <strong>support more than 600,000 restaurants and 66 million users</strong>. Meanwhile, it keeps recommending me the same <strong>tacos that gave me food poisoning</strong>.</li>
+<li>🖼️ <strong>Pinterest</strong> developed its own version called <a href="https://medium.com/pinterest-engineering/pinsage-a-new-graph-convolutional-neural-network-for-web-scale-recommender-systems-88795a107f48">PinSAGE</a> to recommend the most relevant images (pins) to its users. Their graph has 18 billion connections and 3 billion nodes.</li>
+<li>🍽️ <strong>UberEats</strong> also reported using a <a href="https://eng.uber.com/uber-eats-graph-learning/">modified version of GraphSAGE</a> to suggest dishes, restaurants, and cuisines. UberEats claims to support more than 600,000 restaurants and 66 million users. Meanwhile, it keeps recommending me tacos that gave me food poisoning.</li>
 </ul>
-<p>In this tutorial, we'll use a dataset with <strong>20k nodes instead of billions</strong> because Google Colab <strong>cannot handle our ambitions</strong>. We will stick to the <strong>original GraphSAGE</strong> architecture, but the previous variants also bring <strong>interesting features</strong> that we will comment on.</p>
-<p>So, first things first, let's install and import <strong>PyTorch Geometric</strong> with the following commands.</p>
+<p>In this tutorial, we’ll use a dataset with 20k nodes instead of billions because Google Colab cannot handle our ambitions. We will stick to the <strong>original GraphSAGE</strong> architecture, but the previous variants also bring interesting features that we will comment on.</p>
+<p>You can run the code with the following <a href="https://colab.research.google.com/drive/1udeUfWJzvMlLO7sGUDGsHo8cRPMicajl?usp=sharing">Google Colab notebook</a>.</p>
 
 </div>
 </div>
@@ -230,13 +227,13 @@ window.onload = wrap_img;
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="&#127760;-I.-PubMed-dataset">&#127760; I. PubMed dataset<a class="anchor-link" href="#&#127760;-I.-PubMed-dataset"> </a></h2><p>As we saw in the <a href="https://mlabonne.github.io/blog/gat/">previous article</a>, <strong>PubMed</strong> is the senior member of the <strong>Planetoid</strong> triumvirate. Here's a quick summary:</p>
+<h2 id="&#127760;-I.-PubMed-dataset">&#127760; I. PubMed dataset<a class="anchor-link" href="#&#127760;-I.-PubMed-dataset"> </a></h2><center><img src="https://mlabonne.github.io/blog/images/graphsage/pubmed.png" /></center><p>As we saw in the <a href="https://mlabonne.github.io/blog/gat/">previous article</a>, <strong>PubMed</strong> is part of the <strong>Planetoid</strong> dataset (MIT license). Here's a quick summary:</p>
 <ul>
 <li>It contains <strong>19,717 scientific publications</strong> about diabetes from PubMed's database;</li>
-<li>Node features are <strong><a href="https://en.wikipedia.org/wiki/Tf%E2%80%93idf">TF-IDF</a> weighted word vectors</strong> with 500 dimensions, which is a pretty cool way of <strong>summarizing documents</strong> without transformers;</li>
-<li>The task is quite straightforward since it's a <strong>multi-class classification with three categories</strong>: diabetes mellitus experimental, diabetes mellitus type 1, and diabetes mellitus type 2.</li>
+<li>Node features are <strong><a href="https://en.wikipedia.org/wiki/Tf%E2%80%93idf">TF-IDF</a> weighted word vectors</strong> with 500 dimensions, which is a pretty cool way of summarizing documents without transformers;</li>
+<li>The task is quite straightforward since it's a multi-class classification with <strong>three categories</strong>: diabetes mellitus experimental, diabetes mellitus type 1, and diabetes mellitus type 2.</li>
 </ul>
-<p>This is the beauty and the curse of deep learning: <strong>I don't know anything about diabetes</strong>, but I'll still feel pretty satisfied if we <strong>reach 70% accuracy</strong>. However, we shouldn't forget that <strong>expert knowledge is required to apply any DL technique</strong> to a field, or we might just build the next <a href="https://slate.com/technology/2022/01/ibm-watson-health-failure-artificial-intelligence.html">IBM Watson</a>.</p>
+<p>This is the beauty and the curse of deep learning: I don’t know anything about diabetes, but I’ll still feel pretty satisfied if we reach 70% accuracy. At least, we’re not building the next <a href="https://slate.com/technology/2022/01/ibm-watson-health-failure-artificial-intelligence.html">IBM Watson</a>.</p>
 
 </div>
 </div>
@@ -309,7 +306,8 @@ Graph has loops: False
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>As we can see, PubMed has an <strong>insanely low number of training nodes</strong> compared to the full graph. There are <strong>only 60 samples</strong> to learn <strong>how to classify the 1000 test nodes</strong>. Despite this challenge, GNNs manage to obtain <strong>high levels of accuracy</strong>. Here's the <strong>leaderboard of known techniques</strong> (a more complete benchmark can be found on <a href="https://paperswithcode.com/sota/node-classification-on-pubmed">PapersWithCode</a>):
+<p>As we can see, PubMed has an insanely low number of training nodes compared to the full graph. There are only 60 samples to learn how to classify the 1000 test nodes.</p>
+<p>Despite this challenge, GNNs manage to obtain high levels of accuracy. Here’s the leaderboard of known techniques (a more complete benchmark can be found on <a href="https://paperswithcode.com/sota/node-classification-on-pubmed">PapersWithCode</a>):
 <br />
 <br /></p>
 <table>
@@ -338,39 +336,40 @@ Graph has loops: False
 </tbody>
 </table>
 <p><br /></p>
-<p>I <strong>couldn't find any result for GraphSAGE on PubMed</strong> with this specific setting (60 training nodes, 1000 test nodes), so I <strong>don't expect a great accuracy</strong>. But another metric can be <strong>just as relevant</strong> when working with large graphs: <strong>training time</strong>.</p>
-<!-- An important **distinction** needs to be made when talking about **training and test sets** in a graph setting. There are two types of learning that can be used:
-* **Inductive learning**: the model is trained on the training set and tested on a test set it has never seen before, like in traditional supervised learning.
-* **Transductive learning**: the model is trained on the training set and test on a test set **it has seen during training**. It means that the model didn't have access to the labels of the test nodes, but had access to their feature vectors.
+<p>I couldn’t find any result for GraphSAGE on PubMed with this specific setting (60 training nodes, 1000 test nodes), so I don’t expect a great accuracy. But another metric can be just as relevant when working with large graphs: <strong>training time</strong>.</p>
 
-Transductive learning can feel **a bit like cheating**, this is why it's better to **clearly state it**. In applications where **new nodes can appear** and have to be **correctly labeled**, **inductive learning** is prefered (it leads to better generalization). GraphSAGE was designed as an **inductive learning algorithm**, but it doesn't have to be: we'll use it for **transductive learning** in this tutorial. -->
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="&#129497;&#8205;&#9794;&#65039;-II.-GraphSAGE-in-theory">&#129497;&#8205;&#9794;&#65039; II. GraphSAGE in theory<a class="anchor-link" href="#&#129497;&#8205;&#9794;&#65039;-II.-GraphSAGE-in-theory"> </a></h2><center><div id="anim_container"><img alt="GraphSAGE's architecture" src="https://mlabonne.github.io/blog/images/graphsage/architecture.png" loading="lazy" id="anim_inner" /></div></center><p>The <strong>GraphSAGE</strong> algorithm can be divided into two steps: 1/ <strong>neighbor sampling</strong> and 2/ <strong>aggregation</strong>.</p>
-<h3 id="&#127920;-A.-Neighbor-sampling">&#127920; A. Neighbor sampling<a class="anchor-link" href="#&#127920;-A.-Neighbor-sampling"> </a></h3><p>Mini-batching is a <strong>common technique</strong> used in machine learning. It works by <strong>breaking down a dataset into smaller batches</strong>, which allows us to train models more effectively. So <strong>what are the benefits</strong> of using mini-batching?</p>
+<h2 id="&#129497;&#8205;&#9794;&#65039;-II.-GraphSAGE-in-theory">&#129497;&#8205;&#9794;&#65039; II. GraphSAGE in theory<a class="anchor-link" href="#&#129497;&#8205;&#9794;&#65039;-II.-GraphSAGE-in-theory"> </a></h2><center><img src="https://mlabonne.github.io/blog/images/graphsage/architecture.png" /></center><p>The <strong>GraphSAGE</strong> algorithm can be divided into two steps:</p>
 <ol>
-<li><strong>Improved accuracy</strong> - mini-batches help to reduce overfitting (gradients are averaged), as well as variance in error rates; </li>
-<li><strong>Increased speed</strong> - mini-batches are processed in parallel and take less time to train than larger batches;</li>
-<li><strong>Improved scalability</strong> - an entire dataset can exceed the GPU memory, but smaller batches can get around this limitation.</li>
+<li><strong>Beighbor sampling</strong>;</li>
+<li><strong>Aggregation</strong>.</li>
 </ol>
-<p>Mini-batching is <strong>so useful it became standard</strong> in regular neural networks. However, it is <strong>not as straightforward  with graph data</strong>, since splitting the dataset into smaller chunks <strong>would break essential connections</strong> between nodes. ❌</p>
-<p>So, what can we do? In recent years, researchers developed <strong>different strategies</strong> to create graph mini-batches. The one we're interested in is called <strong>neighbor sampling</strong> (from <a href="https://arxiv.org/abs/1706.02216">GraphSAGE's paper</a>). There are many other techniques you can find on <a href="https://pytorch-geometric.readthedocs.io/en/latest/modules/loader.html">PyG's documentation</a>, such as <strong>subgraph clustering</strong> (from <a href="https://arxiv.org/pdf/1905.07953.pdf">Cluster-GCN</a>).</p>
+<h3 id="&#127920;-A.-Neighbor-sampling">&#127920; A. Neighbor sampling<a class="anchor-link" href="#&#127920;-A.-Neighbor-sampling"> </a></h3><p>Mini-batching is a common technique used in machine learning.</p>
+<p>It works by <strong>breaking down a dataset into smaller batches</strong>, which allows us to train models more effectively. Mini-batching has several benefits:</p>
+<ol>
+<li><strong>Improved accuracy</strong> — mini-batches help to reduce overfitting (gradients are averaged), as well as variance in error rates;</li>
+<li><strong>Increased speed</strong> — mini-batches are processed in parallel and take less time to train than larger batches;</li>
+<li><strong>Improved scalability</strong> — an entire dataset can exceed the GPU memory, but smaller batches can get around this limitation.</li>
+</ol>
+<p>Mini-batching is so useful it became standard in regular neural networks. However, it is not as straightforward with graph data, since splitting the dataset into smaller chunks would <strong>break essential connections</strong> between nodes. ❌</p>
+<p>So, what can we do? In recent years, researchers developed different strategies to create graph mini-batches. The one we're interested in is called <a href="https://arxiv.org/abs/1706.02216">6<strong>neighbor sampling</strong></a>). There are many other techniques you can find on <a href="https://pytorch-geometric.readthedocs.io/en/latest/modules/loader.html">PyG's documentation</a>, such as <a href="https://arxiv.org/pdf/1905.07953.pdf">subgraph clustering</a>).</p>
 <center class="dark-bg">
     <video autoplay="" loop="" muted="" width="800" class="no-margin">
         <source src="https://mlabonne.github.io/blog/images/graphsage/sampling.mp4" type="video/mp4" />&lt;/source&gt;
     </video>
-</center><p>Neighbor sampling considers <strong>only a fixed number of random neighbors</strong>. Here's the process:</p>
+</center><p>Neighbor sampling considers only a <strong>fixed number</strong> of random neighbors. Here’s the process:</p>
 <ol>
-<li>We define the <strong>number of neighbors</strong> (1 hop), the <strong>number of neighbors of neighbors</strong> (2 hops), etc. we would like to have.</li>
-<li>The sampler <strong>looks at the list</strong> of neighbors, of neighbors of neighbors, etc. of a target node and <strong>randomly selects a predefined number of them</strong>;</li>
+<li>We define the <strong>number of neighbors</strong> (1 hop), the number of neighbors of neighbors (2 hops), etc. we would like to have.</li>
+<li>The sampler looks at the list of neighbors, of neighbors of neighbors, etc. of a target node and <strong>randomly selects</strong> a predefined number of them;</li>
 <li>The sampler <strong>outputs a subgraph</strong> containing the target node and the randomly selected neighboring nodes.</li>
 </ol>
-<p>This process is <strong>repeated for every node</strong> in a list or the entirety of the graph. However, creating a subgraph for each node is not efficient, that is why we can <strong>process them in batches</strong> instead. In this case, each subgraph is shared by <strong>multiple target nodes</strong>.</p>
-<p>Neighbor sampling has an <strong>added benefit</strong>. Sometimes, we observe <strong>extremely popular nodes</strong> that act like hubs, such as celebrities on social media. Obtaining the <strong>hidden vectors</strong> of these nodes can be <strong>computationally very expensive</strong> since it requires calculating the hidden vectors of thousands or even millions of neighbors. GraphSAGE fixes this issue by simply <strong>ignoring most of the nodes</strong>!</p>
-<p>In PyG, <strong>neighbor sampling</strong> is implemented through the <code>NeighborLoader</code> object. Let's say we want <strong>5 neighbors and 10 of their neighbors</strong> (<code>num_neighbors</code>). As we discussed, we can also specify a <code>batch_size</code> to speed up the process by creating subgraphs for <strong>multiple target nodes</strong>.</p>
+<p>This process is <strong>repeated for every node</strong> in a list or the entirety of the graph. However, creating a subgraph for each node is not efficient, that is why we can process them in batches instead. In this case, each subgraph is shared by multiple target nodes.</p>
+<p>Neighbor sampling has an added benefit. Sometimes, we observe extremely popular nodes that act like hubs, such as celebrities on social media. Obtaining the hidden vectors of these nodes can be <strong>computationally very expensive</strong> since it requires calculating the hidden vectors of thousands or even millions of neighbors. GraphSAGE fixes this issue by simply ignoring most of the nodes!</p>
+<p>In PyG, neighbor sampling is implemented through the <code>NeighborLoader</code> object. Let's say we want <strong>5 neighbors and 10 of their neighbors</strong> (<code>num_neighbors</code>). As we discussed, we can also specify a <code>batch_size</code> to speed up the process by creating subgraphs for multiple target nodes.</p>
 
 </div>
 </div>
@@ -451,8 +450,8 @@ Subgraph 3: Data(x=[189, 500], edge_index=[2, 229], y=[189], train_mask=[189], v
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We created <strong>4 subgraphs</strong> of various sizes ($60 div 16 = 4$). It allows us to <strong>process them in parallel</strong> and they're <strong>easier to fit on a GPU</strong> since they're smaller.</p>
-<p>The number of neighbors is an <strong>important parameter</strong> since pruning our graph <strong>removes a lot of information</strong>. How much, exactly? Well, quite a lot. We can visualize this effect by looking at the <strong>node degrees</strong>.</p>
+<p>We created <strong>4 subgraphs</strong> of various sizes. It allows us to process them in parallel and they're easier to fit on a GPU since they're smaller.</p>
+<p>The number of neighbors is an important parameter since pruning our graph removes a lot of information. How much, exactly? Well, quite a lot. We can visualize this effect by looking at the <strong>node degrees</strong> (number of neighbors).</p>
 
 </div>
 </div>
@@ -524,15 +523,19 @@ Subgraph 3: Data(x=[189, 500], edge_index=[2, 229], y=[189], train_mask=[189], v
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>In this example, the <strong>maximum node degree</strong> of our subgraphs is <strong>5</strong>, which is <strong>much lower</strong> than the original max value. It's important to remember this <strong>tradeoff</strong> when talking about GraphSAGE.</p>
-<p>PinSAGE offers another sampling solution. In this architecture, <strong>random walks</strong> are simulated to 1/ sample a <strong>fixed number of neighbors</strong> (like GraphSAGE) and 2/ obtain their <strong>relative importance</strong> (important nodes are seen more frequently than others). This strategy feels a bit like an <strong>attention mechanism</strong> since it assigns <strong>weights</strong> to nodes and increases the relevance of the <strong>most popular ones</strong>.</p>
-<h2 id="&#128165;-B.-Aggregation">&#128165; B. Aggregation<a class="anchor-link" href="#&#128165;-B.-Aggregation"> </a></h2><p>The aggregation process determines <strong>how to combine the feature vectors</strong> to produce the <strong>node embeddings</strong>. The original paper presents three ways of aggregating features:</p>
+<p>In this example, the <strong>maximum node degree</strong> of our subgraphs is 5, which is much lower than the original max value. It’s important to remember this tradeoff when talking about GraphSAGE.</p>
+<p>PinSAGE implements another sampling solution using <strong>random walks</strong>. It has two main objectives:</p>
+<ol>
+<li>Sample a <strong>fixed number of neighbors</strong> (like GraphSAGE);</li>
+<li>Obtain their <strong>relative importance</strong> (important nodes are seen more frequently than others).</li>
+</ol>
+<p>This strategy feels a bit like a fast <strong>attention mechanism</strong>. It assigns weights to nodes and increases the relevance of the most popular ones.</p>
+<h2 id="&#128165;-B.-Aggregation">&#128165; B. Aggregation<a class="anchor-link" href="#&#128165;-B.-Aggregation"> </a></h2><p>The aggregation process determines how to combine the feature vectors to produce the <strong>node embeddings</strong>. The original paper presents three ways of aggregating features:</p>
 <ul>
-<li>Mean aggregator</li>
-<li>LSTM aggregator</li>
-<li>Pooling aggregator</li>
+<li><strong>Mean</strong> aggregator</li>
+<li><strong>LSTM</strong> aggregator</li>
+<li><strong>Pooling</strong> aggregator</li>
 </ul>
-<p>We could include <strong>other aggregators</strong> (preferably fast): GraphSAGE is a flexible framework. The sampling technique is <strong>more essential</strong> than the aggregation step.</p>
 <center class="dark-bg">
     <video autoplay="" loop="" muted="" width="800" class="no-margin">
         <source src="https://mlabonne.github.io/blog/images/graphsage/aggregation.mp4" type="video/mp4" />&lt;/source&gt;
@@ -545,28 +548,33 @@ Subgraph 3: Data(x=[189, 500], edge_index=[2, 229], y=[189], train_mask=[189], v
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The <strong>mean aggregator</strong> is the simplest one. The idea is close to a GCN approach:</p>
 <ol>
-<li>The hidden features of the target node $\textbf{h}_v$ are <strong>concatenated with the hidden features of its neighbors</strong> $\textbf{h}_u$;</li>
+<li>The hidden features of the target node $\textbf{h}_v$ are <strong>concatenated</strong> with the hidden features of its neighbors $\textbf{h}_u$;</li>
 <li>The resulting vector is <strong>averaged</strong>;</li>
 <li>A <strong>linear transformation</strong> with a weight matrix $\textbf{W}$ is applied.</li>
 </ol>
 <p>
 $$\textbf{h}_v' = \textbf{W} \cdot mean([\textbf{h}_v||\textbf{h}_u])$$
 </p>
-<p>The result can then be fed to a <strong>non-linear activation function</strong> $\sigma$ (like $tanh$ or $ReLU$). This is the technique we'll use with PyG and the one selected by UberEats.</p>
-<p>The <strong>LSTM aggregator</strong> can seem like a <strong>weird idea</strong> because this architecture is <strong>sequential</strong>: it assigns an <strong>order to our unordered</strong> nodes. This is why the authors <strong>randomly shuffle them</strong> to force the LSTM to only <strong>consider the hidden features</strong>. It is the <strong>best performing technique</strong> in their benchmarks.</p>
-<p>The <strong>pooling aggregator</strong> feeds each neighbor's hidden vector to a feedforward neural network. A <strong>max-pooling</strong> operation is applied to the result.</p>
+<p>The result can then be fed to a non-linear <strong>activation function</strong> $\sigma$ (like $tanh$ or $ReLU$). This is the technique we'll use with PyG and the one selected by UberEats.</p>
+<p>The <strong>LSTM aggregator</strong> can seem like a weird idea because this architecture is sequential: it assigns an order to our unordered nodes. This is why the authors randomly shuffle them to force the LSTM to only consider the hidden features. It is the best performing technique in their benchmarks.</p>
+<p>The <strong>pooling aggregator</strong> feeds each neighbor's hidden vector to a feedforward neural network. A max-pooling operation is applied to the result.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="&#129504;-III.-GraphSAGE-in-PyTorch-Geometric">&#129504; III. GraphSAGE in PyTorch Geometric<a class="anchor-link" href="#&#129504;-III.-GraphSAGE-in-PyTorch-Geometric"> </a></h1><p>We can easily implement a GraphSAGE architecture in <strong>PyTorch Geometric</strong> with the <code>SAGEConv</code> layer. This implementation is not <strong>exactly the same</strong> as in the paper since it uses <strong>2 matrices instead of one</strong>:</p>
+<h1 id="&#129504;-III.-GraphSAGE-in-PyTorch-Geometric">&#129504; III. GraphSAGE in PyTorch Geometric<a class="anchor-link" href="#&#129504;-III.-GraphSAGE-in-PyTorch-Geometric"> </a></h1><p>We can easily implement a GraphSAGE architecture in PyTorch Geometric with the <code>SAGEConv</code> layer. This implementation is <strong>not exactly the same</strong> as in the paper since it uses 2 matrices instead of one:</p>
 <p>
 $$\textbf{h}_v' = \textbf{W}_1\textbf{h}_v + \textbf{W}_2 \cdot mean(\textbf{h}_u)$$
 </p>
-<p>Okay, let's create a network with two <code>SAGEConv</code> layers. The first one will use $ReLU$ as the <strong>activation function</strong> and a <strong>dropout layer</strong>. The second one will directly output the <strong>node embeddings</strong>. As we're dealing with a <strong>multi-class classification</strong> task, we'll use the <strong>cross-entropy loss</strong> as our loss function.</p>
-<p>To see the benefits of GraphSAGE, let's <strong>compare it with a GCN and a GAT</strong> without any sampling.</p>
+<p>Let's create a network with two <code>SAGEConv</code> layers:</p>
+<ul>
+<li>The first one uses $ReLU$ as the activation function and a <strong>dropout layer</strong>;</li>
+<li>The second one directly outputs the <strong>node embeddings</strong>.</li>
+</ul>
+<p>As we're dealing with a*multi-class classification** task, we'll use the cross-entropy loss as our loss function.</p>
+<p>To see the benefits of GraphSAGE, let's <strong>compare</strong> it with a GCN and a GAT without any sampling.</p>
 
 </div>
 </div>
@@ -743,8 +751,7 @@ $$\textbf{h}_v' = \textbf{W}_1\textbf{h}_v + \textbf{W}_2 \cdot mean(\textbf{h}_
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Notice that the <strong>training loop is different</strong> between GraphSAGE and the two other GNNs: they <strong>don't use neighbor sampling</strong>, so they have a regular training loop.</p>
-<p>With GraphSAGE, we <strong>loop through batches</strong> (our 4 subgraphs) created by the neighbor sampling process. The way we <strong>calculate the accuracy and the validation loss</strong> is also different because of that.</p>
+<p>With GraphSAGE, we loop through <strong>batches</strong> (our 4 subgraphs) created by the neighbor sampling process. The way we <strong>calculate the accuracy and the validation loss</strong> is also different because of that.</p>
 
 </div>
 </div>
@@ -961,26 +968,30 @@ Wall time: 18min 7s
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The three models obtain <strong>similar results in terms of accuracy</strong>. We expect the GAT to perform better because its <strong>aggregation mechanism is more nuanced</strong>, but it's not always the case.</p>
-<p>The real difference is the <strong>training time</strong>: GraphSAGE is <strong>88 times faster than the GAT</strong> and <strong>4 times faster than the GCN</strong> in this example!</p>
-<p>Here lies the <strong>true power of GraphSAGE</strong>. We do lose a lot of information by <strong>pruning our graph</strong> with neighbor sampling. The <strong>final node embeddings might not be as good</strong> as what we could find with a GCN or a GAT. But this is not the point: GraphSAGE is <strong>designed to improve scalability</strong>. In turn, it <strong>can</strong> lead to building larger graphs that can improve <strong>accuracy</strong>.</p>
-<center><div id="anim_container"><img alt="Training times" src="https://mlabonne.github.io/blog/images/graphsage/timechart.png" loading="lazy" id="anim_inner" width="800" /></div></center>
+<p>The three models obtain <strong>similar</strong> results in terms of accuracy. We expect the GAT to perform better because its aggregation mechanism is more nuanced, but it’s not always the case.</p>
+<p>The real difference is the training time: GraphSAGE is <strong>88 times faster</strong> than the GAT and 4 times faster than the GCN in this example!</p>
+<p>Here lies the true power of GraphSAGE. We do lose a lot of information by pruning our graph with neighbor sampling. The final node embeddings might <strong>not be as good</strong> as what we could find with a GCN or a GAT. But this is not the point: GraphSAGE is designed to improve scalability. In turn, it can lead to building larger graphs that can improve accuracy.</p>
+<center><img src="https://mlabonne.github.io/blog/images/graphsage/timechart.png" width="800" /></center>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This work was done in a <strong>supervised training</strong> setting (node classification), but we could also train GraphSAGE in an <strong>unsupervised way</strong>. In this case, we can't use the cross-entropy loss. We have to engineer a loss function that forces <strong>nodes that are nearby</strong> in the original graph to <strong>remain close to each other in the embedding space</strong>. Conversely, the same function must ensure that <strong>distant nodes</strong> in the graph must have <strong>distant representations</strong> in the embedding space. This is the loss that is presented in <a href="https://cs.stanford.edu/people/jure/pubs/graphsage-nips17.pdf">GraphSAGE's paper</a>.</p>
-<p>In the case of PinSAGE and UberEeats' modified GraphSAGE, we're dealing with <strong>recommender systems</strong>. The goal is to correctly <strong>rank the most relevant items</strong> (pins, restaurants) for each user, which is very different. We don't only want to know what the <strong>closest embeddings</strong> are, we have to produce the <strong>best rankings possible</strong>. This is why these systems are also trained in an <strong>unsupervised way</strong>, but with another loss function: a <strong>max-margin ranking loss</strong>.</p>
-<h1 id="&#128282;-IV.-Conclusion">&#128282; IV. Conclusion<a class="anchor-link" href="#&#128282;-IV.-Conclusion"> </a></h1><p>GraphSAGE is an <strong>incredibly fast architecture</strong> to process <strong>large graphs</strong>. It might not be <strong>as accurate as a GCN or a GAT</strong>, but it is an essential model when dealing with a <strong>massive amount of data</strong>. It delivers this speed thanks to a clever combination of 1/ <strong>neighbor sampling</strong> to prune the graph and 2/ <strong>fast aggregation</strong> with a mean aggregator in this example. In this article,</p>
+<p>This work was done in a supervised training setting (node classification), but we could also train GraphSAGE in an <strong>unsupervised way</strong>.</p>
+<p>In this case, we can’t use the cross-entropy loss. We have to engineer a loss function that forces nodes that are nearby in the original graph to remain close to each other in the embedding space. Conversely, the same function must ensure that <strong>distant nodes</strong> in the graph must have <strong>distant representations</strong> in the embedding space. This is the loss that is presented in <a href="https://cs.stanford.edu/people/jure/pubs/graphsage-nips17.pdf">GraphSAGE’s paper</a>.</p>
+<p>In the case of PinSAGE and UberEeats’ modified GraphSAGE, we’re dealing with <strong>recommender systems</strong>.</p>
+<p>The goal is to correctly rank the most relevant items (pins, restaurants) for each user, which is very different. We don’t only want to know what the closest embeddings are, we have to produce the <strong>best rankings possible</strong>. This is why these systems are also trained in an unsupervised way, but with another loss function: a max-margin ranking loss.</p>
+<h1 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion"> </a></h1><p>GraphSAGE is an incredibly fast architecture to process large graphs. It might not be as accurate as a GCN or a GAT, but it is an essential model when dealing with a <strong>massive amount of data</strong>. It delivers this speed thanks to a clever combination of 1/ neighbor sampling to prune the graph and 2/ fast aggregation with a mean aggregator in this example. In this article,</p>
 <ul>
-<li>We explored a <strong>new dataset</strong> with PubMed, which is <strong>several times larger</strong> than the previous one;</li>
-<li>We explained the idea behind <strong>neighbor sampling</strong>, which only considers a <strong>predefined number of random neighbors</strong> at each hop;</li>
-<li>We saw the <strong>three aggregators</strong> presented in GraphSAGE's paper and focused on the <strong>mean aggregator</strong>;</li>
-<li>We <strong>benchmarked three models</strong> (GraphSAGE, GAT, and GCN) in terms of <strong>accuracy</strong> and <strong>training time</strong>.</li>
+<li>We explored a <strong>new dataset</strong> with PubMed, which is several times larger than the previous one;</li>
+<li>We explained the idea behind <strong>neighbor sampling</strong>, which only considers a predefined number of random neighbors at each hop;</li>
+<li>We saw the <strong>three aggregators</strong> presented in GraphSAGE's paper and focused on the mean aggregator;</li>
+<li>We benchmarked three models (GraphSAGE, GAT, and GCN) in terms of <strong>accuracy</strong> and <strong>training time</strong>.</li>
 </ul>
-<p>We saw three architectures with the same end application: <strong>node classification</strong>. But GNNs have been <strong>successfully applied</strong> to other tasks. In the next tutorials, I'd like to use them in two different contexts: <strong>edge and graph prediction</strong>. This will be a good way to discover <strong>new datasets and applications</strong> where GNNs dominate the <strong>state of the art</strong>.</p>
-<p>I hope you enjoyed this article! Feel free to <strong>follow me on Twitter</strong> <a href="https://twitter.com/maximelabonne">@maximelabonne</a> for <strong>more illustrations and content</strong> about Graph Neural Networks. Thanks for your attention! 📣</p>
+<p>We saw three architectures with the same end application: node classification. But GNNs have been successfully applied to other tasks. In the next tutorials, I’d like to use them in two different contexts: <strong>graph and edge prediction</strong>. This will be a good way to discover new datasets and applications where GNNs dominate the state of the art.</p>
+<p>If you enjoyed this article, let’s connect on Twitter <a href="https://twitter.com/maximelabonne">@maximelabonne</a> for more graph learning content.</p>
+<p>Thanks for your attention! 📣</p>
+<p><a href="https://mlabonne.github.io/blog/gin/"><center><b>&gt; Graph Neural Network Course Chapter 4: Graph Isomorphism Network &lt;</b></center></a></p>
 
 </div>
 </div>

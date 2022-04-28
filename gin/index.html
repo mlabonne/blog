@@ -7,7 +7,7 @@
   <!-- Twitter cards -->
     <meta name="twitter:site"    content="@">
     <meta name="twitter:creator" content="@">
-    <meta name="twitter:title"   content="How to Design the Most Powerful Graph Neural Network">
+    <meta name="twitter:title"   content="GIN: How to Design the Most Powerful Graph Neural Network">
 
     
     <meta name="twitter:description" content="Illustrated machine learning and deep learning tutorials with Python and PyTorch for programmers.">
@@ -22,13 +22,13 @@
   <!-- Pinterest -->
   <meta name="p:domain_verify" content="e8bbc84dbf0895d9267aad84438e86df"/>
   <!-- end of Pinterest--><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>How to Design the Most Powerful Graph Neural Network | Maxime Labonne</title>
+<title>GIN: How to Design the Most Powerful Graph Neural Network | Maxime Labonne</title>
 <meta name="generator" content="Jekyll v4.1.1" />
-<meta property="og:title" content="How to Design the Most Powerful Graph Neural Network" />
+<meta property="og:title" content="GIN: How to Design the Most Powerful Graph Neural Network" />
 <meta name="author" content="Maxime Labonne" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Graph classification with Graph Isomorphism Networks" />
-<meta property="og:description" content="Graph classification with Graph Isomorphism Networks" />
+<meta name="description" content="Graph Neural Network Course: Chapter 4" />
+<meta property="og:description" content="Graph Neural Network Course: Chapter 4" />
 <link rel="canonical" href="https://mlabonne.github.io/blog/gin/" />
 <meta property="og:url" content="https://mlabonne.github.io/blog/gin/" />
 <meta property="og:site_name" content="Maxime Labonne" />
@@ -37,9 +37,9 @@
 <meta property="article:published_time" content="2022-04-25T00:00:00-05:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta property="twitter:image" content="https://mlabonne.github.io/blog/images/gin/thumbnail.png" />
-<meta property="twitter:title" content="How to Design the Most Powerful Graph Neural Network" />
+<meta property="twitter:title" content="GIN: How to Design the Most Powerful Graph Neural Network" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Maxime Labonne","url":"https://mlabonne.github.io/blog/"},"dateModified":"2022-04-25T00:00:00-05:00","datePublished":"2022-04-25T00:00:00-05:00","description":"Graph classification with Graph Isomorphism Networks","headline":"How to Design the Most Powerful Graph Neural Network","image":"https://mlabonne.github.io/blog/images/gin/thumbnail.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://mlabonne.github.io/blog/gin/"},"url":"https://mlabonne.github.io/blog/gin/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Maxime Labonne","url":"https://mlabonne.github.io/blog/"},"dateModified":"2022-04-25T00:00:00-05:00","datePublished":"2022-04-25T00:00:00-05:00","description":"Graph Neural Network Course: Chapter 4","headline":"GIN: How to Design the Most Powerful Graph Neural Network","image":"https://mlabonne.github.io/blog/images/gin/thumbnail.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://mlabonne.github.io/blog/gin/"},"url":"https://mlabonne.github.io/blog/gin/"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://mlabonne.github.io/blog/feed.xml" title="Maxime Labonne" /><!-- the google_analytics_id gets auto inserted from the config file -->
 
@@ -125,7 +125,7 @@ window.onload = wrap_img;
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title p-name" itemprop="name headline">How to Design the Most Powerful Graph Neural Network</h1><p class="page-description">Graph classification with Graph Isomorphism Networks</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-04-25T00:00:00-05:00" itemprop="datePublished">
+    <h1 class="post-title p-name" itemprop="name headline">GIN: How to Design the Most Powerful Graph Neural Network</h1><p class="page-description">Graph Neural Network Course: Chapter 4</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-04-25T00:00:00-05:00" itemprop="datePublished">
         <img src="/blog/images/icons/icon-watch.svg" class="icon-watch"> Apr 25, 2022
       </time>
        • <span class="read-time" title="Estimated read time">
@@ -184,17 +184,17 @@ window.onload = wrap_img;
         
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<center><div id="anim_container"><img alt="Illustration of GIN" src="https://mlabonne.github.io/blog/images/gin/thumbnail.png" loading="lazy" id="anim_inner" /></div></center><p>Graph Neural Networks are <strong>not limited to classifying nodes</strong>.</p>
-<p>One of the most popular applications is <strong>graph classification</strong>. This is a common task when dealing with <strong>molecules</strong>: they are represented as <strong>graphs</strong> and <strong>features about each atom</strong> (node) can be used to predict the <strong>behavior of the entire molecule</strong>.</p>
-<p>However, GNNs only learn <strong>node embeddings</strong>. How to combine them in order to produce an entire <strong>graph embedding</strong>? In this article, we will:</p>
+<center><img src="https://mlabonne.github.io/blog/images/gin/thumbnail.png" /></center><p>Graph Neural Networks are not limited to classifying nodes.</p>
+<p>One of the most popular applications is <strong>graph classification</strong>. This is a common task when dealing with molecules: they are represented as graphs and features about each atom (node) can be used to predict the behavior of the entire molecule.</p>
+<p>However, GNNs only learn node embeddings. How to combine them in order to produce an entire <strong>graph embedding</strong>? In this article, we will:</p>
 <ul>
-<li><p>See a <strong>new type of layer</strong>, called "<strong>global pooling</strong>", to combine node embeddings;</p>
+<li><p>See a new type of layer, called "<strong>global pooling</strong>", to combine node embeddings;</p>
 </li>
-<li><p>Introduce a <strong>new architecture</strong> called <strong>Graph Isomorphism Network</strong> (GIN), designed by <a href="https://arxiv.org/abs/1810.00826v3">Xu et al.</a> in 2018.</p>
+<li><p>Introduce a new architecture called <strong>Graph Isomorphism Network</strong> (GIN), designed by <a href="https://arxiv.org/abs/1810.00826v3">Xu et al.</a> in 2018.</p>
 </li>
 </ul>
-<p>We'll detail the advantages of GIN in terms of <strong>discriminative power</strong> compared to GCNs or GraphSAGE, and its connection to the <strong>Weisfeiler-Lehman</strong> graph isomorphism test. Beyond its <strong>powerful aggregator</strong>, GIN brings <strong>exciting takeaways</strong> about GNNs in general.</p>
-<p>You can run the code with the following <a href="https://colab.research.google.com/drive/1b6SWugNKnxsI0L9auX1zwszlXf3rRZyS?usp=sharing">Google Colab notebook</a>. As per usual, let's <strong>install and import</strong> the required libraries first.</p>
+<p>We'll detail the advantages of GIN in terms of <strong>discriminative power</strong> compared to a GCN or GraphSAGE, and its connection to the Weisfeiler-Lehman test. Beyond its powerful aggregator, GIN brings exciting takeaways about GNNs in general.</p>
+<p>You can run the code with the following <a href="https://colab.research.google.com/drive/1b6SWugNKnxsI0L9auX1zwszlXf3rRZyS?usp=sharing">Google Colab notebook</a>.</p>
 
 </div>
 </div>
@@ -230,9 +230,9 @@ window.onload = wrap_img;
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="&#127760;-I.-PROTEINS-dataset">&#127760; I. PROTEINS dataset<a class="anchor-link" href="#&#127760;-I.-PROTEINS-dataset"> </a></h1><center><div id="anim_container"><img src="https://mlabonne.github.io/blog/images/gin/proteinimager.png" loading="lazy" id="anim_inner" /></div><i>3D plot of a protein by DeepMind.</i></center><p>PROTEINS is a <strong>popular</strong> dataset in <strong>bioinformatics</strong>. It is a collection of <strong>1113 graphs</strong> representing proteins, where nodes are <strong>amino acids</strong>. Two nodes are <strong>connected</strong> by an edge when they are <strong>close enough</strong> (&lt; 0.6 nanometers). The goal is to classify each protein as an <strong>enzyme</strong> or <strong>not</strong>.</p>
-<p>Enzymes are a particular <strong>type of proteins</strong> that act as <strong>catalysts</strong> to <strong>speed up chemical reactions</strong> in the cell. They are essential for <strong>digestion</strong> (e.g., lipases), <strong>respiration</strong> (e.g., oxidases), and other <strong>crucial functions</strong> of the human body. They are also used in <strong>commercial applications</strong>, like the production of <strong>antibiotics</strong>.</p>
-<p>This dataset is also available on <strong>TUDataset</strong> and implemented in PyTorch Geometric.</p>
+<h1 id="&#127760;-I.-PROTEINS-dataset">&#127760; I. PROTEINS dataset<a class="anchor-link" href="#&#127760;-I.-PROTEINS-dataset"> </a></h1><center><img src="https://mlabonne.github.io/blog/images/gin/proteinimager.png" /><i>3D plot of a protein by DeepMind.</i></center><p><a href="https://chrsmrrs.github.io/datasets/docs/datasets/">PROTEINS</a> is a popular dataset in bioinformatics. It is a collection of <strong>1113 graphs</strong> representing proteins, where nodes are amino acids. Two nodes are connected by an edge when they are close enough (&lt; 0.6 nanometers). The goal is to classify each protein as an <strong>enzyme</strong> or <strong>not</strong>.</p>
+<p>Enzymes are a particular type of <strong>proteins</strong> that act as catalysts to speed up chemical reactions in the cell. They are essential for digestion (e.g., lipases), respiration (e.g., oxidases), and other crucial functions of the human body. They are also used in commercial applications, like the production of antibiotics.</p>
+<p>This dataset is also available on TUDataset and implemented in PyTorch Geometric.</p>
 
 </div>
 </div>
@@ -285,7 +285,7 @@ Number of classes: 2
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>I'm not a biochemist so I'm curious about these proteins. Let's <strong>plot one as a graph</strong> to see what it looks like.</p>
+<p>I'm not a biochemist so I'm curious about these proteins. Let's plot one as a graph to see what it looks like.</p>
 
 </div>
 </div>
@@ -354,10 +354,10 @@ Number of classes: 2
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The previous <strong>3D structure</strong> is randomly generated: obtaining the correct 3D representation is a problem <strong>so important and difficult</strong> it's the whole point of <a href="https://alphafold.ebi.ac.uk/">AlphaFold</a>.</p>
-<p>Graphs are <strong>not the only way</strong> to represent molecules. The <a href="https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system">simplified molecular-input line-entry system (SMILES)</a> is another popular method, which uses a line (string) notation. It is obtained by <strong>printing the nodes</strong> encountered in a <strong>depth-first tree traversal</strong> of a slightly modified molecular graph.</p>
-<p>Researchers <strong>often use this representation</strong> when working with molecules or chemical compounds. Fortunately for us, the PROTEINS dataset is <strong>already encoded</strong> in the form of graphs. Otherwise, we could have to <strong>translate the SMILES strings</strong> into <code>networkx</code> graphs.</p>
-<p>It doesn't mean we'll <strong>directly feed</strong> the PROTEINS dataset to our GNN. If <a href="https://mlabonne.github.io/blog/graphsage/">GraphSAGE</a> taught us anything, it's that <strong>mini-batching is incredibly efficient</strong>. It is now an <strong>indispensable tool</strong> whenever we implement a GNN.</p>
+<p>The previous 3D structure is <strong>randomly generated</strong>: obtaining the correct 3D representation is a problem so difficult it's the whole point of <a href="https://alphafold.ebi.ac.uk/">AlphaFold</a>.</p>
+<p>Graphs are not the only way to represent molecules. The <a href="https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system">simplified molecular-input line-entry system (<strong>SMILES</strong>)</a> is another popular method, which uses a line (string) notation. It is obtained by printing the nodes encountered in a depth-first tree traversal of a slightly modified molecular graph.</p>
+<p>Researchers often use this representation when working with molecules or chemical compounds. Fortunately for us, the PROTEINS dataset is <strong>already encoded</strong> in the form of graphs. Otherwise, we could have to translate the SMILES strings into <code>networkx</code> graphs.</p>
+<p>It doesn't mean we'll directly feed the PROTEINS dataset to our GNN. If <a href="https://mlabonne.github.io/blog/graphsage/">GraphSAGE</a> taught us anything, it's that <strong>mini-batching is incredibly efficient</strong>. It is now an indispensable tool whenever we implement a GNN.</p>
 
 </div>
 </div>
@@ -447,62 +447,62 @@ Test loader:
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>PROTEINS is <strong>not a huge dataset</strong>, but mini-batching will <strong>speed up the training</strong> nonetheless. We could use a GCN or a GAT, but there's a <strong>new architecture</strong> I'd like to introduce: the <strong>Graph Isomorphism Network</strong>.</p>
-<h1 id="&#127870;-II.-Graph-Isomorphism-Network-(GIN)">&#127870; II. Graph Isomorphism Network (GIN)<a class="anchor-link" href="#&#127870;-II.-Graph-Isomorphism-Network-(GIN)"> </a></h1><p>GIN was designed by researchers trying to <strong>maximize the representational/discriminative power</strong> of a GNN. But how do you <strong>define</strong> a "representational power"?</p>
-<h2 id="A.-Weisfeiler-Lehman-test">A. Weisfeiler-Lehman test<a class="anchor-link" href="#A.-Weisfeiler-Lehman-test"> </a></h2><p>A way to characterize the "power" of a GNN is to use the <strong>Weisfeiler-Lehman (WL) graph isomorphism test</strong>. <a href="https://en.wikipedia.org/wiki/Graph_isomorphism">Isomorphic graphs</a> mean that they have the <strong>same structure</strong>: <strong>identical connections</strong> but a <strong>permutation of nodes</strong>. The WL test is able to tell <strong>if two graphs are non-isomorphic</strong>, but it cannot guarantee that <strong>they are isomorphic</strong>.</p>
-<center><div id="anim_container"><img src="https://mlabonne.github.io/blog/images/gin/isomorphic_graphs.png" loading="lazy" id="anim_inner" /></div><i>Two isomorphic graphs.</i></center><p>This might not seem like much, but it can be <strong>extremely difficult</strong> to tell two large graphs apart. In fact, this problem is <strong>not known</strong> to be solvable in <strong>polynomial time</strong>, nor to be <strong>NP-complete</strong>. It might even be somewhere in between, in the computational complexity class <a href="https://en.wikipedia.org/wiki/Graph_isomorphism_problem">NP-intermediate</a> (if it only exists).</p>
+<p>PROTEINS is not a huge dataset, but mini-batching will speed up the training nonetheless. We could use a GCN or a GAT, but there's a new architecture I'd like to introduce: the <strong>Graph Isomorphism Network</strong>.</p>
+<h1 id="&#127870;-II.-Graph-Isomorphism-Network-(GIN)">&#127870; II. Graph Isomorphism Network (GIN)<a class="anchor-link" href="#&#127870;-II.-Graph-Isomorphism-Network-(GIN)"> </a></h1><p>GIN was designed by researchers trying to maximize the <strong>representational (or discriminative) power</strong> of a GNN. But how do you define a "representational power"?</p>
+<h2 id="A.-Weisfeiler-Lehman-test">A. Weisfeiler-Lehman test<a class="anchor-link" href="#A.-Weisfeiler-Lehman-test"> </a></h2><p>A way to characterize the "power" of a GNN is to use the Weisfeiler-Lehman (WL) graph isomorphism test. <a href="https://en.wikipedia.org/wiki/Graph_isomorphism">Isomorphic graphs</a> mean that they have the <strong>same structure</strong>: identical connections but a permutation of nodes. The WL test is able to tell if two graphs are non-isomorphic, but it cannot guarantee that they are isomorphic.</p>
+<center><img src="https://mlabonne.github.io/blog/images/gin/isomorphic_graphs.png" /><i>Two isomorphic graphs.</i></center><p>This might not seem like much, but it can be <strong>extremely difficult</strong> to tell two large graphs apart. In fact, this problem is not known to be solvable in polynomial time, nor to be NP-complete. It might even be somewhere in between, in the computational complexity class <a href="https://en.wikipedia.org/wiki/Graph_isomorphism_problem">NP-intermediate</a> (if it only exists).</p>
 <p>Okay, but how is it <strong>related</strong> to GNNs? Some researchers in graph learning noticed that <strong>this test and the way GNNs learn are oddly similar</strong>. In the WL test,</p>
 <ol>
 <li>Every node starts with the <strong>same label</strong>;</li>
-<li>Labels from neighboring nodes are <strong>aggregated</strong> and <strong>hashed</strong> to produce a new label;</li>
+<li>Labels from neighboring nodes are aggregated and <strong>hashed</strong> to produce a new label;</li>
 <li>The previous step is repeated until the labels <strong>stop changing</strong>.</li>
 </ol>
 <p>If you're interested in the WL test, I would recommend <a href="https://davidbieber.com/post/2019-05-10-weisfeiler-lehman-isomorphism-test/">this blog post</a> by David Bieber and <a href="https://towardsdatascience.com/expressive-power-of-graph-neural-networks-and-the-weisefeiler-lehman-test-b883db3c7c49">this article</a> by Michael Bronstein.</p>
-<p>Not only this test is similar to how <strong>feature vectors are aggregated</strong> in GNNs, but its ability to tell graphs apart makes it <strong>more powerful</strong> than a lot of architectures, including GCNs and GraphSAGE. This is what inspired <a href="https://arxiv.org/abs/1810.00826v3">Xu et al.</a> to design a <strong>new aggregator</strong> that is proven to be as good as the WL test.</p>
-<h2 id="B.-One-aggregator-to-rule-them-all">B. One aggregator to rule them all<a class="anchor-link" href="#B.-One-aggregator-to-rule-them-all"> </a></h2><p>To be as good as the WL test, this new aggregator must produce <strong>different node embeddings</strong> when dealing with <strong>non-isomorphic graphs</strong>.</p>
-<p>We'll skip the math-heavy part of the paper, but the solution they found is to use two <strong>injective functions</strong>. Which ones? We don't know, we can just <strong>learn them</strong> with a MLP!</p>
+<p>Not only this test is similar to how feature vectors are aggregated in GNNs, but its ability to tell graphs apart makes it <strong>more powerful</strong> than a lot of architectures, including GCNs and GraphSAGE. This is what inspired <a href="https://arxiv.org/abs/1810.00826v3">Xu et al.</a> to design a new aggregator that is proven to be as good as the WL test.</p>
+<h2 id="B.-One-aggregator-to-rule-them-all">B. One aggregator to rule them all<a class="anchor-link" href="#B.-One-aggregator-to-rule-them-all"> </a></h2><p>To be as good as the WL test, this new aggregator must produce <strong>different node embeddings</strong> when dealing with non-isomorphic graphs.</p>
+<p>We'll skip the math-heavy part of the paper, but the solution they found is to use two injective functions. Which ones? We don't know, we can just learn them with a MLP!</p>
 <ul>
 <li>With GATs, we used a neural network to learn the <strong>best weighting factors</strong> for a given task;</li>
 <li>With GINs, we now learn the <strong>approximation of two injective functions</strong> thanks to the <a href="https://en.wikipedia.org/wiki/Universal_approximation_theorem">Universal Approximation Theorem</a>.</li>
 </ul>
-<p>Here's how to calculate the <strong>hidden vector</strong> of a particular node $i$:</p>
+<p>Here's how to calculate the <strong>hidden vector</strong> of a particular node $i$ with GIN:</p>
 <p>
 $$h_i = MLP\bigg((1+ɛ) \cdot x_i + \sum_{j \in \mathcal{N}_i}x_j\bigg)$$
 </p>
-<p>In this formula, $ɛ$ determines the <strong>importance of the target node</strong> compared to its neighbors (it has the same importance if $ɛ = 0$). It can be a <strong>learnable parameter</strong> or a <strong>fixed scalar</strong>.</p>
-<p>Note that we talk about MLPs to highlight the fact there is <strong>more than one layer</strong>. According to the authors, one layer is <strong>not sufficient</strong> for graph learning in general.</p>
-<h2 id="C.-Global-pooling">C. Global pooling<a class="anchor-link" href="#C.-Global-pooling"> </a></h2><p><strong>Global pooling</strong> or <strong>graph-level readout</strong> consists of producing a <strong>graph embedding</strong> using the node embeddings calculated by the GNN.</p>
-<p>A simple way to obtain a graph embedding $h_G$ is to use the <strong>mean, sum, or max of every node embedding</strong> $h_i$:</p>
+<p>In this formula, $ɛ$ determines the <strong>importance of the target node</strong> compared to its neighbors (it has the same importance if $ɛ = 0$). It can be a learnable parameter or a fixed scalar.</p>
+<p>Note that we talk about MLPs to highlight the fact there is more than one layer. According to the authors, one layer is <strong>not sufficient</strong> for graph learning in general.</p>
+<h2 id="C.-Global-pooling">C. Global pooling<a class="anchor-link" href="#C.-Global-pooling"> </a></h2><p>Global pooling or graph-level readout consists of producing a <strong>graph embedding</strong> using the node embeddings calculated by the GNN.</p>
+<p>A simple way to obtain a graph embedding $h_G$ is to use the <strong>mean</strong>, <strong>sum</strong>, or <strong>max</strong> of every node embedding $h_i$:</p>
 $${Mean}: h_G = \frac{1}{N} \sum_{i=0}^N h_i \\
 {Sum}: h_G = \sum_{i=0}^N h_i \\
-{Max}: h_G = {max}_{i=0}^N(h_i)$$<p>The authors make <strong>two important points</strong> about graph-level readout:</p>
+{Max}: h_G = {max}_{i=0}^N(h_i)$$<p>The authors make two important points about graph-level readout:</p>
 <ul>
 <li>To consider all structural information, it is necessary to <strong>keep embeddings from previous layers</strong>;</li>
 <li>The sum operator is surprisingly <strong>more expressive</strong> than the mean and the max.</li>
 </ul>
-<p>These observations lead them to propose the following <strong>global pooling</strong> method:</p>
+<p>These observations lead them to propose the following global pooling method:</p>
 <p>
 $$h_G = \sum_{i=0}^N{h_i^0}\ || \ \dots \ || \ \sum_{i=0}^N{h_i^k}\$$
 </p>
-<p>For each layer, embeddings nodes are <strong>summed</strong> and the result is <strong>concatenated</strong>. This solution combines the <strong>expressiveness</strong> of the sum operator with the <strong>memory of previous iterations</strong> from the concatenation.</p>
+<p>For each layer, embeddings nodes are <strong>summed</strong> and the result is <strong>concatenated</strong>. This solution combines the expressiveness of the sum operator with the memory of previous iterations from the concatenation.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="&#129504;-III.-GIN-in-PyTorch-Geometric">&#129504; III. GIN in PyTorch Geometric<a class="anchor-link" href="#&#129504;-III.-GIN-in-PyTorch-Geometric"> </a></h1><p>It is always interesting to see the differences between the <strong>original design and its implementations</strong>.</p>
+<h1 id="&#129504;-III.-GIN-in-PyTorch-Geometric">&#129504; III. GIN in PyTorch Geometric<a class="anchor-link" href="#&#129504;-III.-GIN-in-PyTorch-Geometric"> </a></h1><p>It is always interesting to see the differences between the original design and its implementations.</p>
 <p>There is a <code>GINConv</code> layer in PyTorch Geometric with different parameters:</p>
 <ul>
 <li><code>nn</code>: the <strong>MLP</strong> that is used to approximate our two injective functions;</li>
 <li><code>eps</code>: the initial value of $ɛ$, which is <strong>0 by default</strong>;</li>
 <li><code>train_eps</code>: a True/False statement to determine if $ɛ$ is trainable, which is <strong>False by default</strong>.</li>
 </ul>
-<p>You can see that $ɛ$ is <strong>entirely removed by default</strong> in this implementation: it's a hyperparameter we can tune, but probably <strong>not an essential one</strong>.</p>
-<p>There is a <strong>second GIN layer</strong> in PyTorch Geometric, called <code>GINEConv</code>. It comes from <a href="https://arxiv.org/pdf/1905.12265.pdf">this paper's implementation</a> of GIN, which applies a <strong>$ReLU$ function</strong> to the neighbors' features. We won't use it in this tutorial, since the benefits are not clear.</p>
+<p>You can see that $ɛ$ is entirely removed by default in this implementation: it's a hyperparameter we can tune, but probably not an essential one.</p>
+<p>There is a <strong>second GIN layer</strong> in PyTorch Geometric, called <code>GINEConv</code>. It comes from <a href="https://arxiv.org/pdf/1905.12265.pdf">this paper's implementation</a> of GIN, which applies a $ReLU$ function to the neighbors' features. We won't use it in this tutorial, since the benefits are not clear.</p>
 <p>We still need to design a MLP for the <code>GINConv</code> layer. Here's the design we'll implement, inspired by the original paper:</p>
-<center><div id="anim_container"><img src="https://mlabonne.github.io/blog/images/gin/mlp.png" loading="lazy" id="anim_inner" /></div></center><p>The paper stacks <strong>5 layers</strong> but we'll be more humble with <strong>3 layers</strong> instead. Here is what the entire architecture looks like:</p>
-<center><div id="anim_container"><img src="https://mlabonne.github.io/blog/images/gin/architecture.png" loading="lazy" id="anim_inner" /></div></center><p>I could not find any implementation of <strong>GIN with graph embedding concatenation</strong>, so here is my version (it improves the accuracy by 1% on average). Let's compare it to a <strong>GCN with a simple mean pooling</strong> (and no concatenation).</p>
+<center><img src="https://mlabonne.github.io/blog/images/gin/mlp.png" width="800" /></center><p>The paper stacks <strong>5 layers</strong> but we'll be more humble with <strong>3 layers</strong> instead. Here is what the entire architecture looks like:</p>
+<center><img src="https://mlabonne.github.io/blog/images/gin/architecture.png" /></center><p>I could not find any implementation of GIN with graph embedding <strong>concatenation</strong>, so here is my version (it improves the accuracy by 1% on average). Let's compare it to a GCN with a simple mean pooling (and no concatenation).</p>
 
 </div>
 </div>
@@ -689,12 +689,12 @@ Test Loss: 0.60 | Test Acc: 66.93%
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This time, there's <strong>no competition</strong>!</p>
-<p>The GIN architecture <strong>completely outperforms</strong> the GCN. This gap (10% accuracy on average) is due to several reasons:</p>
+<p>This time, there's no competition!</p>
+<p>The GIN architecture completely outperforms the GCN. This gap (10% accuracy on average) is due to several reasons:</p>
 <ul>
 <li>GIN's aggregator is specifically designed to <strong>discriminate graphs</strong> that the GCN's aggregator cannot;</li>
-<li>Graph hidden vectors from every layer are concatenated instead of only considering the last one;</li>
-<li>The sum operator is superior to the mean operator (at least in theory).</li>
+<li>Graph hidden vectors from every layer are <strong>concatenated instead</strong> of only considering the last one;</li>
+<li>The sum operator is <strong>superior</strong> to the mean operator (at least in theory).</li>
 </ul>
 <p>Let's visualize the proteins we classified with the GCN and the GIN.</p>
 
@@ -807,8 +807,8 @@ Test Loss: 0.60 | Test Acc: 66.93%
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Interestingly enough, the two models make <strong>different mistakes</strong>. This is a common result in machine learning when different algorithms are <strong>applied to the same problem</strong>.</p>
-<p>We can take advantage of this behavior by <strong>creating an ensemble</strong>. There are many ways of <strong>combining our graph embeddings</strong>. The simplest method is to take the <strong>mean of the normalized output vectors</strong>.</p>
+<p>Interestingly enough, the two models make <strong>different mistakes</strong>. This is a common result in machine learning when different algorithms are applied to the same problem.</p>
+<p>We can take advantage of this behavior by creating an <strong>ensemble</strong>. There are many ways of combining our graph embeddings. The simplest method is to take the mean of the normalized output vectors.</p>
 
 </div>
 </div>
@@ -869,15 +869,15 @@ GCN+GIN accuracy: 67.45%
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>This time, we're lucky enough to see the <strong>accuracy improved</strong>.</p>
-<p>Obviously, it's not always the case. More sophisticated methods involve building an <strong>entirely different ML algorithm</strong> for classification, such as a Random Forest. This classifier takes <strong>graph embeddings as inputs</strong> and outputs the <strong>final classification</strong>.</p>
-<h1 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion"> </a></h1><p>Graph Isomorphism Networks are an <strong>important step</strong> in our understanding of GNNs.</p>
-<p>They not only <strong>improve the accuracy scores</strong> on several benchmarks but also provide a <strong>theoretical framework</strong> to explain why one architecture is better than another. In this article,</p>
+<p>Obviously, it's not always the case. More sophisticated methods involve building an entirely different ML algorithm for classification, such as a Random Forest. This classifier takes graph embeddings as inputs and outputs the final classification.</p>
+<h1 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion"> </a></h1><p>Graph Isomorphism Networks are an important step in the understanding of GNNs.</p>
+<p>They not only improve the accuracy scores on several benchmarks but also provide a <strong>theoretical framework</strong> to explain why one architecture is better than another. In this article,</p>
 <ul>
 <li>We saw a new task with <strong>graph classification</strong>, performed with global pooling;</li>
-<li>We introduced the <strong>WL test</strong> and its connection with the new <strong>GIN layer</strong>;</li>
-<li>We implemented a GIN and a GCN and made an <strong>simple ensemble</strong> with their classifications.</li>
+<li>We introduced the <strong>WL test</strong> and its connection with the new GIN layer;</li>
+<li>We implemented a GIN and a GCN and made an simple <strong>ensemble</strong> with their classifications.</li>
 </ul>
-<p>Although GINs achieve good performance, especially with <strong>social graphs</strong>, their theoretical superiority <strong>doesn't always translate well</strong> in the real world. It is true with other <a href="https://arxiv.org/pdf/2003.00982.pdf">"provably powerful" architectures</a>, which tend to <strong>underperform in practice</strong>, such as the 3WLGNN.</p>
+<p>Although GINs achieve good performance, especially with social graphs, their theoretical superiority <strong>doesn't always translate well</strong> in the real world. It is true with other <a href="https://arxiv.org/pdf/2003.00982.pdf">"provably powerful" architectures</a>, which tend to <strong>underperform in practice</strong>, such as the 3WLGNN.</p>
 <p>If you enjoyed this article, please leave a <strong>few claps</strong> and <a href="https://twitter.com/maximelabonne"><strong>follow me on Twitter</strong></a> for more graph content! 📣</p>
 
 </div>
