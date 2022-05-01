@@ -119,10 +119,30 @@ window.onload = wrap_img;
 </header>
 <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
+        <!-- Header -->
+<link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
 <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+<py-env>
+    - numpy
+    - matplotlib
+  </py-env>
 
-<py-script> print('Hello, World!') </py-script>
+<!-- Title -->
+<h1 class="post-title">PyScript</h1>
+
+<!-- Code -->
+<div id="plot"></div>
+<py-script output="plot">
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    x = np.random.randn(1000)
+    y = np.random.randn(1000)
+
+    fig, ax = plt.subplots()
+    ax.scatter(x, y)
+    fig
+</py-script>
       </div>
     </main><footer class="site-footer h-card">
   <data class="u-url" href="/blog/"></data>
