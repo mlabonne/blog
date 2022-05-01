@@ -133,15 +133,15 @@ window.onload = wrap_img;
 <!-- Code -->
 <div id="plot"></div>
 <py-script output="plot">
-    import matplotlib.pyplot as plt
-    import numpy as np
+import matplotlib.pyplot as plt
+import numpy as np
 
-    x = np.random.randn(1000)
-    y = np.random.randn(1000)
+x = np.random.randn(1000)
+y = np.random.randn(1000)
 
-    fig, ax = plt.subplots()
-    ax.scatter(x, y)
-    fig
+fig, ax = plt.subplots()
+ax.scatter(x, y)
+fig
 </py-script>
       </div>
     </main><footer class="site-footer h-card">
