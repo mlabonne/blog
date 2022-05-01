@@ -8,21 +8,22 @@ search_exclude: true
 <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
 <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
 <py-env>
-    - numpy
-    - matplotlib
-  </py-env>
+  - numpy
+  - matplotlib
+</py-env>
 
 <!-- Title -->
 <h1 class="post-title">PyScript</h1>
+<br>
 
 <!-- Code -->
-<div id="plot"></div>
+<center><div id="plot"></div></center>
 <py-script output="plot">
 import matplotlib.pyplot as plt
 import numpy as np
 
-x = np.random.randn(1000)
-y = np.random.randn(1000)
+x = np.random.randn(100)
+y = np.random.randn(100)
 
 fig, ax = plt.subplots()
 ax.scatter(x, y)
