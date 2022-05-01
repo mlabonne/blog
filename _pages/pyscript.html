@@ -4,7 +4,27 @@ permalink: /pyscript/
 search_exclude: true
 ---
 
+<!-- Header -->
 <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
 <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+<py-env>
+    - numpy
+    - matplotlib
+  </py-env>
 
-<py-script> print('Hello, World!') </py-script>
+<!-- Title -->
+<h1 class="post-title">PyScript</h1>
+
+<!-- Code -->
+<div id="plot"></div>
+<py-script output="plot">
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    x = np.random.randn(1000)
+    y = np.random.randn(1000)
+
+    fig, ax = plt.subplots()
+    ax.scatter(x, y)
+    fig
+</py-script>
