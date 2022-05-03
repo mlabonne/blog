@@ -473,16 +473,9 @@ Check solution:
 <p>This is an <strong>optimization</strong> problem we've already seen: actually, it is a variant of the famous <a href="https://en.wikipedia.org/wiki/Knapsack_problem">knapsack problem</a>. We could reuse the code from the previous article and just change the input parameters.</p>
 <p>This time, we'll solve it using Constraint Programming. This paradigm is not limited to finding feasible solutions. It can also perform optimization using <a href="https://en.wikipedia.org/wiki/Constrained_optimization">different algorithms</a> to handle this overhead.</p>
 <p>Let's create a model of the problem. First of all, we have to declare three variables: 🥖<strong>bread</strong>, 🥩<strong>meat</strong>, and 🍺<strong>beer</strong>. It's possible to have 0 of them, but their number cannot exceed the maximal capacity.</p>
-<p>
-$$0 \leq bread \leq capacity$$
-</p>
-<p>
-$$0 \leq meat \leq capacity$$
-</p>
-<p>
-$$0 \leq beer \leq capacity$$
-</p>
-
+$$0 \leq bread \leq capacity \\
+0 \leq meat \leq capacity \\
+0 \leq beer \leq capacity$$
 </div>
 </div>
 </div>
@@ -724,8 +717,8 @@ Food:
 <p>We said that the previous problem could be solved with Linear Programming, so let's compare the code of both solutions:</p>
 <center><img src="https://mlabonne.github.io/blog/images/cp/code.png" width="800" /></center><p>As you can see, the syntax is quite similar but it's not the same: model/solver vs. solver, <code>NewIntVar</code> instead of <code>IntVar</code>, etc. There's a bit of translation to do, but it's easily manageable.</p>
 <p>These two techniques are <strong>incredibly close to each other</strong>: they both handle variables with constraints and perform optimization using math and heuristics. However, CP is limited to discrete parameters, while LP handles continuous ones. On the other hand, you can implement specialized constraints like <a href="https://www.ibm.com/docs/en/icos/12.9.0?topic=variables-all-different-constraint">"all different"</a> in CP, but not in LP. Here is a summary of the main differences between these two technologies:</p>
-<center><img src="https://mlabonne.github.io/blog/images/cp/comparison.png" /></center><p>If you want to know more about this topic, I would recommend <a href="https://pubsonline.informs.org/doi/abs/10.1287/inte.31.6.29.9647">this article</a> by Irvin J. Lustig and Jean-François Puget. CPLEX's documentation also details the differences <a href="http://ibmdecisionoptimization.github.io/docplex-doc/mp_vs_cp.html">at this address</a>, in terms of modeling and optimization.</p>
-<h2 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion"> </a></h2><center><img src="https://mlabonne.github.io/blog/images/cp/infographic.png" /></center><p>Constraint Programming is another incredible technique in the <strong>mathematical optimization</strong> toolbox. It is a radically different approach compared to traditional, declarative programming. In this article,</p>
+<center><img src="https://mlabonne.github.io/blog/images/cp/comparison.png" width="800" /></center><p>If you want to know more about this topic, I would recommend <a href="https://pubsonline.informs.org/doi/abs/10.1287/inte.31.6.29.9647">this article</a> by Irvin J. Lustig and Jean-François Puget. CPLEX's documentation also details the differences <a href="http://ibmdecisionoptimization.github.io/docplex-doc/mp_vs_cp.html">at this address</a>, in terms of modeling and optimization.</p>
+<h2 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion"> </a></h2><center><img src="https://mlabonne.github.io/blog/images/cp/infographic.png" width="600" /></center><p>Constraint Programming is another incredible technique in the <strong>mathematical optimization</strong> toolbox. It is a radically different approach compared to traditional, declarative programming. In this article,</p>
 <ul>
 <li>We saw <strong>two applications</strong> of CP with satisfiability and optimization;</li>
 <li>We implemented <strong>CP models</strong> in OR-Tools and played with the callback function;</li>
