@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Twitter cards -->
+    <meta name="twitter:site"    content="@">
+    <meta name="twitter:creator" content="@Maxime Labonne">
+    <meta name="twitter:title"   content="Integer vs. Linear Programming in Python">
+
+    
+    <meta name="twitter:description" content="Illustrated machine learning and deep learning tutorials with Python and PyTorch for programmers.">
+    
+
+    
+    <meta name="twitter:card"  content="summary_large_image">
+    <meta name="twitter:image" content="https://mlabonne.github.ioimages/integerprogramming/thumbnail.png">
+    
+  <!-- end of Twitter cards -->
+
+  <!-- Pinterest -->
+  <meta name="p:domain_verify" content="e8bbc84dbf0895d9267aad84438e86df"/>
+  <!-- end of Pinterest--><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Integer vs. Linear Programming in Python | Maxime Labonne</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Integer vs. Linear Programming in Python" />
+<meta name="author" content="Maxime Labonne" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Mixed Integer Programming for optimization with Google OR-Tools" />
+<meta property="og:description" content="Mixed Integer Programming for optimization with Google OR-Tools" />
+<link rel="canonical" href="https://mlabonne.github.io/blog/integerprogramming/" />
+<meta property="og:url" content="https://mlabonne.github.io/blog/integerprogramming/" />
+<meta property="og:site_name" content="Maxime Labonne" />
+<meta property="og:image" content="https://mlabonne.github.io/blog/images/integerprogramming/thumbnail.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-03-05T00:00:00-06:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://mlabonne.github.io/blog/images/integerprogramming/thumbnail.png" />
+<meta property="twitter:title" content="Integer vs. Linear Programming in Python" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Maxime Labonne"},"dateModified":"2022-03-05T00:00:00-06:00","datePublished":"2022-03-05T00:00:00-06:00","description":"Mixed Integer Programming for optimization with Google OR-Tools","headline":"Integer vs. Linear Programming in Python","image":"https://mlabonne.github.io/blog/images/integerprogramming/thumbnail.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://mlabonne.github.io/blog/integerprogramming/"},"url":"https://mlabonne.github.io/blog/integerprogramming/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://mlabonne.github.io/blog/feed.xml" title="Maxime Labonne" /><!-- the google_analytics_id gets auto inserted from the config file -->
+
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4DWYJM47PC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-4DWYJM47PC');
+</script>
+
+
+<link rel="shortcut icon" type="image/x-icon" href="/blog/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/blog/">Maxime Labonne</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/blog/about/">About</a><a class="page-link" href="/blog/publications/">Publications</a><a class="page-link" href="/blog/search/">🔎</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Integer vs. Linear Programming in Python</h1><p class="page-description">Mixed Integer Programming for optimization with Google OR-Tools</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-03-05T00:00:00-06:00" itemprop="datePublished">
+        <img src="/blog/images/icons/icon-watch.svg" class="icon-watch"> Mar 5, 2022
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Maxime Labonne</span></span>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      15 min read
+    
+</span></p>
+
+    
+
+    
+      
+        <div class="badges">
+          <div class="runthecode">
+            Run the code along the article without installating anything
+          </div>
+          <div class="d-flex flex-justify-center">
+            <div class="px-2">
+  <a href="https://deepnote.com/launch?url=https%3A%2F%2Fgithub.com%2Fmlabonne%2Fblog%2Fblob%2Fmaster%2F_notebooks%2F2022-03-05-Integer_Programming.ipynb" target="_blank">
+      <img class="notebook-badge-image" src="/blog/assets/badges/deepnote.svg" alt="Launch in Deepnote"/>
+  </a>
+</div>
+
+            <div class="px-2">
+    <a href="https://colab.research.google.com/github/mlabonne/blog/blob/master/_notebooks/2022-03-05-Integer_Programming.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/blog/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+            <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/mlabonne/blog/master?filepath=_notebooks%2F2022-03-05-Integer_Programming.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/blog/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+            <div class="px-2">
+
+    <a href="https://github.com/mlabonne/blog/tree/master/_notebooks/2022-03-05-Integer_Programming.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/blog/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          </div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2022-03-05-Integer_Programming.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<center><img src="https://mlabonne.github.io/blog/images/integerprogramming/thumbnail.jpg" /></center><p>Why is <strong>linear programming</strong> called that way?</p>
+<p>Both terms are confusing:</p>
+<ul>
+<li><strong>Linear</strong> implies that <strong>nonlinear</strong> programming exists;</li>
+<li><strong>Programming</strong> actually means "<strong>planning</strong>" in this context.</li>
+</ul>
+<p>In summary, it has nothing to do with code: linear or not. It's about <strong>optimizing</strong> variables with various constraints.</p>
+<p>In this article, we're gonna talk about another type of optimization: <strong>integer programming</strong>. We'll see why a good understanding of the problem we face is necessary to choose the right solver. Finally, we will write a model that can take on a bigger challenge and actually solve a whole class of optimization problems.</p>
+<p>You can run the code from this tutorial with the following <a href="https://colab.research.google.com/drive/1aIKnXPEiXFo1M3U0EM6arE2teD9KkJdF?usp=sharing"><strong>Google Colab notebook</strong></a>.</p>
+<center><img src="https://mlabonne.github.io/blog/images/integerprogramming/units.png" /></center><h2 id="&#128202;-I.-Optimization-problem&#160;types">&#128202; I. Optimization problem&#160;types<a class="anchor-link" href="#&#128202;-I.-Optimization-problem&#160;types"> </a></h2><p>In the <a href="https://mlabonne.github.io/blog/linearoptimization/">introduction to linear programming</a>, we <strong>optimized an army composition</strong>. Here was the result:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>================= Solution =================
+Solved in 87.00 milliseconds in 2 iterations
+
+Optimal power = 1800.0 💪power
+Army:
+ - 🗡️Swordsmen = 6.0000000000000036
+ - 🏹Bowmen = 0.0
+ - 🐎Horsemen = 5.999999999999999
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>How can we have 5.999… horsemen? We specified that our variables <strong>should be integers</strong> with <code>VarInt</code>. What was wrong with our code?</p>
+<p>The problem is not the model but the choice of the solver.</p>
+<p>GLOP is a <a href="https://en.wikipedia.org/wiki/GLOP">pure linear programming solver</a>. This means that it cannot understand the concept of integers. It is limited to continuous parameters with a linear relationship.</p>
+<p>This is the difference between <strong>linear</strong> programming (LP) and <strong>integer linear</strong> programming (ILP). In summary, LP solvers can only use real numbers and not integers as variables. So why did we declare our variables as integers if it doesn't take them into account?</p>
+<p>GLOP cannot solve ILP problems, but other solvers can. Actually, a lot of them are <strong>mixed integer linear programming</strong> (MILP, commonly called MIP) solvers. This means that they can consider both <strong>continuous</strong> (real numbers) and <strong>discrete</strong> (integers) variables. A particular case of discrete values is Boolean variables to represent decisions with 0–1 values.</p>
+<p>Other solvers like SCIP or CBC can solve both <strong>MILP and MINLP</strong> (mixed integer <em>nonlinear</em> programming) problems. Thanks to OR-Tools, we can use the same model and just change the solver to SCIP or CBC.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">solver</span> <span class="o">=</span> <span class="n">pywraplp</span><span class="o">.</span><span class="n">Solver</span><span class="p">(</span><span class="s1">&#39;Maximize army power&#39;</span><span class="p">,</span> <span class="n">pywraplp</span><span class="o">.</span><span class="n">Solver</span><span class="o">.</span><span class="n">CBC_MIXED_INTEGER_PROGRAMMING</span><span class="p">)</span>
+
+<span class="c1"># 1. Create the variables we want to optimize</span>
+<span class="n">swordsmen</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">IntVar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">solver</span><span class="o">.</span><span class="n">infinity</span><span class="p">(),</span> <span class="s1">&#39;swordsmen&#39;</span><span class="p">)</span>
+<span class="n">bowmen</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">IntVar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">solver</span><span class="o">.</span><span class="n">infinity</span><span class="p">(),</span> <span class="s1">&#39;bowmen&#39;</span><span class="p">)</span>
+<span class="n">horsemen</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">IntVar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">solver</span><span class="o">.</span><span class="n">infinity</span><span class="p">(),</span> <span class="s1">&#39;horsemen&#39;</span><span class="p">)</span>
+
+<span class="c1"># 2. Add constraints for each resource</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">swordsmen</span><span class="o">*</span><span class="mi">60</span> <span class="o">+</span> <span class="n">bowmen</span><span class="o">*</span><span class="mi">80</span> <span class="o">+</span> <span class="n">horsemen</span><span class="o">*</span><span class="mi">140</span> <span class="o">&lt;=</span> <span class="mi">1200</span><span class="p">)</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">swordsmen</span><span class="o">*</span><span class="mi">20</span> <span class="o">+</span> <span class="n">bowmen</span><span class="o">*</span><span class="mi">10</span> <span class="o">&lt;=</span> <span class="mi">800</span><span class="p">)</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">bowmen</span><span class="o">*</span><span class="mi">40</span> <span class="o">+</span> <span class="n">horsemen</span><span class="o">*</span><span class="mi">100</span> <span class="o">&lt;=</span> <span class="mi">600</span><span class="p">)</span>
+
+<span class="c1"># 3. Maximize the objective function</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">Maximize</span><span class="p">(</span><span class="n">swordsmen</span><span class="o">*</span><span class="mi">70</span> <span class="o">+</span> <span class="n">bowmen</span><span class="o">*</span><span class="mi">95</span> <span class="o">+</span> <span class="n">horsemen</span><span class="o">*</span><span class="mi">230</span><span class="p">)</span>
+
+<span class="c1"># Solve problem</span>
+<span class="n">status</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">Solve</span><span class="p">()</span>
+
+<span class="c1"># If an optimal solution has been found, print results</span>
+<span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="n">pywraplp</span><span class="o">.</span><span class="n">Solver</span><span class="o">.</span><span class="n">OPTIMAL</span><span class="p">:</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;================= Solution =================&#39;</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Solved in </span><span class="si">{</span><span class="n">solver</span><span class="o">.</span><span class="n">wall_time</span><span class="p">()</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> milliseconds in </span><span class="si">{</span><span class="n">solver</span><span class="o">.</span><span class="n">iterations</span><span class="p">()</span><span class="si">}</span><span class="s1"> iterations&#39;</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">()</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Optimal value = </span><span class="si">{</span><span class="n">solver</span><span class="o">.</span><span class="n">Objective</span><span class="p">()</span><span class="o">.</span><span class="n">Value</span><span class="p">()</span><span class="si">}</span><span class="s1"> 💪power&#39;</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Army:&#39;</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; - 🗡️Swordsmen = </span><span class="si">{</span><span class="n">swordsmen</span><span class="o">.</span><span class="n">solution_value</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; - 🏹Bowmen = </span><span class="si">{</span><span class="n">bowmen</span><span class="o">.</span><span class="n">solution_value</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; - 🐎Horsemen = </span><span class="si">{</span><span class="n">horsemen</span><span class="o">.</span><span class="n">solution_value</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The solver could not find an optimal solution.&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>================= Solution =================
+Solved in 3.00 milliseconds in 0 iterations
+
+Optimal value = 1800.0 💪power
+Army:
+ - 🗡️Swordsmen = 6.0
+ - 🏹Bowmen = 0.0
+ - 🐎Horsemen = 6.0
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Strictly speaking, our variables are still floats (<code>type(swordsmen.solution_value()) = float</code>) but we can see that they don't have weird decimals anymore: the CBC solver really considered them as <strong>integers</strong>.</p>
+<p>In this example, we would generally just <strong>round up these values</strong> since the error is insignificant. However, it is important to remember to choose the appropriate solver according to the studied problem:</p>
+<ul>
+<li><strong>LP</strong> for continuous variables;</li>
+<li><strong>MIP/MILP</strong> for a combination of continuous and discrete variables.</li>
+</ul>
+<p>There are other types such as <strong>quadratic</strong> (QP) or <strong>nonlinear</strong> (NLP or MINLP, with an exponential objective function or constraints for instance) problems. They're applied in different contexts, but follow the same principles as LP or MIP solvers.</p>
+<center><img src="https://mlabonne.github.io/blog/images/integerprogramming/continuousvsdiscrete.png" /></center><h2 id="&#129521;-II.-Building-a-general-model">&#129521; II. Building a general model<a class="anchor-link" href="#&#129521;-II.-Building-a-general-model"> </a></h2><p>But what if our <strong>resources change</strong>? Or if the cost of a unit evolved? What if we upgraded horsemen and their power increased?</p>
+<p>One of the best perks of OR-Tools is that it uses a general-purpose programming language like Python. Instead of static numbers, we can store our parameters in objects like <strong>dictionaries</strong> or <strong>lists</strong>.</p>
+<p>The code won't be as readable, but it becomes much more flexible: actually, it can be so flexible that we can solve an <strong>entire class of optimization problems</strong> without changing the model (just the parameters).</p>
+<p>Let's transform our input parameters into Python lists and feed them to the solver through a function.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">UNITS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;🗡️Swordsmen&#39;</span><span class="p">,</span> <span class="s1">&#39;🏹Bowmen&#39;</span><span class="p">,</span> <span class="s1">&#39;🐎Horsemen&#39;</span><span class="p">]</span>
+
+<span class="n">DATA</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">60</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">70</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">95</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">140</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">230</span><span class="p">]]</span>
+
+<span class="n">RESOURCES</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1200</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">solve_army</span><span class="p">(</span><span class="n">UNITS</span><span class="p">,</span> <span class="n">DATA</span><span class="p">,</span> <span class="n">RESOURCES</span><span class="p">):</span>
+  <span class="c1"># Create the linear solver using the CBC backend</span>
+  <span class="n">solver</span> <span class="o">=</span> <span class="n">pywraplp</span><span class="o">.</span><span class="n">Solver</span><span class="p">(</span><span class="s1">&#39;Maximize army power&#39;</span><span class="p">,</span> <span class="n">pywraplp</span><span class="o">.</span><span class="n">Solver</span><span class="o">.</span><span class="n">CBC_MIXED_INTEGER_PROGRAMMING</span><span class="p">)</span>
+
+  <span class="c1"># 1. Create the variables we want to optimize</span>
+  <span class="n">units</span> <span class="o">=</span> <span class="p">[</span><span class="n">solver</span><span class="o">.</span><span class="n">IntVar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">solver</span><span class="o">.</span><span class="n">infinity</span><span class="p">(),</span> <span class="n">unit</span><span class="p">)</span> <span class="k">for</span> <span class="n">unit</span> <span class="ow">in</span> <span class="n">UNITS</span><span class="p">]</span>
+
+  <span class="c1"># 2. Add constraints for each resource</span>
+  <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">RESOURCES</span><span class="p">):</span>
+    <span class="n">solver</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="n">r</span><span class="p">]</span> <span class="o">*</span> <span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">))</span> <span class="o">&lt;=</span> <span class="n">RESOURCES</span><span class="p">[</span><span class="n">r</span><span class="p">])</span>
+
+  <span class="c1"># 3. Maximize the objective function</span>
+  <span class="n">solver</span><span class="o">.</span><span class="n">Maximize</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">)))</span>
+
+  <span class="c1"># Solve problem</span>
+  <span class="n">status</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">Solve</span><span class="p">()</span>
+
+  <span class="c1"># If an optimal solution has been found, print results</span>
+  <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="n">pywraplp</span><span class="o">.</span><span class="n">Solver</span><span class="o">.</span><span class="n">OPTIMAL</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;================= Solution =================&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Solved in </span><span class="si">{</span><span class="n">solver</span><span class="o">.</span><span class="n">wall_time</span><span class="p">()</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> milliseconds in </span><span class="si">{</span><span class="n">solver</span><span class="o">.</span><span class="n">iterations</span><span class="p">()</span><span class="si">}</span><span class="s1"> iterations&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Optimal value = </span><span class="si">{</span><span class="n">solver</span><span class="o">.</span><span class="n">Objective</span><span class="p">()</span><span class="o">.</span><span class="n">Value</span><span class="p">()</span><span class="si">}</span><span class="s1"> 💪power&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Army:&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">):</span>
+      <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; - </span><span class="si">{</span><span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">()</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="o">.</span><span class="n">solution_value</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The solver could not find an optimal solution.&#39;</span><span class="p">)</span>
+
+<span class="n">solve_army</span><span class="p">(</span><span class="n">UNITS</span><span class="p">,</span> <span class="n">DATA</span><span class="p">,</span> <span class="n">RESOURCES</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>================= Solution =================
+Solved in 2.00 milliseconds in 0 iterations
+
+Optimal value = 1800.0 💪power
+Army:
+ - 🗡️Swordsmen = 6.0
+ - 🏹Bowmen = 0.0
+ - 🐎Horsemen = 6.0
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We obtain the same results: our code seems to work. Now let's <strong>change the parameters</strong> to tackle a slightly more complex problem.</p>
+<p>Imagine we have a lot more resources: 🌾<strong>183000</strong>, 🪵<strong>90512</strong>, and 🪙<strong>80150</strong>, so we can also produce a lot more units! This is the new table:</p>
+<p><br />
+<br /></p>
+<table>
+<thead><tr>
+<th style="text-align:left">Unit</th>
+<th style="text-align:center">🌾Food</th>
+<th style="text-align:center">🪵Wood</th>
+<th style="text-align:center">🪙Gold</th>
+<th style="text-align:center">💪Attack</th>
+<th style="text-align:center">❤️Health</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">🗡️Swordsman</td>
+<td style="text-align:center">60</td>
+<td style="text-align:center">20</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">6</td>
+<td style="text-align:center">70</td>
+</tr>
+<tr>
+<td style="text-align:left">🛡️Man-at-arms</td>
+<td style="text-align:center">100</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">20</td>
+<td style="text-align:center">12</td>
+<td style="text-align:center">155</td>
+</tr>
+<tr>
+<td style="text-align:left">🏹Bowman</td>
+<td style="text-align:center">30</td>
+<td style="text-align:center">50</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">5</td>
+<td style="text-align:center">70</td>
+</tr>
+<tr>
+<td style="text-align:left">❌Crossbowman</td>
+<td style="text-align:center">80</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">40</td>
+<td style="text-align:center">12</td>
+<td style="text-align:center">80</td>
+</tr>
+<tr>
+<td style="text-align:left">🔫Handcannoneer</td>
+<td style="text-align:center">120</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">120</td>
+<td style="text-align:center">35</td>
+<td style="text-align:center">150</td>
+</tr>
+<tr>
+<td style="text-align:left">🐎Horseman</td>
+<td style="text-align:center">100</td>
+<td style="text-align:center">20</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">9</td>
+<td style="text-align:center">125</td>
+</tr>
+<tr>
+<td style="text-align:left">♞Knight</td>
+<td style="text-align:center">140</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">100</td>
+<td style="text-align:center">24</td>
+<td style="text-align:center">230</td>
+</tr>
+<tr>
+<td style="text-align:left">🐏Battering ram</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">300</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">200</td>
+<td style="text-align:center">700</td>
+</tr>
+<tr>
+<td style="text-align:left">🎯Springald</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">250</td>
+<td style="text-align:center">250</td>
+<td style="text-align:center">30</td>
+<td style="text-align:center">200</td>
+</tr>
+</tbody>
+</table>
+<p><br /></p>
+<p>Notice that we transformed the 💪<strong>power</strong> into two values: 💪<strong>attack</strong> and ❤️<strong>health</strong>, which is a little more detailed. Health values are higher than attack values, which is why we want to add a weighting factor to make them more comparable.</p>
+<p>Let's take 10 as an example, so $power = 10 \times attack + health$. Our objective function becomes:</p>
+<p>
+$$maximize \ \sum_{u \in units} (10\times attack + health) \cdot u$$
+</p>
+<p>Adapting our code to this new problem is actually quite simple: we just have to <strong>change the input parameters</strong> and update the <strong>objective function</strong>.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="n">UNITS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;🗡️Swordsmen&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;🛡️Men-at-arms&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;🏹Bowmen&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;❌Crossbowmen&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;🔫Handcannoneers&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;🐎Horsemen&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;♞Knights&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;🐏Battering rams&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;🎯Springalds&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;🪨Mangonels&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">DATA</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="mi">60</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">70</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">155</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">70</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">80</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">120</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">150</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">125</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">140</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">230</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">700</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">200</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">12</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> <span class="mi">240</span><span class="p">]</span>
+<span class="p">]</span>
+
+<span class="n">RESOURCES</span> <span class="o">=</span> <span class="p">[</span><span class="mi">183000</span><span class="p">,</span> <span class="mi">90512</span><span class="p">,</span> <span class="mi">80150</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">solve_army</span><span class="p">(</span><span class="n">UNITS</span><span class="p">,</span> <span class="n">DATA</span><span class="p">,</span> <span class="n">RESOURCES</span><span class="p">):</span>
+  <span class="c1"># Create the linear solver using the CBC backend</span>
+  <span class="n">solver</span> <span class="o">=</span> <span class="n">pywraplp</span><span class="o">.</span><span class="n">Solver</span><span class="p">(</span><span class="s1">&#39;Maximize army power&#39;</span><span class="p">,</span> <span class="n">pywraplp</span><span class="o">.</span><span class="n">Solver</span><span class="o">.</span><span class="n">CBC_MIXED_INTEGER_PROGRAMMING</span><span class="p">)</span>
+
+  <span class="c1"># 1. Create the variables we want to optimize</span>
+  <span class="n">units</span> <span class="o">=</span> <span class="p">[</span><span class="n">solver</span><span class="o">.</span><span class="n">IntVar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">solver</span><span class="o">.</span><span class="n">infinity</span><span class="p">(),</span> <span class="n">unit</span><span class="p">)</span> <span class="k">for</span> <span class="n">unit</span> <span class="ow">in</span> <span class="n">UNITS</span><span class="p">]</span>
+
+  <span class="c1"># 2. Add constraints for each resource</span>
+  <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">RESOURCES</span><span class="p">):</span>
+    <span class="n">solver</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="n">r</span><span class="p">]</span> <span class="o">*</span> <span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">))</span> <span class="o">&lt;=</span> <span class="n">RESOURCES</span><span class="p">[</span><span class="n">r</span><span class="p">])</span>
+
+  <span class="c1"># 3. Maximize the new objective function</span>
+  <span class="n">solver</span><span class="o">.</span><span class="n">Maximize</span><span class="p">(</span><span class="nb">sum</span><span class="p">((</span><span class="mi">10</span><span class="o">*</span><span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">)))</span>
+
+  <span class="c1"># Solve problem</span>
+  <span class="n">status</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">Solve</span><span class="p">()</span>
+
+  <span class="c1"># If an optimal solution has been found, print results</span>
+  <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="n">pywraplp</span><span class="o">.</span><span class="n">Solver</span><span class="o">.</span><span class="n">OPTIMAL</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;================= Solution =================&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Solved in </span><span class="si">{</span><span class="n">solver</span><span class="o">.</span><span class="n">wall_time</span><span class="p">()</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> milliseconds in </span><span class="si">{</span><span class="n">solver</span><span class="o">.</span><span class="n">iterations</span><span class="p">()</span><span class="si">}</span><span class="s1"> iterations&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Optimal value = </span><span class="si">{</span><span class="n">solver</span><span class="o">.</span><span class="n">Objective</span><span class="p">()</span><span class="o">.</span><span class="n">Value</span><span class="p">()</span><span class="si">}</span><span class="s1"> 💪power&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Army:&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">):</span>
+      <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; - </span><span class="si">{</span><span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">()</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="o">.</span><span class="n">solution_value</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The solver could not find an optimal solution.&#39;</span><span class="p">)</span>
+
+<span class="n">solve_army</span><span class="p">(</span><span class="n">UNITS</span><span class="p">,</span> <span class="n">DATA</span><span class="p">,</span> <span class="n">RESOURCES</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>================= Solution =================
+Solved in 74.00 milliseconds in 412 iterations
+
+Optimal value = 1393145.0 💪power
+Army:
+ - 🗡️Swordsmen = 2.0
+ - 🛡️Men-at-arms = 1283.0
+ - 🏹Bowmen = 3.0
+ - ❌Crossbowmen = 0.0
+ - 🔫Handcannoneers = 454.0
+ - 🐎Horsemen = 0.0
+ - ♞Knights = 0.0
+ - 🐏Battering rams = 301.0
+ - 🎯Springalds = 0.0
+ - 🪨Mangonels = 0.0
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This problem would take a long time for humans to address, but the ILP solver did it in the blink of an eye. Better than that: it also gives us the guarantee that <strong>our solution is optimal</strong>, which means that our enemy cannot find a better army composition for the same cost!</p>
+<p>We could increase the number of units and give billions of resources but you get the picture: it would just take longer to obtain a solution, but it wouldn't change the problem.</p>
+<h2 id="&#9876;&#65039;-III.-Combining-constraints">&#9876;&#65039; III. Combining constraints<a class="anchor-link" href="#&#9876;&#65039;-III.-Combining-constraints"> </a></h2><p>Now, let's say we scouted our enemy and know that their army has a 💪power of <strong>1,000,000</strong>. We could build a much better army, but our resources are precious and it wouldn't be very efficient: all we have to do is to build an army with a 💪<strong>power higher than 1,000,000</strong> (even 1,000,001 would be enough).</p>
+<p>In other words, the total power is now a <strong>constraint</strong> (💪 &gt; 1,000,000) instead of the objective to maximize. The new goal is to minimize the resources we need to produce this army. However, we can reuse our input parameters since they didn't change.</p>
+<p>The new constraint can be translated as "the sum of the power of the selected units must be strictly greater than 1,000,000".</p>
+<p>
+$$\sum_{u \in units} (10\times attack + health) \cdot u &gt; 1\,000\,000$$
+</p>
+<p>In code, we can loop through our units and resources to design this constraint.</p>
+<p>The objective function also has to change. Our goal is to <strong>minimize the sum of resources spent</strong> to build the army.</p>
+<p>
+$$minimize \ \sum_{u \in units} (food + wood + gold) \cdot u$$
+</p>
+<p>Once again, we can loop through our resources to implement it in OR-Tools.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="k">def</span> <span class="nf">solve_army</span><span class="p">(</span><span class="n">UNITS</span><span class="p">,</span> <span class="n">DATA</span><span class="p">,</span> <span class="n">RESOURCES</span><span class="p">):</span>
+  <span class="c1"># Create the linear solver using the CBC backend</span>
+  <span class="n">solver</span> <span class="o">=</span> <span class="n">pywraplp</span><span class="o">.</span><span class="n">Solver</span><span class="p">(</span><span class="s1">&#39;Minimize resource consumption&#39;</span><span class="p">,</span> <span class="n">pywraplp</span><span class="o">.</span><span class="n">Solver</span><span class="o">.</span><span class="n">CBC_MIXED_INTEGER_PROGRAMMING</span><span class="p">)</span>
+
+  <span class="c1"># 1. Create the variables we want to optimize</span>
+  <span class="n">units</span> <span class="o">=</span> <span class="p">[</span><span class="n">solver</span><span class="o">.</span><span class="n">IntVar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">solver</span><span class="o">.</span><span class="n">infinity</span><span class="p">(),</span> <span class="n">unit</span><span class="p">)</span> <span class="k">for</span> <span class="n">unit</span> <span class="ow">in</span> <span class="n">UNITS</span><span class="p">]</span>
+
+  <span class="c1"># 2. Add constraints for each resource</span>
+  <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">RESOURCES</span><span class="p">):</span>
+    <span class="n">solver</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="nb">sum</span><span class="p">((</span><span class="mi">10</span> <span class="o">*</span> <span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">))</span> <span class="o">&gt;=</span> <span class="mi">1000001</span><span class="p">)</span>
+
+  <span class="c1"># 3. Minimize the objective function</span>
+  <span class="n">solver</span><span class="o">.</span><span class="n">Minimize</span><span class="p">(</span><span class="nb">sum</span><span class="p">((</span><span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">)))</span>
+
+  <span class="c1"># Solve problem</span>
+  <span class="n">status</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">Solve</span><span class="p">()</span>
+
+  <span class="c1"># If an optimal solution has been found, print results</span>
+  <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="n">pywraplp</span><span class="o">.</span><span class="n">Solver</span><span class="o">.</span><span class="n">OPTIMAL</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;================= Solution =================&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Solved in </span><span class="si">{</span><span class="n">solver</span><span class="o">.</span><span class="n">wall_time</span><span class="p">()</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> milliseconds in </span><span class="si">{</span><span class="n">solver</span><span class="o">.</span><span class="n">iterations</span><span class="p">()</span><span class="si">}</span><span class="s1"> iterations&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+
+    <span class="n">power</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">((</span><span class="mi">10</span> <span class="o">*</span> <span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="o">.</span><span class="n">solution_value</span><span class="p">()</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Optimal value = </span><span class="si">{</span><span class="n">solver</span><span class="o">.</span><span class="n">Objective</span><span class="p">()</span><span class="o">.</span><span class="n">Value</span><span class="p">()</span><span class="si">}</span><span class="s1"> 🌾🪵🪙resources&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Power = 💪</span><span class="si">{</span><span class="n">power</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Army:&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">):</span>
+      <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; - </span><span class="si">{</span><span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">()</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="o">.</span><span class="n">solution_value</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+
+    <span class="n">food</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">((</span><span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="o">.</span><span class="n">solution_value</span><span class="p">()</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">))</span>
+    <span class="n">wood</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">((</span><span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="o">.</span><span class="n">solution_value</span><span class="p">()</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">))</span>
+    <span class="n">gold</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">((</span><span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="o">.</span><span class="n">solution_value</span><span class="p">()</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Resources:&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; - 🌾Food = </span><span class="si">{</span><span class="n">food</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; - 🪵Wood = </span><span class="si">{</span><span class="n">wood</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; - 🪙Gold = </span><span class="si">{</span><span class="n">gold</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+  <span class="k">else</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The solver could not find an optimal solution.&#39;</span><span class="p">)</span>
+
+<span class="n">solve_army</span><span class="p">(</span><span class="n">UNITS</span><span class="p">,</span> <span class="n">DATA</span><span class="p">,</span> <span class="n">RESOURCES</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>================= Solution =================
+Solved in 4.00 milliseconds in 0 iterations
+
+Optimal value = 111300.0 🌾🪵🪙resources
+Power = 💪1001700.0
+Army:
+ - 🗡️Swordsmen = 0.0
+ - 🛡️Men-at-arms = 0.0
+ - 🏹Bowmen = 0.0
+ - ❌Crossbowmen = 0.0
+ - 🔫Handcannoneers = 0.0
+ - 🐎Horsemen = 0.0
+ - ♞Knights = 0.0
+ - 🐏Battering rams = 371.0
+ - 🎯Springalds = 0.0
+ - 🪨Mangonels = 0.0
+
+Resources:
+ - 🌾Food = 0.0
+ - 🪵Wood = 111300.0
+ - 🪙Gold = 0.0
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The solver found an optimal solution: we need to build <strong>371 🐏battering rams</strong> for a total cost of 111,300 🪵wood. Wait, what if we don't have that much wood? In the previous section, we only had 🪵90512: we cannot produce 371 🐏battering rams. 😱</p>
+<p>So is it possible to take these <strong>limited resources</strong> into account and still try to <strong>build the best army</strong>? Actually, it's super easy: we just have to copy/paste the constraints from the previous section.</p>
+<p>In this version, we have two types of constraints:</p>
+<ul>
+<li>The total power must be <strong>greater than 1,000,000</strong>;</li>
+<li>We cannot spend more than our <strong>limited resources</strong>.</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python"><pre><span></span><span class="k">def</span> <span class="nf">solve_army</span><span class="p">(</span><span class="n">UNITS</span><span class="p">,</span> <span class="n">DATA</span><span class="p">,</span> <span class="n">RESOURCES</span><span class="p">):</span>
+  <span class="c1"># Create the linear solver using the CBC backend</span>
+  <span class="n">solver</span> <span class="o">=</span> <span class="n">pywraplp</span><span class="o">.</span><span class="n">Solver</span><span class="p">(</span><span class="s1">&#39;Minimize resource consumption&#39;</span><span class="p">,</span> <span class="n">pywraplp</span><span class="o">.</span><span class="n">Solver</span><span class="o">.</span><span class="n">CBC_MIXED_INTEGER_PROGRAMMING</span><span class="p">)</span>
+
+  <span class="c1"># 1. Create the variables we want to optimize</span>
+  <span class="n">units</span> <span class="o">=</span> <span class="p">[</span><span class="n">solver</span><span class="o">.</span><span class="n">IntVar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">solver</span><span class="o">.</span><span class="n">infinity</span><span class="p">(),</span> <span class="n">unit</span><span class="p">)</span> <span class="k">for</span> <span class="n">unit</span> <span class="ow">in</span> <span class="n">UNITS</span><span class="p">]</span>
+
+  <span class="c1"># 2. Add constraints for each resource</span>
+  <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">RESOURCES</span><span class="p">):</span>
+    <span class="n">solver</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="nb">sum</span><span class="p">((</span><span class="mi">10</span> <span class="o">*</span> <span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">))</span> <span class="o">&gt;=</span> <span class="mi">1000001</span><span class="p">)</span>
+
+  <span class="c1"># Old constraints for limited resources</span>
+  <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">RESOURCES</span><span class="p">):</span>
+    <span class="n">solver</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="n">r</span><span class="p">]</span> <span class="o">*</span> <span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">))</span> <span class="o">&lt;=</span> <span class="n">RESOURCES</span><span class="p">[</span><span class="n">r</span><span class="p">])</span>
+
+  <span class="c1"># 3. Minimize the objective function</span>
+  <span class="n">solver</span><span class="o">.</span><span class="n">Minimize</span><span class="p">(</span><span class="nb">sum</span><span class="p">((</span><span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">)))</span>
+
+  <span class="c1"># Solve problem</span>
+  <span class="n">status</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">Solve</span><span class="p">()</span>
+
+  <span class="c1"># If an optimal solution has been found, print results</span>
+  <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="n">pywraplp</span><span class="o">.</span><span class="n">Solver</span><span class="o">.</span><span class="n">OPTIMAL</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;================= Solution =================&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Solved in </span><span class="si">{</span><span class="n">solver</span><span class="o">.</span><span class="n">wall_time</span><span class="p">()</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> milliseconds in </span><span class="si">{</span><span class="n">solver</span><span class="o">.</span><span class="n">iterations</span><span class="p">()</span><span class="si">}</span><span class="s1"> iterations&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+
+    <span class="n">power</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">((</span><span class="mi">10</span> <span class="o">*</span> <span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="o">.</span><span class="n">solution_value</span><span class="p">()</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Optimal value = </span><span class="si">{</span><span class="n">solver</span><span class="o">.</span><span class="n">Objective</span><span class="p">()</span><span class="o">.</span><span class="n">Value</span><span class="p">()</span><span class="si">}</span><span class="s1"> 🌾🪵🪙resources&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Power = 💪</span><span class="si">{</span><span class="n">power</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Army:&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">):</span>
+      <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; - </span><span class="si">{</span><span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">()</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="o">.</span><span class="n">solution_value</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
+    
+    <span class="n">food</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">((</span><span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="o">.</span><span class="n">solution_value</span><span class="p">()</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">))</span>
+    <span class="n">wood</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">((</span><span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="o">.</span><span class="n">solution_value</span><span class="p">()</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">))</span>
+    <span class="n">gold</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">((</span><span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="o">.</span><span class="n">solution_value</span><span class="p">()</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Resources:&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; - 🌾Food = </span><span class="si">{</span><span class="n">food</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; - 🪵Wood = </span><span class="si">{</span><span class="n">wood</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39; - 🪙Gold = </span><span class="si">{</span><span class="n">gold</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+  <span class="k">else</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The solver could not find an optimal solution.&#39;</span><span class="p">)</span>
+
+<span class="n">solve_army</span><span class="p">(</span><span class="n">UNITS</span><span class="p">,</span> <span class="n">DATA</span><span class="p">,</span> <span class="n">RESOURCES</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>================= Solution =================
+Solved in 28.00 milliseconds in 1 iterations
+
+Optimal value = 172100.0 🌾🪵🪙resources
+Power = 💪1000105.0
+Army:
+ - 🗡️Swordsmen = 1.0
+ - 🛡️Men-at-arms = 681.0
+ - 🏹Bowmen = 0.0
+ - ❌Crossbowmen = 0.0
+ - 🔫Handcannoneers = 0.0
+ - 🐎Horsemen = 0.0
+ - ♞Knights = 0.0
+ - 🐏Battering rams = 301.0
+ - 🎯Springalds = 0.0
+ - 🪨Mangonels = 0.0
+
+Resources:
+ - 🌾Food = 68160.0
+ - 🪵Wood = 90320.0
+ - 🪙Gold = 13620.0
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Since we now have a <strong>limited resource of 🪵wood</strong>, the number of 🐏battering rams sadly dropped from 371 to 301. In exchange, we got 681 🛡️men-at-arms and 1 lost 🗡️swordsman (welcome to them).</p>
+<p>The total cost of the army is <strong>172,100</strong>, which is much higher than the 111,300 we previously found (+65% increase) but it truly is the optimal solution under these constraints. It shows that we should produce more wood because these 🐏 battering rams are extremely cost-efficient!</p>
+<p>This example shows <strong>how modular</strong> LP models can be. It is possible to reuse parts of the code, like constraints, in another model to combine them and solve more complex problems.</p>
+<h2 id="&#129504;-IV.-Linear-Programming-vs-Machine&#160;Learning">&#129504; IV. Linear Programming vs Machine&#160;Learning<a class="anchor-link" href="#&#129504;-IV.-Linear-Programming-vs-Machine&#160;Learning"> </a></h2><p>Let's talk about the elephant in the room. Why not use <strong>machine learning</strong> (in a broad sense) instead of linear programming? It's not like this problem cannot be solved with a genetic algorithm for instance.</p>
+<p>Mathematical optimization is often neglected in favor of machine learning techniques, but both have their merits:</p>
+<ul>
+<li>Linear programming can produce an <strong>optimal solution</strong> in an undetermined amount of time (it can take years), while machine learning can approximate complex functions in no time.</li>
+<li>There is <strong>no training</strong> in LP, but an expert is required to build a mathematical model. Machine learning needs data, but the models can be used as black boxes to solve a problem.</li>
+<li>As a rule of thumb, problems that <strong>do not have a particular time constraint</strong> and/or are not extremely complex can be advantageously solved with linear programming.</li>
+</ul>
+<center><img src="https://mlabonne.github.io/blog/images/integerprogramming/lpvsml.jpg" /></center><h2 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion"> </a></h2><p>In this tutorial, we dived deeper into our understanding of mathematical optimization.</p>
+<ul>
+<li>We talked about solvers and types of optimization problems: <strong>LP, MIP, NLP</strong>;</li>
+<li>We modeled and solved an extremely common optimization problem in an optimal way and <strong>generalized our model</strong> through a function;</li>
+<li>We reframed this problem and <strong>merged two sets of constraints</strong> to obtain the best army composition for the lowest price;</li>
+<li>We compared the <strong>pros and cons</strong> of linear programming and machine learning.</li>
+</ul>
+<p>There are <strong>a lot more problems</strong> where optimization can be applied. For instance, how to create school timetables that satisfy everybody's requirements? How to deliver 1,000 different orders in a minimum amount of time? Where to create a new metro line to maximize its usefulness?</p>
+<p>In future articles, we'll talk about new types of applications for these techniques, including satisfiability and nonlinear problems.</p>
+<p>I hope you enjoyed this more advanced article. If you like machine learning and optimization, <a href="https://twitter.com/maximelabonne"><strong>let's connect on Twitter</strong></a>!</p>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="mlabonne/blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/blog/integerprogramming/" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+        <ul class="contact-list">
+          <li class="p-name">Maxime Labonne</li>
+          
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p>Illustrated machine learning and deep learning tutorials with Python and PyTorch for programmers.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/mlabonne" target="_blank" title="mlabonne"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://www.linkedin.com/in/maxime-labonne" target="_blank" title="maxime-labonne"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#linkedin"></use></svg></a></li><li><a rel="me" href="https://twitter.com/maximelabonne" target="_blank" title="maximelabonne"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
