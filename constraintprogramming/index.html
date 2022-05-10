@@ -268,7 +268,7 @@ $$<p>Let's implement it with OR-Tools. The first thing we need to do is to impor
 <p>The first step to create our CP model is to declare the <strong>variables</strong>. In this example, we only have one: $army$, the number of soldiers.</p>
 <p>We have to give lower and upper bounds. The <strong>lower bound</strong> is 1 since we know there's an army, and the <strong>upper bound</strong> is 10,000 according to the scouts:</p>
 <p>
-$$0 \leq army \leq 10\ 000$$
+$$1 \leq army \leq 10\ 000$$
 </p>
 <p>In OR-Tools, we use the <code>NewIntVar</code> method to create this variable.</p>
 
@@ -365,7 +365,7 @@ $$0 \leq army \leq 10\ 000$$
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>================= Solution =================
-Solved in 0.00 milliseconds
+Solved in 0.01 milliseconds
 
 🪖 Army = 9139
 
@@ -490,7 +490,7 @@ $$0 \leq bread \leq capacity \\
 <span class="n">solver</span> <span class="o">=</span> <span class="n">cp_model</span><span class="o">.</span><span class="n">CpSolver</span><span class="p">()</span>
 
 <span class="c1"># 1. Variables</span>
-<span class="n">capacity</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">capacity</span> <span class="o">=</span> <span class="mi">19</span>
 <span class="n">bread</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">NewIntVar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">capacity</span><span class="p">,</span> <span class="s1">&#39;bread&#39;</span><span class="p">)</span>
 <span class="n">meat</span>  <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">NewIntVar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">capacity</span><span class="p">,</span> <span class="s1">&#39;meat&#39;</span><span class="p">)</span>
 <span class="n">beer</span>  <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">NewIntVar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">capacity</span><span class="p">,</span> <span class="s1">&#39;beer&#39;</span><span class="p">)</span>
@@ -526,22 +526,6 @@ $$1 \times bread + 3 \times meat + 7 \times beer \leq 19$$
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>&lt;ortools.sat.python.cp_model.Constraint at 0x7f8c48ad7e90&gt;</pre>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -618,13 +602,13 @@ $$max\ 3 \times bread + 10 \times meat + 26 \times beer$$
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>================= Solution =================
-Solved in 0.00 milliseconds
+Solved in 0.01 milliseconds
 
-Optimal value = 3712 popularity
+Optimal value = 68 popularity
 Food:
- - 🥖Bread = 0
- - 🥩Meat  = 2
- - 🍺Beer  = 142
+ - 🥖Bread = 2
+ - 🥩Meat  = 1
+ - 🍺Beer  = 2
 </pre>
 </div>
 </div>
