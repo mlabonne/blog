@@ -401,7 +401,7 @@ span.ansi-red-bg { background-color: red; }
 
 .site-footer { background-color: #24292e; }
 
-.katex-display { font-size: 18px !important; }
+.katex-display { font-size: 20px !important; }
 
 .post-link, .post-link:visited { font-weight: 600 !important; color: #24292e !important; font-family: Arial; }
 

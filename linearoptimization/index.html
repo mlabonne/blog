@@ -487,7 +487,7 @@ Army:
 <li><strong>Defining objective</strong>: the criterion to maximize was the total power of this army. It could have been something else, like the number of units.</li>
 <li><strong>Optimizing</strong>: GLOP found an optimal solution to this problem in less than a second.</li>
 </ol>
-<center><img src="https://mlabonne.github.io/blog/images/linearoptimization/infographic.png" /></center><p>This is the main benefit of linear programming: the algorithm gives us a <strong>guarantee that the solution that was found is optimal</strong> (with a certain error). This guarantee is powerful, but comes at a cost: the model can be so complex that the solver takes years (or more) to find an optimal solution. In this scenario, we have two options:</p>
+<center><img src="https://mlabonne.github.io/blog/images/linearoptimization/infographic.png" width="600" /></center><p>This is the main benefit of linear programming: the algorithm gives us a <strong>guarantee that the solution that was found is optimal</strong> (with a certain error). This guarantee is powerful, but comes at a cost: the model can be so complex that the solver takes years (or more) to find an optimal solution. In this scenario, we have two options:</p>
 <ul>
 <li>We can <strong>stop the solver</strong> after a certain time (and probably obtain a suboptimal answer);</li>
 <li>We can use a <strong>metaheuristic</strong> like a genetic algorithm to calculate an excellent solution in a short amount of time.</li>
