@@ -184,11 +184,11 @@ window.onload = wrap_img;
         
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<center><div id="anim_container"><img alt="Performance plot" src="https://mlabonne.github.io/blog/images/dataframe/perfplot.png" loading="lazy" id="anim_inner" width="800" /></div></center><p>When I started machine learning, I followed the guidelines and <strong>created my own features by combining multiple columns</strong> in my dataset. It's all well and good, but the way I did it was <strong>horribly inefficient</strong>. I had to wait <strong>several minutes to do the most basic operations</strong>.</p>
-<p>My problem was simple: <strong>I didn't know the fastest way iterate over rows in Pandas</strong>.</p>
-<p>I often see people online using the <strong>same techniques</strong> I used to apply. It's <strong>not elegant</strong> but it's ok if you <strong>don't have much data</strong>. However, if you process <strong>more than 10k rows</strong>, it quickly becomes an <strong>obvious performance issue</strong>.</p>
-<p>In this article, I'm gonna give you the <strong>best way to iterate over rows in a Pandas DataFrame</strong>, with <strong>no extra code</strong> required. It's not just about performance: it's also about <strong>understanding what's going on under the hood</strong> to become a <strong>better data scientist</strong>.</p>
-<p>Let's <strong>import a dataset</strong> in Pandas. In this case, I chose the one I worked on when I started: it's time to fix my past mistakes! 🩹</p>
+<center><div id="anim_container"><img alt="Performance plot" src="https://mlabonne.github.io/blog/images/dataframe/perfplot.png" loading="lazy" id="anim_inner" width="800" /></div></center><p>When I started machine learning, I followed the guidelines and created my own features by combining multiple columns in my dataset. It's all well and good, but the way I did it was <strong>horribly inefficient</strong>. I had to wait several minutes to do the most basic operations.</p>
+<p>My problem was simple: I didn't know the fastest way iterate over rows in Pandas.</p>
+<p>I often see people online using the same techniques I used to apply. It's not elegant but it's ok if you don't have much data. However, if you process <strong>more than 10k rows</strong>, it quickly becomes an obvious performance issue.</p>
+<p>In this article, I'm gonna give you the <strong>best way to iterate over rows in a Pandas DataFrame</strong>, with no extra code required. It's not just about performance: it's also about understanding what's going on under the hood to become a better data scientist.</p>
+<p>Let's import a dataset in Pandas. In this case, I chose the one I worked on when I started: it's time to fix my past mistakes! 🩹</p>
 
 </div>
 </div>
@@ -617,20 +617,20 @@ window.onload = wrap_img;
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This dataset has <strong>22k rows and 43 columns</strong> with a combination of categorical and numerical values. Each row describes a <strong>connection between two computers</strong>.</p>
-<p>Let's say we want to create a new feature: the <strong>total number of bytes</strong> in the connection. We just have to <strong>sum up two existing features</strong>: <code>src_bytes</code> and <code>dst_bytes</code>. Let's see <strong>different methods</strong> to calculate this new feature.</p>
+<p>This dataset has 22k rows and 43 columns with a combination of categorical and numerical values. Each row describes a connection between two computers.</p>
+<p>Let's say we want to create a new feature: the <strong>total number of bytes</strong> in the connection. We just have to sum up two existing features: <code>src_bytes</code> and <code>dst_bytes</code>. Let's see different methods to calculate this new feature.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="&#10060;&#10060;-1.-Iterrows">&#10060;&#10060; 1. Iterrows<a class="anchor-link" href="#&#10060;&#10060;-1.-Iterrows"> </a></h2><p>According to the <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.iterrows.html">official documentation</a>, <code>iterrows()</code> iterates "over the rows of a Pandas DataFrame as (index, Series) pairs". It <strong>converts each row into a Series object</strong>, which causes two problems:</p>
+<h2 id="&#10060;&#10060;-1.-Iterrows">&#10060;&#10060; 1. Iterrows<a class="anchor-link" href="#&#10060;&#10060;-1.-Iterrows"> </a></h2><p>According to the <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.iterrows.html">official documentation</a>, <code>iterrows()</code> iterates "over the rows of a Pandas DataFrame as (index, Series) pairs". It converts each row into a Series object, which causes two problems:</p>
 <ol>
-<li>It can <strong>change the type of your data</strong> (dtypes);</li>
+<li>It can <strong>change the type</strong> of your data (dtypes);</li>
 <li>The conversion <strong>greatly degrades performance</strong>.</li>
 </ol>
-<p>For these reasons, the ill-named <code>iterrows()</code> is the <strong>WORST possible method</strong> to actually iterate over rows.</p>
+<p>For these reasons, the ill-named <code>iterrows()</code> is the WORST possible method to actually iterate over rows.</p>
 
 </div>
 </div>
@@ -673,9 +673,9 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Now let's see slightly better techniques...</p>
-<h2 id="&#10060;-2.-For-loop-with-.loc-or-.iloc-(3&#215;-faster)">&#10060; 2. For loop with .loc or .iloc (3&#215; faster)<a class="anchor-link" href="#&#10060;-2.-For-loop-with-.loc-or-.iloc-(3&#215;-faster)"> </a></h2><p>This is what I used to do when I started: a basic <strong>for loop to select rows by index</strong> (with <code>.loc</code> or <code>.iloc</code>).</p>
-<p>Why is it bad? Because DataFrames are <strong>not designed for this purpose</strong>. As with the previous method, rows are <strong>converted into Pandas Series objects</strong>, which degrades performance.</p>
-<p>Interestingly enough, <code>.iloc</code> is faster than <code>.loc</code>. It makes sense since Python <strong>doesn't have to check user-defined labels</strong> and directly look at <strong>where the row is stored in memory</strong>.</p>
+<h2 id="&#10060;-2.-For-loop-with-.loc-or-.iloc-(3&#215;-faster)">&#10060; 2. For loop with .loc or .iloc (3&#215; faster)<a class="anchor-link" href="#&#10060;-2.-For-loop-with-.loc-or-.iloc-(3&#215;-faster)"> </a></h2><p>This is what I used to do when I started: a <strong>basic for loop</strong> to select rows by index (with <code>.loc</code> or <code>.iloc</code>).</p>
+<p>Why is it bad? Because DataFrames are not designed for this purpose. As with the previous method, rows are converted into Pandas Series objects, which degrades performance.</p>
+<p>Interestingly enough, <code>.iloc</code> is faster than <code>.loc</code>. It makes sense since Python doesn't have to check user-defined labels and directly look at where the row is stored in memory.</p>
 
 </div>
 </div>
@@ -752,10 +752,10 @@ window.onload = wrap_img;
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Even this basic for loop with <code>.iloc</code> is <strong>3 times faster than the first method</strong>!</p>
-<h2 id="&#10060;-3.-Apply-(4&#215;-faster)">&#10060; 3. Apply (4&#215; faster)<a class="anchor-link" href="#&#10060;-3.-Apply-(4&#215;-faster)"> </a></h2><p>The <code>apply()</code> method is <strong>another popular choice</strong> to iterate over rows. It creates code that is <strong>easy to understand</strong> but at a cost: performance is <strong>nearly as bad as the previous for loop</strong>.</p>
-<p>This is why I would strongly advise you to <strong>avoid this function for this specific purpose</strong> (it's fine for other applications).</p>
-<p>Note that I <strong>convert the DataFrame into a list</strong> using the <code>to_list()</code> method to obtain <strong>identical results</strong>.</p>
+<p>Even this basic for loop with <code>.iloc</code> is <strong>3 times faster</strong> than the first method!</p>
+<h2 id="&#10060;-3.-Apply-(4&#215;-faster)">&#10060; 3. Apply (4&#215; faster)<a class="anchor-link" href="#&#10060;-3.-Apply-(4&#215;-faster)"> </a></h2><p>The <code>apply()</code> method is another popular choice to iterate over rows. It creates code that is easy to understand but at a cost: performance is nearly as bad as the previous for loop.</p>
+<p>This is why I would strongly advise you to <strong>avoid this function</strong> for this specific purpose (it's fine for other applications).</p>
+<p>Note that I convert the DataFrame into a list using the <code>to_list()</code> method to obtain identical results.</p>
 
 </div>
 </div>
@@ -795,9 +795,9 @@ window.onload = wrap_img;
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The <code>apply()</code> method is a <strong>for loop in disguise</strong>, which is why the performance doesn't improve that much: it's <strong>only 4 times faster</strong> than the first technique.</p>
+<p>The <code>apply()</code> method is a for loop in disguise, which is why the performance doesn't improve that much: it's only <strong>4 times faster</strong> than the first technique.</p>
 <h2 id="&#10060;-4.-Itertuples-(10&#215;-faster)">&#10060; 4. Itertuples (10&#215; faster)<a class="anchor-link" href="#&#10060;-4.-Itertuples-(10&#215;-faster)"> </a></h2><p>If you know about <code>iterrows()</code>, you probably know about <code>itertuples()</code>. According to the <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.itertuples.html">official documentation</a>, it iterates "over the rows of a DataFrame as namedtuples of the values". In practice, it means that <strong>rows are converted into tuples</strong>, which are <strong>much lighter objects</strong> than Pandas Series.</p>
-<p>This is why <code>itertuples()</code> are a <strong>better version</strong> of <code>iterrows()</code>. The only issue is that we need to <strong>select columns based on their index</strong>, which is <strong>not as user-friendly</strong> as previous techniques.</p>
+<p>This is why <code>itertuples()</code> is a better version of <code>iterrows()</code>. This time, we need to access the values with an <strong>attribute</strong> (or an index). If you want to access them with a <strong>string</strong> (e.g., if there's a space in the string), you can use the <code>getattr()</code> function instead.</p>
 
 </div>
 </div>
@@ -813,7 +813,7 @@ window.onload = wrap_img;
 <span class="c1"># Itertuples</span>
 <span class="n">total</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">itertuples</span><span class="p">():</span>
-    <span class="n">total</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="n">row</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+    <span class="n">total</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">src_bytes</span> <span class="o">+</span> <span class="n">row</span><span class="o">.</span><span class="n">dst_bytes</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -839,9 +839,10 @@ window.onload = wrap_img;
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Okay, it's <strong>10 times faster</strong> than <code>iterrows()</code>: this is starting to look better.</p>
-<h2 id="&#10060;-5.-List-comprehensions-(200&#215;-faster)">&#10060; 5. List comprehensions (200&#215; faster)<a class="anchor-link" href="#&#10060;-5.-List-comprehensions-(200&#215;-faster)"> </a></h2><p>List comprehensions are a <strong>fancy way to iterate over a list as a one-liner</strong>. For instance, <code>[print(i) for i in range(10)]</code> prints numbers from 0 to 9 <strong>without any explicit for loop</strong>.</p>
-<p>I say "<strong>explicit</strong>" because Python actually <strong>processes it as a for loop</strong> if we look at the <strong>bytecode</strong>. So why is it <strong>faster</strong>? Quite simply because we don't call the <code>.append()</code> method in this version.</p>
+<p>This is starting to look better: it is now <strong>10 times faster</strong> than <code>iterrows()</code>.</p>
+<h2 id="&#10060;-5.-List-comprehensions-(200&#215;-faster)">&#10060; 5. List comprehensions (200&#215; faster)<a class="anchor-link" href="#&#10060;-5.-List-comprehensions-(200&#215;-faster)"> </a></h2><p>List comprehensions are a fancy way to iterate over a list as a one-liner.</p>
+<p>For instance, <code>[print(i) for i in range(10)]</code> prints numbers from 0 to 9 <strong>without any explicit for loop</strong>. I say "explicit" because Python actually processes it as a for loop if we look at the bytecode.</p>
+<p>So why is it faster? Quite simply because we don't call the <code>.append()</code> method in this version.</p>
 
 </div>
 </div>
@@ -882,9 +883,9 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Indeed, this technique is <strong>200 times faster</strong> than the first one! But we can still do better.</p>
-<h2 id="&#9989;-6.-Pandas-vectorization-(1500&#215;-faster)">&#9989; 6. Pandas vectorization (1500&#215; faster)<a class="anchor-link" href="#&#9989;-6.-Pandas-vectorization-(1500&#215;-faster)"> </a></h2><p>Until now, all the techniques used <strong>simply add up single values</strong>. Instead of adding single values, why not <strong>group them into vectors to sum them up</strong>? The difference between <strong>adding two numbers or two vectors is not <a href="https://en.wikipedia.org/wiki/Single_instruction,_multiple_data">significant for a CPU</a></strong>, which should <strong>speed things up</strong>.</p>
+<h2 id="&#9989;-6.-Pandas-vectorization-(1500&#215;-faster)">&#9989; 6. Pandas vectorization (1500&#215; faster)<a class="anchor-link" href="#&#9989;-6.-Pandas-vectorization-(1500&#215;-faster)"> </a></h2><p>Until now, all the techniques used simply add up single values. Instead of adding single values, why not <strong>group them into vectors</strong> to sum them up? The difference between adding two numbers or two vectors is not <a href="https://en.wikipedia.org/wiki/Single_instruction,_multiple_data">significant for a CPU</a>, which should speed things up.</p>
 <p>On top of that, Pandas can <strong>process Series objects in parallel</strong>, using every CPU core available!</p>
-<p>The syntax is also the simplest imaginable: this solution is <strong>extremely intuitive</strong>. Under the hood, <strong>Pandas takes care of vectorizing our data</strong>  with an <strong>optimized C code using contiguous memory blocks</strong>.</p>
+<p>The syntax is also the simplest imaginable: this solution is extremely intuitive. Under the hood, Pandas takes care of vectorizing our data with an optimized C code using contiguous memory blocks.</p>
 
 </div>
 </div>
@@ -925,8 +926,8 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>This code is <strong>1500 times faster</strong> than <code>iterrows()</code> and it is even simpler to write.</p>
-<h2 id="&#9989;&#9989;-7.-NumPy-vectorization-(1900&#215;-faster)">&#9989;&#9989; 7. NumPy vectorization (1900&#215; faster)<a class="anchor-link" href="#&#9989;&#9989;-7.-NumPy-vectorization-(1900&#215;-faster)"> </a></h2><p>NumPy is designed to <strong>handle scientific computing</strong>. It has <strong>less overhead</strong> than Pandas methods since rows and dataframes all become <code>np.array</code>. It <strong>relies on the same optimizations</strong> as Pandas vectorization.</p>
-<p>There are <strong>two ways of converting a Series into a <code>np.array</code></strong>: using <code>.values</code> or <code>.to_numpy()</code>. The former has been <strong>deprecated for years</strong>, which is why we're gonna use <code>.to_numpy()</code> in this example.</p>
+<h2 id="&#9989;&#9989;-7.-NumPy-vectorization-(1900&#215;-faster)">&#9989;&#9989; 7. NumPy vectorization (1900&#215; faster)<a class="anchor-link" href="#&#9989;&#9989;-7.-NumPy-vectorization-(1900&#215;-faster)"> </a></h2><p>NumPy is designed to handle scientific computing. It has <strong>less overhead</strong> than Pandas methods since rows and dataframes all become <code>np.array</code>. It relies on the same optimizations as Pandas vectorization.</p>
+<p>There are <strong>two ways</strong> of converting a Series into a <code>np.array</code>: using <code>.values</code> or <code>.to_numpy()</code>. The former has been deprecated for years, which is why we're gonna use <code>.to_numpy()</code> in this example.</p>
 
 </div>
 </div>
@@ -967,11 +968,11 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>We found our winner with a technique that is <strong>1900 times faster</strong> than our first competitor! Let's wrap things up.</p>
-<h2 id="&#127942;-Conclusion">&#127942; Conclusion<a class="anchor-link" href="#&#127942;-Conclusion"> </a></h2><p>Don't be like me: if you need to <strong>iterate over rows in a DataFrame</strong>, <strong>vectorization</strong> is the way to go! You can find the code to reproduce the experiments <a href="https://colab.research.google.com/drive/1v9v4j1MnklaCd9eFcuGnB5x_5FoINmRe?usp=sharing">at this address</a>. Vectorization is <strong>not harder to read</strong>, it <strong>doesn't take longer</strong> to write, and the <strong>performance gain is incredible</strong>.</p>
-<p>It's not just about performance: <strong>understanding how each method works</strong> under the hood helped me to <strong>write better code</strong>. Performance gains are always based on the same techniques: <strong>transforming data into vectors</strong> and matrices to take advantage of <strong>parallel processing</strong>. Alas, this is often at the <strong>expense of readability</strong>. But it doesn't have to be.</p>
-<p>Iterating over rows is <strong>just an example</strong> but it shows that, sometimes, <strong>you can have the cake and eat it</strong>. 🎂</p>
-<p>If you liked this article, <strong>follow me on Twitter <a href="https://twitter.com/maximelabonne">@maximelabonne</a> for more tips</strong> about data science and machine learning!</p>
-<h2 id="&#128200;-Bonus">&#128200; Bonus<a class="anchor-link" href="#&#128200;-Bonus"> </a></h2><p>We can measure the performance of each method <strong>depending on the size</strong> of the DataFrame. I reimplemented all of them in this dummy example using <strong>perfplot</strong> to show that the <strong>leaderboard might be different under 300 rows</strong>. Anyway, such a dataset would be so small that we <strong>wouldn't need much optimization</strong>.</p>
+<h2 id="&#127942;-Conclusion">&#127942; Conclusion<a class="anchor-link" href="#&#127942;-Conclusion"> </a></h2><p>Don't be like me: if you need to iterate over rows in a DataFrame, <strong>vectorization</strong> is the way to go! You can find the code to reproduce the experiments <a href="https://colab.research.google.com/drive/1v9v4j1MnklaCd9eFcuGnB5x_5FoINmRe?usp=sharing">at this address</a>. Vectorization is not harder to read, it doesn't take longer to write, and the performance gain is incredible.</p>
+<p>It's not just about performance: understanding how each method works under the hood helped me to <strong>write better code</strong>. Performance gains are always based on the same techniques: transforming data into vectors and matrices to take advantage of parallel processing. Alas, this is often at the expense of readability. But it doesn't have to be.</p>
+<p>Iterating over rows is just an example but it shows that, sometimes, you can have the cake and eat it. 🎂</p>
+<p>If you liked this article, <strong>follow me on Twitter <a href="https://twitter.com/maximelabonne">@maximelabonne</a></strong> for more tips about data science and machine learning!</p>
+<h2 id="&#128200;-Bonus">&#128200; Bonus<a class="anchor-link" href="#&#128200;-Bonus"> </a></h2><p>We can measure the performance of each method depending on the size of the DataFrame. I reimplemented all of them in this dummy example using <strong>perfplot</strong> to show that the leaderboard might be different under 300 rows. Anyway, such a dataset would be so small that we wouldn't need much optimization.</p>
 
 </div>
 </div>
