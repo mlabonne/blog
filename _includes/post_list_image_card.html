@@ -14,9 +14,9 @@
         </h3>
         <p class="post-meta-description">{{ post.description }}</p>
           <p class="post-meta">
-            <img src="{{ '/blog/images/icons/icon-calendar.svg' }}" class="icon-watch"> {{ post.date | date: date_format }}
+            <img src="{{ '/blog/images/icons/icon-calendar.svg' }}" class="icon-watch"> {{ post.date | date: date_format }} 
             {%- if post.colab -%}
-              • <a href= {{ post.colab }} target="_blank"> <img class="notebook-badge-image" src="/blog/assets/badges/colab.svg" alt="Open In Colab"></a>
+              • <a href= {{ post.colab }} target="_blank"> <img class="notebook-badge-image-home" src="/blog/assets/badges/colab-home.svg" alt="Open In Colab"></a>
             {%- endif %}
           </p>
       </div>
