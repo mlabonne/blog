@@ -433,7 +433,7 @@ span.ansi-red-bg { background-color: red; }
 
 .icon-watch { width: 14px; display: inline-block !important; vertical-align: baseline !important; margin-right: 2px !important; }
 
-.icon-colab { display: inline-block !important; vertical-align: baseline !important; margin-right: 2px !important; }
+.icon-colab { display: inline-block !important; vertical-align: middle !important; margin-right: 2px !important; margin-bottom: 3px !important; }
 
 @media (max-width: 700px) { .col-8.d-table-cell.p-3 { display: none !important; } }
 
