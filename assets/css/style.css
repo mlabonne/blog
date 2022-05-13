@@ -447,7 +447,7 @@ span.ansi-red-bg { background-color: red; }
 
 .post-list > li { margin-bottom: 20px; }
 
-.codeincolab, .codeincolab:visited, .codeincolab:hover, .codeincolab:active { color: #828282; text-decoration: none; }
+.codeincolab, .codeincolab:visited, .codeincolab:hover, .codeincolab:active { color: #828282 !important; text-decoration: none; }
 
 /*-----------------------------------*/
 /*--- IMPORT STYLES FOR FASTPAGES ---*/
