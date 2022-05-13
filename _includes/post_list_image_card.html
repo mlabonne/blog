@@ -13,6 +13,11 @@
           </a>
         </h3>
         <p class="post-meta-description">{{ post.description }}</p>
-          <p class="post-meta"><img src="{{ '/blog/images/icons/icon-calendar.svg' }}" class="icon-watch"> {{ post.date | date: date_format }}</p>
+          <p class="post-meta">
+            <img src="{{ '/blog/images/icons/icon-calendar.svg' }}" class="icon-watch"> {{ post.date | date: date_format }}
+            {%- if page.colab -%}
+              • <a href= {{ page.colab }} target="_blank"> <img class="notebook-badge-image" src="/blog/assets/badges/colab.svg" alt="Open In Colab"></a>
+            {%- endif %}
+          </p>
       </div>
   </div>
