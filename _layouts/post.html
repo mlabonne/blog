@@ -32,6 +32,9 @@ layout: default
         {% endfor %}
       {%- endif %}
        • {% include reading_time.html -%}
+      {%- if page.colab -%}
+       • <a href= {{ page.colab }} target="_blank"> <img class="notebook-badge-image" src="/blog/assets/badges/colab.svg" alt="Open In Colab"></a>
+      {%- endif %}
     </p>
 
     {% if page.categories.size > 0 and site.show_tags %}
@@ -43,7 +46,7 @@ layout: default
       </p>
     {% endif %}
 
-    {% if page.layout == 'notebook' %}
+    <!-- {% if page.layout == 'notebook' %}
       {% if page.badges or page.badges == nil %}
         <div class="badges">
           <div class="runthecode">
@@ -57,7 +60,7 @@ layout: default
           </div>
         </div>
       {% endif -%}
-    {% endif -%}
+    {% endif -%} -->
   </header>
 
   <div class="post-content e-content" itemprop="articleBody">
