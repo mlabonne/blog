@@ -331,6 +331,8 @@ body { font-size: inherit !important; overflow-x: hidden !important; background-
 
 .post-content h2 { font-size: 36px !important; }
 
+.post-content h3 { font-size: 30px !important; }
+
 .site-header { border-top: 0; border-bottom: 0; background-color: #24292e; }
 
 .site-title { font-family: Arial, Helvetica, sans-serif; font-weight: 600; }
@@ -413,9 +415,9 @@ span.ansi-red-bg { background-color: red; }
 
 .figure { margin-top: 1rem !important; margin-bottom: 1rem !important; }
 
-.note-book-badge-image { margin-top: 0.5rem !important; }
+.note-book-badge-image { margin-top: 0.5rem !important; display: inherit !important; vertical-align: middle !important; margin-left: 0.2rem !important; }
 
-.notebook-badge-image:hover { filter: drop-shadow(0 0 0.2rem #3B70FE); }
+.notebook-badge-image:hover { filter: drop-shadow(0 0 0.2rem #0e7fc0); }
 
 .inline-img { display: inline; margin: 0 0.125em; padding: 0; vertical-align: baseline; }
 
