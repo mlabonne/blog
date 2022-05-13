@@ -359,7 +359,7 @@ hr { margin-bottom: 3rem !important; margin-top: 3rem !important; border: 0 !imp
 
 .utterances:before { content: ' '; display: block; margin-bottom: 2rem; margin-top: 3rem; border: 0; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0)); }
 
-.dark-bg { background-color: #323443; padding-top: 0.5rem; padding-bottom: 0.5rem; width: 100vw; margin-left: 50%; transform: translateX(-50%); }
+.dark-bg { background-color: #323443; padding-top: 0.5rem; padding-bottom: 0.5rem; width: 100vw; margin-left: 50%; margin-top: 2rem; margin-bottom: 2rem; transform: translateX(-50%); }
 
 .no-margin { margin: 0 !important; }
 
