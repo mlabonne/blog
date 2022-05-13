@@ -339,6 +339,11 @@ span.ansi-red-bg {
     margin-bottom: 20px;
 }
 
+.codeincolab, .codeincolab:visited, .codeincolab:hover, .codeincolab:active {
+    color: #828282;
+    text-decoration: none
+}
+
 /*-----------------------------------*/
 /*--- IMPORT STYLES FOR FASTPAGES ---*/
 @import "minima/fastpages-styles";   

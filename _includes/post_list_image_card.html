@@ -16,7 +16,7 @@
           <p class="post-meta">
             <img src="{{ '/blog/images/icons/icon-calendar.svg' }}" class="icon-watch"> {{ post.date | date: date_format }} 
             {%- if post.colab -%}
-             • <a href= {{ post.colab }}>Code in Colab</a>
+             • <a href= {{ post.colab }} class="codeincolab">Code in Colab</a>
             {%- endif %}
           </p>
       </div>
