@@ -306,8 +306,9 @@ span.ansi-red-bg {
 }
 .icon-colab {
     display: inline-block !important;
-    vertical-align: baseline !important;
+    vertical-align: middle !important;
     margin-right: 2px !important;
+    margin-bottom: 3px !important;
 }
 
 @media (max-width: 700px) {
