@@ -135,11 +135,12 @@ window.onload = wrap_img;
     
       31 min read
     
-</span></p>
+</span>
+    </p>
 
     
 
-    
+    <!-- 
       
         <div class="badges">
           <div class="runthecode">
@@ -172,7 +173,8 @@ window.onload = wrap_img;
 
           </div>
         </div>
-      </header>
+      -->
+  </header>
 
   <div class="post-content e-content" itemprop="articleBody">
     <!--
@@ -284,9 +286,7 @@ HFFG
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="&#127937;-II.-Q-table">&#127937; II. Q-table<a class="anchor-link" href="#&#127937;-II.-Q-table"> </a></h2><p>In ❄️<strong>Frozen Lake</strong>, there are 16 tiles, which means our agent can be found in 16 different positions, called <strong>states</strong>. For each state, there are 4 possible actions: go ◀️<strong>LEFT</strong>, 🔽<strong>DOWN</strong>, ▶️<strong>RIGHT</strong>, and 🔼<strong>UP</strong>. Learning how to play Frozen Lake is like <strong>learning which action you should choose in every state</strong>. To know which action is the best in a given state, we would like to assign a <strong>quality value</strong> to our actions. We have 16 states and 4 actions, so want to calculate $16 \times 4 = 64$ values.</p>
-<p>A nice way of representing it is using a table, known as a Q-table, where <strong>rows list every state $s$</strong> and <strong>columns list every action $a$</strong>. In this Q-table, each cell contains a value $Q(s, a)$, which is the <strong>value (quality) of the action $a$ in the state $s$</strong> (1 if it's the best action possible, 0 if it's really bad). When our agent is in a particular state $s$, it <strong>just has to check this table to see which action has the highest value</strong>. Taking the action with the highest value makes sense but <strong>we'll see later that we can design something even better</strong>...
-<br />
-<br /></p>
+<p>A nice way of representing it is using a table, known as a Q-table, where <strong>rows list every state $s$</strong> and <strong>columns list every action $a$</strong>. In this Q-table, each cell contains a value $Q(s, a)$, which is the <strong>value (quality) of the action $a$ in the state $s$</strong> (1 if it's the best action possible, 0 if it's really bad). When our agent is in a particular state $s$, it <strong>just has to check this table to see which action has the highest value</strong>. Taking the action with the highest value makes sense but <strong>we'll see later that we can design something even better</strong>...</p>
 <table>
 <thead><tr>
 <th style="text-align:left">State</th>
@@ -341,9 +341,7 @@ HFFG
 </tr>
 </tbody>
 </table>
-<p><center><i>Example of Q-table, where each cell contains the value $Q(a, s)$ of the action $a$ (column) in a given state $s$ (row)</i></center>
-<br /></p>
-<p>Let's create our Q-table and fill it with zeros since <strong>we still have no idea of the value of each action in each state</strong>.</p>
+<center><i>Example of Q-table, where each cell contains the value $Q(a, s)$ of the action $a$ (column) in a given state $s$ (row)</i></center><p>Let's create our Q-table and fill it with zeros since <strong>we still have no idea of the value of each action in each state</strong>.</p>
 
 </div>
 </div>

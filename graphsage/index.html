@@ -133,11 +133,12 @@ window.onload = wrap_img;
     
       21 min read
     
-</span></p>
+</span>• <a href= https://colab.research.google.com/drive/1b6SWugNKnxsI0L9auX1zwszlXf3rRZyS?usp=sharing target="_blank"> <img class="notebook-badge-image" src="/blog/assets/badges/colab.svg" alt="Open In Colab"></a>
+    </p>
 
     
 
-    
+    <!-- 
       
         <div class="badges">
           <div class="runthecode">
@@ -170,7 +171,8 @@ window.onload = wrap_img;
 
           </div>
         </div>
-      </header>
+      -->
+  </header>
 
   <div class="post-content e-content" itemprop="articleBody">
     <!--
@@ -307,9 +309,7 @@ Graph has loops: False
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>As we can see, PubMed has an insanely low number of training nodes compared to the full graph. There are only 60 samples to learn how to classify the 1000 test nodes.</p>
-<p>Despite this challenge, GNNs manage to obtain high levels of accuracy. Here’s the leaderboard of known techniques (a more complete benchmark can be found on <a href="https://paperswithcode.com/sota/node-classification-on-pubmed">PapersWithCode</a>):
-<br />
-<br /></p>
+<p>Despite this challenge, GNNs manage to obtain high levels of accuracy. Here’s the leaderboard of known techniques (a more complete benchmark can be found on <a href="https://paperswithcode.com/sota/node-classification-on-pubmed">PapersWithCode</a>):</p>
 <table>
 <thead><tr>
 <th style="text-align:left">Model</th>
@@ -335,7 +335,6 @@ Graph has loops: False
 </tr>
 </tbody>
 </table>
-<p><br /></p>
 <p>I couldn’t find any result for GraphSAGE on PubMed with this specific setting (60 training nodes, 1000 test nodes), so I don’t expect a great accuracy. But another metric can be just as relevant when working with large graphs: <strong>training time</strong>.</p>
 
 </div>

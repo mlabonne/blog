@@ -135,11 +135,12 @@ window.onload = wrap_img;
     
       16 min read
     
-</span></p>
+</span>• <a href= https://colab.research.google.com/drive/1B0vLpH_gSfrOLgsc2UZVyXrcofzA-t0L?usp=sharing target="_blank"> <img class="notebook-badge-image" src="/blog/assets/badges/colab.svg" alt="Open In Colab"></a>
+    </p>
 
     
 
-    
+    <!-- 
       
         <div class="badges">
           <div class="runthecode">
@@ -172,7 +173,8 @@ window.onload = wrap_img;
 
           </div>
         </div>
-      </header>
+      -->
+  </header>
 
   <div class="post-content e-content" itemprop="articleBody">
     <!--
@@ -237,9 +239,7 @@ window.onload = wrap_img;
 <li><a href="http://eliassi.org/papers/ai-mag-tr08.pdf"><strong>PubMed</strong></a>: it is an even bigger dataset with 19717 scientific publications about diabetes from PubMed’s database, classified into 3 categories.
 ➡️ Node features are <a href="https://en.wikipedia.org/wiki/Tf%E2%80%93idf">TF-IDF weighted word vector</a> from a dictionary of 500 unique words.</li>
 </ul>
-<p>These datasets have been widely used by the scientific community. As a challenge, we can compare our accuracy scores to those obtained in the <a href="https://arxiv.org/pdf/1710.10903.pdf">literature</a> using <strong>Multilayer Perceptrons</strong> (MLPs), <strong>GCNs</strong>, and <strong>GATs</strong>:
-<br />
-<br /></p>
+<p>These datasets have been widely used by the scientific community. As a challenge, we can compare our accuracy scores to those obtained in the <a href="https://arxiv.org/pdf/1710.10903.pdf">literature</a> using <strong>Multilayer Perceptrons</strong> (MLPs), <strong>GCNs</strong>, and <strong>GATs</strong>:</p>
 <table>
 <thead><tr>
 <th style="text-align:left">Dataset</th>
@@ -269,7 +269,6 @@ window.onload = wrap_img;
 </tr>
 </tbody>
 </table>
-<p><br /></p>
 <p>PubMed is quite large so it would take longer to process it and train a GNN on it. Cora is the most studied one in the literature, so let’s <strong>focus on CiteSeer</strong> as a middle ground.</p>
 <p>We can directly import any of these datasets in PyTorch Geometric with the <a href="https://pytorch-geometric.readthedocs.io/en/latest/modules/datasets.html#torch_geometric.datasets.Planetoid">Planetoid class</a>:</p>
 
