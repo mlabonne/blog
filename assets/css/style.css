@@ -419,6 +419,8 @@ span.ansi-red-bg { background-color: red; }
 
 .notebook-badge-image:hover { filter: drop-shadow(0 0 0.2rem #0e7fc0); }
 
+.notebook-badge-image-home { display: inherit !important; vertical-align: middle !important; margin-left: 0.2rem !important; }
+
 .inline-img { display: inline; margin: 0 0.125em; padding: 0; vertical-align: baseline; }
 
 .social-media-list li a, .pagination li a { border-radius: 100px; }
