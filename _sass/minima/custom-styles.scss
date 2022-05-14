@@ -14,13 +14,13 @@ body {
 }
 
 .post-content h1 {
-    font-size: 36px !important;
+    font-size: 2.25rem !important;
 }
 .post-content h2 {
-    font-size: 36px !important;
+    font-size: 2.25rem !important;
 }
 .post-content h3 {
-    font-size: 30px !important;
+    font-size: 1.875rem !important;
 }
 
 .site-header {
@@ -79,6 +79,10 @@ body {
     -webkit-transition: transform 0.5s;
     -moz-transition: transform 0.5s;
     -o-transition: transform 0.5s;
+}
+
+.related {
+    font-size: 1.75rem;
 }
 
 hr {
@@ -148,7 +152,7 @@ blockquote {
 .post-content p, .post-content li {
     color: #24292e !important;
     text-align: justify;
-    font-size: 18px;
+    font-size: 1.125rem;
  }
 
 .p-name {
@@ -231,7 +235,7 @@ span.ansi-red-bg {
 }
 
 .katex-display {
-    font-size: 20px !important;
+    font-size: 1.25rem !important;
 }
 
 .post-link, .post-link:visited {
