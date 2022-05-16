@@ -331,7 +331,7 @@ body { font-size: inherit !important; overflow-x: hidden !important; background-
 
 .post-content h1 { font-size: 2.25rem !important; font-weight: 600 !important; }
 
-.post-content h2 { font-size: 2.25rem !important; font-weight: 600 !important; }
+.post-content h2 { font-size: 2.25rem !important; font-weight: 600 !important; margin-top: 3rem !important; }
 
 .post-content h3 { font-size: 1.875rem !important; font-weight: 600 !important; }
 
