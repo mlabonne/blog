@@ -234,7 +234,7 @@ window.onload = wrap_img;
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="&#127760;-I.-PROTEINS-dataset">&#127760; I. PROTEINS dataset<a class="anchor-link" href="#&#127760;-I.-PROTEINS-dataset"> </a></h1><center><img src="https://mlabonne.github.io/blog/images/gin/proteinimager.png" /><i>3D plot of a protein by DeepMind.</i></center><p><a href="https://chrsmrrs.github.io/datasets/docs/datasets/">PROTEINS</a> is a popular dataset in bioinformatics. It is a collection of <strong>1113 graphs</strong> representing proteins, where nodes are amino acids. Two nodes are connected by an edge when they are close enough (&lt; 0.6 nanometers). The goal is to classify each protein as an <strong>enzyme</strong> or <strong>not</strong>.</p>
+<h2 id="&#127760;-I.-PROTEINS-dataset">&#127760; I. PROTEINS dataset<a class="anchor-link" href="#&#127760;-I.-PROTEINS-dataset"> </a></h2><center><img src="https://mlabonne.github.io/blog/images/gin/proteinimager.png" /><i>3D plot of a protein by DeepMind.</i></center><p><a href="https://chrsmrrs.github.io/datasets/docs/datasets/">PROTEINS</a> is a popular dataset in bioinformatics. It is a collection of <strong>1113 graphs</strong> representing proteins, where nodes are amino acids. Two nodes are connected by an edge when they are close enough (&lt; 0.6 nanometers). The goal is to classify each protein as an <strong>enzyme</strong> or <strong>not</strong>.</p>
 <p>Enzymes are a particular type of <strong>proteins</strong> that act as catalysts to speed up chemical reactions in the cell. They are essential for digestion (e.g., lipases), respiration (e.g., oxidases), and other crucial functions of the human body. They are also used in commercial applications, like the production of antibiotics.</p>
 <p>This dataset is also available on TUDataset and implemented in PyTorch Geometric.</p>
 
@@ -452,8 +452,8 @@ Test loader:
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>PROTEINS is not a huge dataset, but mini-batching will speed up the training nonetheless. We could use a GCN or a GAT, but there's a new architecture I'd like to introduce: the <strong>Graph Isomorphism Network</strong>.</p>
-<h1 id="&#127870;-II.-Graph-Isomorphism-Network-(GIN)">&#127870; II. Graph Isomorphism Network (GIN)<a class="anchor-link" href="#&#127870;-II.-Graph-Isomorphism-Network-(GIN)"> </a></h1><p>GIN was designed by researchers trying to maximize the <strong>representational (or discriminative) power</strong> of a GNN. But how do you define a "representational power"?</p>
-<h2 id="A.-Weisfeiler-Lehman-test">A. Weisfeiler-Lehman test<a class="anchor-link" href="#A.-Weisfeiler-Lehman-test"> </a></h2><p>A way to characterize the "power" of a GNN is to use the Weisfeiler-Lehman (WL) graph isomorphism test. <a href="https://en.wikipedia.org/wiki/Graph_isomorphism">Isomorphic graphs</a> mean that they have the <strong>same structure</strong>: identical connections but a permutation of nodes. The WL test is able to tell if two graphs are non-isomorphic, but it cannot guarantee that they are isomorphic.</p>
+<h2 id="&#127870;-II.-Graph-Isomorphism-Network-(GIN)">&#127870; II. Graph Isomorphism Network (GIN)<a class="anchor-link" href="#&#127870;-II.-Graph-Isomorphism-Network-(GIN)"> </a></h2><p>GIN was designed by researchers trying to maximize the <strong>representational (or discriminative) power</strong> of a GNN. But how do you define a "representational power"?</p>
+<h3 id="A.-Weisfeiler-Lehman-test">A. Weisfeiler-Lehman test<a class="anchor-link" href="#A.-Weisfeiler-Lehman-test"> </a></h3><p>A way to characterize the "power" of a GNN is to use the Weisfeiler-Lehman (WL) graph isomorphism test. <a href="https://en.wikipedia.org/wiki/Graph_isomorphism">Isomorphic graphs</a> mean that they have the <strong>same structure</strong>: identical connections but a permutation of nodes. The WL test is able to tell if two graphs are non-isomorphic, but it cannot guarantee that they are isomorphic.</p>
 <center><img src="https://mlabonne.github.io/blog/images/gin/isomorphic_graphs.png" /><i>Two isomorphic graphs.</i></center><p>This might not seem like much, but it can be <strong>extremely difficult</strong> to tell two large graphs apart. In fact, this problem is not known to be solvable in polynomial time, nor to be NP-complete. It might even be somewhere in between, in the computational complexity class <a href="https://en.wikipedia.org/wiki/Graph_isomorphism_problem">NP-intermediate</a> (if it only exists).</p>
 <p>Okay, but how is it <strong>related</strong> to GNNs? Some researchers in graph learning noticed that <strong>this test and the way GNNs learn are oddly similar</strong>. In the WL test,</p>
 <ol>
@@ -463,7 +463,7 @@ Test loader:
 </ol>
 <p>If you're interested in the WL test, I would recommend <a href="https://davidbieber.com/post/2019-05-10-weisfeiler-lehman-isomorphism-test/">this blog post</a> by David Bieber and <a href="https://towardsdatascience.com/expressive-power-of-graph-neural-networks-and-the-weisefeiler-lehman-test-b883db3c7c49">this article</a> by Michael Bronstein.</p>
 <p>Not only this test is similar to how feature vectors are aggregated in GNNs, but its ability to tell graphs apart makes it <strong>more powerful</strong> than a lot of architectures, including GCNs and GraphSAGE. This is what inspired <a href="https://arxiv.org/abs/1810.00826v3">Xu et al.</a> to design a new aggregator that is proven to be as good as the WL test.</p>
-<h2 id="B.-One-aggregator-to-rule-them-all">B. One aggregator to rule them all<a class="anchor-link" href="#B.-One-aggregator-to-rule-them-all"> </a></h2><p>To be as good as the WL test, this new aggregator must produce <strong>different node embeddings</strong> when dealing with non-isomorphic graphs.</p>
+<h3 id="B.-One-aggregator-to-rule-them-all">B. One aggregator to rule them all<a class="anchor-link" href="#B.-One-aggregator-to-rule-them-all"> </a></h3><p>To be as good as the WL test, this new aggregator must produce <strong>different node embeddings</strong> when dealing with non-isomorphic graphs.</p>
 <p>We'll skip the math-heavy part of the paper, but the solution they found is to use two injective functions. Which ones? We don't know, we can just learn them with a MLP!</p>
 <ul>
 <li>With GATs, we used a neural network to learn the <strong>best weighting factors</strong> for a given task;</li>
@@ -475,7 +475,7 @@ $$h_i = MLP\bigg((1+ɛ) \cdot x_i + \sum_{j \in \mathcal{N}_i}x_j\bigg)$$
 </p>
 <p>In this formula, $ɛ$ determines the <strong>importance of the target node</strong> compared to its neighbors (it has the same importance if $ɛ = 0$). It can be a learnable parameter or a fixed scalar.</p>
 <p>Note that we talk about MLPs to highlight the fact there is more than one layer. According to the authors, one layer is <strong>not sufficient</strong> for graph learning in general.</p>
-<h2 id="C.-Global-pooling">C. Global pooling<a class="anchor-link" href="#C.-Global-pooling"> </a></h2><p>Global pooling or graph-level readout consists of producing a <strong>graph embedding</strong> using the node embeddings calculated by the GNN.</p>
+<h3 id="C.-Global-pooling">C. Global pooling<a class="anchor-link" href="#C.-Global-pooling"> </a></h3><p>Global pooling or graph-level readout consists of producing a <strong>graph embedding</strong> using the node embeddings calculated by the GNN.</p>
 <p>A simple way to obtain a graph embedding $h_G$ is to use the <strong>mean</strong>, <strong>sum</strong>, or <strong>max</strong> of every node embedding $h_i$:</p>
 $${Mean}: h_G = \frac{1}{N} \sum_{i=0}^N h_i \\
 {Sum}: h_G = \sum_{i=0}^N h_i \\
@@ -495,7 +495,7 @@ $$h_G = \sum_{i=0}^N{h_i^0}\ || \ \dots \ || \ \sum_{i=0}^N{h_i^k}\$$
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="&#129504;-III.-GIN-in-PyTorch-Geometric">&#129504; III. GIN in PyTorch Geometric<a class="anchor-link" href="#&#129504;-III.-GIN-in-PyTorch-Geometric"> </a></h1><p>It is always interesting to see the differences between the original design and its implementations.</p>
+<h2 id="&#129504;-III.-GIN-in-PyTorch-Geometric">&#129504; III. GIN in PyTorch Geometric<a class="anchor-link" href="#&#129504;-III.-GIN-in-PyTorch-Geometric"> </a></h2><p>It is always interesting to see the differences between the original design and its implementations.</p>
 <p>There is a <code>GINConv</code> layer in PyTorch Geometric with different parameters:</p>
 <ul>
 <li><code>nn</code>: the <strong>MLP</strong> that is used to approximate our two injective functions;</li>
@@ -874,7 +874,7 @@ GCN+GIN accuracy: 67.45%
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>This time, we're lucky enough to see the <strong>accuracy improved</strong>.</p>
 <p>Obviously, it's not always the case. More sophisticated methods involve building an entirely different ML algorithm for classification, such as a Random Forest. This classifier takes graph embeddings as inputs and outputs the final classification.</p>
-<h1 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion"> </a></h1><p>Graph Isomorphism Networks are an important step in the understanding of GNNs.</p>
+<h2 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion"> </a></h2><p>Graph Isomorphism Networks are an important step in the understanding of GNNs.</p>
 <p>They not only improve the accuracy scores on several benchmarks but also provide a <strong>theoretical framework</strong> to explain why one architecture is better than another. In this article,</p>
 <ul>
 <li>We saw a new task with <strong>graph classification</strong>, performed with global pooling;</li>

@@ -531,7 +531,7 @@ Subgraph 3: Data(x=[189, 500], edge_index=[2, 229], y=[189], train_mask=[189], v
 <li>Obtain their <strong>relative importance</strong> (important nodes are seen more frequently than others).</li>
 </ol>
 <p>This strategy feels a bit like a fast <strong>attention mechanism</strong>. It assigns weights to nodes and increases the relevance of the most popular ones.</p>
-<h2 id="&#128165;-B.-Aggregation">&#128165; B. Aggregation<a class="anchor-link" href="#&#128165;-B.-Aggregation"> </a></h2><p>The aggregation process determines how to combine the feature vectors to produce the <strong>node embeddings</strong>. The original paper presents three ways of aggregating features:</p>
+<h3 id="&#128165;-B.-Aggregation">&#128165; B. Aggregation<a class="anchor-link" href="#&#128165;-B.-Aggregation"> </a></h3><p>The aggregation process determines how to combine the feature vectors to produce the <strong>node embeddings</strong>. The original paper presents three ways of aggregating features:</p>
 <ul>
 <li><strong>Mean</strong> aggregator</li>
 <li><strong>LSTM</strong> aggregator</li>
@@ -565,7 +565,7 @@ $$\textbf{h}_v' = \textbf{W} \cdot mean([\textbf{h}_v||\textbf{h}_u])$$
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="&#129504;-III.-GraphSAGE-in-PyTorch-Geometric">&#129504; III. GraphSAGE in PyTorch Geometric<a class="anchor-link" href="#&#129504;-III.-GraphSAGE-in-PyTorch-Geometric"> </a></h1><p>We can easily implement a GraphSAGE architecture in PyTorch Geometric with the <code>SAGEConv</code> layer. This implementation is <strong>not exactly the same</strong> as in the paper since it uses 2 matrices instead of one:</p>
+<h2 id="&#129504;-III.-GraphSAGE-in-PyTorch-Geometric">&#129504; III. GraphSAGE in PyTorch Geometric<a class="anchor-link" href="#&#129504;-III.-GraphSAGE-in-PyTorch-Geometric"> </a></h2><p>We can easily implement a GraphSAGE architecture in PyTorch Geometric with the <code>SAGEConv</code> layer. This implementation is <strong>not exactly the same</strong> as in the paper since it uses 2 matrices instead of one:</p>
 <p>
 $$\textbf{h}_v' = \textbf{W}_1\textbf{h}_v + \textbf{W}_2 \cdot mean(\textbf{h}_u)$$
 </p>
@@ -982,7 +982,7 @@ Wall time: 18min 7s
 <p>In this case, we can’t use the cross-entropy loss. We have to engineer a loss function that forces nodes that are nearby in the original graph to remain close to each other in the embedding space. Conversely, the same function must ensure that <strong>distant nodes</strong> in the graph must have <strong>distant representations</strong> in the embedding space. This is the loss that is presented in <a href="https://cs.stanford.edu/people/jure/pubs/graphsage-nips17.pdf">GraphSAGE’s paper</a>.</p>
 <p>In the case of PinSAGE and UberEeats’ modified GraphSAGE, we’re dealing with <strong>recommender systems</strong>.</p>
 <p>The goal is to correctly rank the most relevant items (pins, restaurants) for each user, which is very different. We don’t only want to know what the closest embeddings are, we have to produce the <strong>best rankings possible</strong>. This is why these systems are also trained in an unsupervised way, but with another loss function: a max-margin ranking loss.</p>
-<h1 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion"> </a></h1><p>GraphSAGE is an incredibly fast architecture to process large graphs. It might not be as accurate as a GCN or a GAT, but it is an essential model when dealing with a <strong>massive amount of data</strong>. It delivers this speed thanks to a clever combination of 1/ neighbor sampling to prune the graph and 2/ fast aggregation with a mean aggregator in this example. In this article,</p>
+<h2 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion"> </a></h2><p>GraphSAGE is an incredibly fast architecture to process large graphs. It might not be as accurate as a GCN or a GAT, but it is an essential model when dealing with a <strong>massive amount of data</strong>. It delivers this speed thanks to a clever combination of 1/ neighbor sampling to prune the graph and 2/ fast aggregation with a mean aggregator in this example. In this article,</p>
 <ul>
 <li>We explored a <strong>new dataset</strong> with PubMed, which is several times larger than the previous one;</li>
 <li>We explained the idea behind <strong>neighbor sampling</strong>, which only considers a predefined number of random neighbors at each hop;</li>

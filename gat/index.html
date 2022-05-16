@@ -395,7 +395,7 @@ Has isolated nodes: True
 <center><img src="https://mlabonne.github.io/blog/images/gat/graph_attention.png" width="400" /></center><p>This mechanism assigns a weighting factor (attention score) to each connection. Let’s call $\alpha_{ij}$ the attention score between the nodes $i$ and $j$.</p>
 <p>Here’s how to calculate the embedding of node 1, where $\mathbf{W}$ is a shared weight matrix:</p>
 <p>
-$$h_i = \sum_{j \in \mathcal{N}_i} \dfrac{1}{\sqrt{deg(i)}\sqrt{deg(j)}} \mathbf{W} x_j$$
+$$h_i = \alpha_{11}\mathbf{W}x_1 + \alpha_{12}\mathbf{W}x_2 + \alpha_{13}\mathbf{W}x_3 + \alpha_{14}\mathbf{W}x_4$$
 </p>
 <p>But how do we calculate the attention scores? We could write a static formula, but there’s a smarter solution: we can <strong>learn their values with a neural network</strong>. There are three steps in this process:</p>
 <ol>
@@ -406,16 +406,16 @@ $$h_i = \sum_{j \in \mathcal{N}_i} \dfrac{1}{\sqrt{deg(i)}\sqrt{deg(j)}} \mathbf
 <h3 id="1&#65039;&#8419;-Linear-transformation">1&#65039;&#8419; Linear transformation<a class="anchor-link" href="#1&#65039;&#8419;-Linear-transformation"> </a></h3><p>We want to calculate the <strong>importance of each connection</strong>, so we need pairs of hidden vectors. An easy way to create these pairs is to concatenate vectors from both nodes.</p>
 <p>Only then can we apply a new <strong>linear transformation</strong> with a weight matrix $W_{att}$:</p>
 <p>
-$$a_{ij} = W_{att}^t[\mathbf{W}x_i\mathbin\Vert \mathbf{W}x_j])\tag{1}$$
+$$a_{ij} = W_{att}^t[\mathbf{W}x_i\mathbin\Vert \mathbf{W}x_j]$$
 </p>
 <center><img src="https://mlabonne.github.io/blog/images/gat/attention_calculation1.png" height="400" /></center><h3 id="2&#65039;&#8419;-Activation-function">2&#65039;&#8419; Activation function<a class="anchor-link" href="#2&#65039;&#8419;-Activation-function"> </a></h3><p>We’re building a neural network, so the second step is to add an activation function. In this case, the authors of the paper chose the <em>LeakyReLU</em> function.</p>
 <p>
-$$e_{ij} = LeakyReLU(a_{ij})\tag{2}$$
+$$e_{ij} = LeakyReLU(a_{ij})$$
 </p>
 <center><img src="https://mlabonne.github.io/blog/images/gat/attention_calculation2.png" height="400" /></center><h3 id="3&#65039;&#8419;-Softmax-normalization">3&#65039;&#8419; Softmax normalization<a class="anchor-link" href="#3&#65039;&#8419;-Softmax-normalization"> </a></h3><p>The output of our neural network is <strong>not normalized</strong>, which is a problem since we want to compare these scores. To be able to say if node 2 is more important to node 1 than node 3 ($\alpha_{12} &gt; \alpha_{13}$), we need to share the same scale.</p>
 <p>A common way to do it with neural networks is to use the <strong><em>softmax</em></strong> function. Here, we apply it to every neighboring node:</p>
 <p>
-$$\alpha_{ij} = softmax_j(e_{ij}) = \frac{exp(e_{ij})}{\sum_{k \in \mathcal{N}_i}{exp(e_{ik})}}\tag{3}$$
+$$\alpha_{ij} = softmax_j(e_{ij}) = \frac{exp(e_{ij})}{\sum_{k \in \mathcal{N}_i}{exp(e_{ik})}}$$
 </p>
 <center><img src="https://mlabonne.github.io/blog/images/gat/attention_calculation3.png" height="400" /></center><p>Here you have it: we can calculate every $\alpha_{ij}$. The only problem is... <strong>self-attention is not very stable</strong>. In order to improve performance, <a href="https://arxiv.org/abs/1706.03762">Vaswani et al.</a> introduced multi-head attention in the transformer architecture.</p>
 <h3 id="4&#65039;&#8419;-Bonus:-multi-head-attention">4&#65039;&#8419; Bonus: multi-head attention<a class="anchor-link" href="#4&#65039;&#8419;-Bonus:-multi-head-attention"> </a></h3><p>This is only slightly surprising since we’ve been talking about self-attention a lot but, in reality, <strong>transformers are GNNs in disguise</strong>. This is why we can reuse some ideas from Natural Language Processing here.</p>
