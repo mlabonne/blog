@@ -15,7 +15,7 @@
 
     
     <meta name="twitter:card"  content="summary_large_image">
-    <meta name="twitter:image" content="https://mlabonne.github.ioimages/minecraft/thumbnail.png">
+    <meta name="twitter:image" content="https://mlabonne.github.ioimages/minecraft/thumbnail.jpg">
     
   <!-- end of Twitter cards -->
 
@@ -32,14 +32,14 @@
 <link rel="canonical" href="https://mlabonne.github.io/blog/minecraft/" />
 <meta property="og:url" content="https://mlabonne.github.io/blog/minecraft/" />
 <meta property="og:site_name" content="Maxime Labonne" />
-<meta property="og:image" content="https://mlabonne.github.io/blog/images/minecraft/thumbnail.png" />
+<meta property="og:image" content="https://mlabonne.github.io/blog/images/minecraft/thumbnail.jpg" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2022-05-25T00:00:00-05:00" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="https://mlabonne.github.io/blog/images/minecraft/thumbnail.png" />
+<meta property="twitter:image" content="https://mlabonne.github.io/blog/images/minecraft/thumbnail.jpg" />
 <meta property="twitter:title" content="Create a Bot to Find Diamonds in Minecraft" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Maxime Labonne","url":"https://mlabonne.github.io/blog/"},"dateModified":"2022-05-25T00:00:00-05:00","datePublished":"2022-05-25T00:00:00-05:00","description":"Reinforcement Learning and Behavior Cloning in Python with MineRL","headline":"Create a Bot to Find Diamonds in Minecraft","image":"https://mlabonne.github.io/blog/images/minecraft/thumbnail.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://mlabonne.github.io/blog/minecraft/"},"url":"https://mlabonne.github.io/blog/minecraft/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Maxime Labonne","url":"https://mlabonne.github.io/blog/"},"dateModified":"2022-05-25T00:00:00-05:00","datePublished":"2022-05-25T00:00:00-05:00","description":"Reinforcement Learning and Behavior Cloning in Python with MineRL","headline":"Create a Bot to Find Diamonds in Minecraft","image":"https://mlabonne.github.io/blog/images/minecraft/thumbnail.jpg","mainEntityOfPage":{"@type":"WebPage","@id":"https://mlabonne.github.io/blog/minecraft/"},"url":"https://mlabonne.github.io/blog/minecraft/"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://mlabonne.github.io/blog/feed.xml" title="Maxime Labonne" /><!-- the google_analytics_id gets auto inserted from the config file -->
 
@@ -188,8 +188,8 @@ window.onload = wrap_img;
 <div class="text_cell_render border-box-sizing rendered_html">
 <center><img src="https://mlabonne.github.io/blog/images/minerl/thumbnail.jpg" /></center><p>Minecraft is the <strong>next frontier</strong> for Artificial Intelligence.</p>
 <p>It's a huge game, with many mechanics and complex sequences of actions. It takes an <a href="https://minecraft.fandom.com/wiki/Minecraft_Wiki">entire wiki</a> with <strong>over 8000 pages</strong> just to teach humans how to play Minecraft. So how good can be artificial intelligence?</p>
-<center><img src="https://mlabonne.github.io/blog/images/minerl/interactive.gif" /></center><p>This is the question we'll answer in this article. We'll design a bot and try to achieve one of the most difficult challenges in Minecraft: <strong>finding diamonds from scratch</strong>. To make things even worse, we will take on this challenge in randomly generated worlds so we can't learn a particular seed.</p>
-<center><img src="https://mlabonne.github.io/blog/images/minerl/sequence.png" /></center><p>What we're gonna talk about is not limited to Minecraft. It can be applied to similar <strong>complex environments</strong> . More specifically, we will implement two different techniques that will become the backbone of our intelligent agent.</p>
+<p>This is the question we'll answer in this article. We'll design a bot and try to achieve one of the most difficult challenges in Minecraft: <strong>finding diamonds from scratch</strong>. To make things even worse, we will take on this challenge in randomly generated worlds so we can't learn a particular seed.</p>
+<center><img src="https://mlabonne.github.io/blog/images/minerl/sequence.png" />Sequence of actions to find diamonds</center><p>What we're gonna talk about is not limited to Minecraft. It can be applied to similar <strong>complex environments</strong> . More specifically, we will implement two different techniques that will become the backbone of our intelligent agent.</p>
 <p>But before we can train an agent, we need to understand <strong>how to interact</strong> with the environment. Let's start with a scripted bot to get familiar with the syntax. We'll use <a href="https://minerl.io/">MineRL</a>, a fantastic library to build AI applications in Minecraft.</p>
 <p>The code used in this article is available on <a href="https://colab.research.google.com/drive/1hRxR_UM72JAe32YveLxqoC6eX6Lqd9c2?usp=sharing">Google Colab</a>. It is a simplified and finetuned version of the excellent notebooks made by the organizers of the <a href="https://github.com/KarolisRam/MineRL2021-Intro-baselines">MineRL 2021 competition</a> (MIT License).</p>
 
@@ -322,7 +322,7 @@ AAAAAAAAAAAAAC1pbHN0AAAAJal0b28AAAAdZGF0YQAAAAEAAAAATGF2ZjU3LjcyLjEwMQ==" type="
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>We are in front of a tree. As you can see, the resolution is <strong>quite low</strong>. A low resolution means fewer pixels, which speeds things up. Fortunately for us, neural networks don't need a 4K resolution to understand what's happening on screen.</p>
 <p>Now, we would like to <strong>interact</strong> with the game. What can our agent do? Here's the <a href="https://minerl.io/docs/environments/#id14">list of possible actions</a>:</p>
-<center><img src="https://mlabonne.github.io/blog/images/minerl/actions.png" /></center><p>The first step to find diamonds is to <strong>get wood</strong> to make a crafting table and a wooden pickaxe.</p>
+<center><img src="https://mlabonne.github.io/blog/images/minerl/actions.png" width="800" /></center><p>The first step to find diamonds is to <strong>get wood</strong> to make a crafting table and a wooden pickaxe.</p>
 <p>Let's try to get closer to the tree. It means that we need to hold the "forward" button for less than a second. With MineRL, there are <strong>20 actions processed per second</strong>: we don't need a full second so let's process it 5 times, and wait for 40 more ticks.</p>
 <center><img src="https://mlabonne.github.io/blog/images/minerl/sequence1.png" /></center>
 </div>
@@ -610,7 +610,7 @@ Mi4xMDE=" type="video/mp4" />
 <p>The agent efficiently chopped the <strong>entire tree</strong>. This is a good start, but we would like to do it in a more automated way...</p>
 <h2 id="&#129504;-II.-Deep-Learning">&#129504; II. Deep Learning<a class="anchor-link" href="#&#129504;-II.-Deep-Learning"> </a></h2><p>Our bot works well in a fixed environment, but what happens if we change the seed or its starting point?</p>
 <p>Everything is <strong>scripted</strong> so the agent would probably try to chop a non-existent tree.</p>
-<center><img src="https://mlabonne.github.io/blog/images/minerl/randomseed.gif" /></center><p>This approach is <strong>too static</strong> for our requirements: we need something that can adapt to new environments. Instead of scripting orders, we want an AI that knows how to chop trees. Naturally, reinforcement learning is a pertinent framework to train this agent. More specifically, deep RL seems to be the solution since we're processing images to select the best actions.</p>
+<p>This approach is <strong>too static</strong> for our requirements: we need something that can adapt to new environments. Instead of scripting orders, we want an AI that knows how to chop trees. Naturally, reinforcement learning is a pertinent framework to train this agent. More specifically, deep RL seems to be the solution since we're processing images to select the best actions.</p>
 <p>There are two ways of implementing it:</p>
 <ul>
 <li><strong>Pure deep RL</strong>: the agent is trained from scratch by interacting with the environment. It is rewarded every time it chops a tree.</li>
@@ -903,13 +903,13 @@ Wall time: 26min 46s
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>
 <center class="youtube-iframe-wrapper">
-    <iframe width="730" height="315" src="https://www.youtube.com/embed/watch?v=umvrmQ_MYSI" frameborder="0" allowfullscreen=""></iframe>
+    <iframe width="730" height="315" src="https://www.youtube.com/embed/umvrmQ_MYSI" frameborder="0" allowfullscreen=""></iframe>
 </center>
-
-Our agent is quite chaotic but it manages to chop trees in this <strong>new, unseen environment</strong>. Now, how to find diamonds?</p>
+</p>
+<p>Our agent is quite chaotic but it manages to chop trees in this <strong>new, unseen environment</strong>. Now, how to find diamonds?</p>
 <h2 id="&#9935;&#65039;-III.-Script-+-Imitation-Learning">&#9935;&#65039; III. Script + Imitation Learning<a class="anchor-link" href="#&#9935;&#65039;-III.-Script-+-Imitation-Learning"> </a></h2><p>A simple yet powerful approach consists of <strong>combining</strong> scripted actions with artificial intelligence. Learn the boring stuff, script the knowledge.</p>
 <p>In this paradigm, we'll use the CNN to get a healthy amount of wood (3000 steps). Then, we can <strong>script a sequence</strong> to craft planks, sticks, a crafting table, a wooden pickaxe, and start mining stone (it should be below our feet). This stone can then be used to craft a stone pickaxe, which can mine iron ore.</p>
-<p>This is when things get complicated: iron ore is <strong>quite rare</strong>, so we would need to run the game for a while to find a deposit. Then, we would have to craft a furnace and melt it to get the iron pickaxe. Finally, we would have to go even deeper and be <strong>even luckier</strong> to obtain a diamond without falling into lava.</p>
+<center><img src="https://mlabonne.github.io/blog/images/minerl/sequence3.png" /></center><p>This is when things get complicated: iron ore is <strong>quite rare</strong>, so we would need to run the game for a while to find a deposit. Then, we would have to craft a furnace and melt it to get the iron pickaxe. Finally, we would have to go even deeper and be <strong>even luckier</strong> to obtain a diamond without falling into lava.</p>
 <p>As you can see, it's doable but the outcome is fairly random. We could train another agent to <a href="https://minerl.readthedocs.io/en/latest/environments/index.html#minerlobtaindiamond-v0">find diamonds</a>, and even a third one to <a href="https://minerl.readthedocs.io/en/latest/environments/index.html#minerlobtainironpickaxe-v0">create the iron pickaxe</a>. If you're interested in more complex approaches, you can read the results of the <a href="https://arxiv.org/abs/2202.10583">MineRL Diamond 2021 Competition</a> by Kanervisto et al. It describes several solutions using different clever techniques, including end-to-end deep learning architectures. Nonetheless, it is a complex problem and no team managed to consistently find diamonds, if at all.</p>
 <p>This is why we will limit ourselves to obtaining a stone pickaxe in the following example, but you can modify the code to go further.</p>
 
@@ -1019,10 +1019,10 @@ Our agent is quite chaotic but it manages to chop trees in this <strong>new, uns
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>
 <center class="youtube-iframe-wrapper">
-    <iframe width="730" height="315" src="https://www.youtube.com/embed/watch?v=7LnjA7Bxf6A" frameborder="0" allowfullscreen=""></iframe>
+    <iframe width="730" height="315" src="https://www.youtube.com/embed/7LnjA7Bxf6A" frameborder="0" allowfullscreen=""></iframe>
 </center>
-
-We can see our agent chopping wood like a madman during the first 3000 steps, then our script takes over and completes the task. It might not be obvious, but the command <code>print(obs.inventory)</code> shows a stone pickaxe. Note that this is a <strong>cherry-picked</strong> example: most of the runs don't end that well.</p>
+</p>
+<p>We can see our agent chopping wood like a madman during the first 3000 steps, then our script takes over and completes the task. It might not be obvious, but the command <code>print(obs.inventory)</code> shows a stone pickaxe. Note that this is a <strong>cherry-picked</strong> example: most of the runs don't end that well.</p>
 <p>There are <strong>several reasons</strong> why the agent may fail: it can spawn in a hostile environment (water, lava, etc.), in an area without wood, or even fall and die. Playing with different seeds will give you a good understanding of the complexity of this problem and, hopefully, ideas to build event better agents.</p>
 <h2 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion"> </a></h2><p>I hope you enjoyed this little guide to reinforcement learning in Minecraft. Beyond its obvious popularity, Minecraft is an interesting environment to try and test RL agents. Like <a href="https://nethackchallenge.com/">NetHack</a>, it requires a <strong>thorough knowledge</strong> of its mechanics to plan precise sequences of actions in a procedurally-generated world. In this article,</p>
 <ul>
