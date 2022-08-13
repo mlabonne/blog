@@ -207,13 +207,9 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
-<span class="n">torchversion</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">__version__</span>
-
-<span class="c1"># Install PyTorch Scatter, PyTorch Sparse, and PyTorch Geometric</span>
-<span class="o">!</span>pip install -q torch-scatter -f https://data.pyg.org/whl/torch-<span class="o">{</span>torchversion<span class="o">}</span>.html
-<span class="o">!</span>pip install -q torch-sparse -f https://data.pyg.org/whl/torch-<span class="o">{</span>torchversion<span class="o">}</span>.html
-<span class="o">!</span>pip install -q git+https://github.com/pyg-team/pytorch_geometric.git
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>pip install torch-scatter -f https://data.pyg.org/whl/torch-<span class="si">${</span><span class="nv">TORCH</span><span class="si">}</span>+<span class="si">${</span><span class="nv">CUDA</span><span class="si">}</span>.html
+<span class="o">!</span>pip install torch-sparse -f https://data.pyg.org/whl/torch-<span class="si">${</span><span class="nv">TORCH</span><span class="si">}</span>+<span class="si">${</span><span class="nv">CUDA</span><span class="si">}</span>.html
+<span class="o">!</span>pip install torch-geometric
 
 <span class="c1"># Visualization</span>
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
@@ -531,7 +527,7 @@ Subgraph 3: Data(x=[189, 500], edge_index=[2, 229], y=[189], train_mask=[189], v
 <li>Obtain their <strong>relative importance</strong> (important nodes are seen more frequently than others).</li>
 </ol>
 <p>This strategy feels a bit like a fast <strong>attention mechanism</strong>. It assigns weights to nodes and increases the relevance of the most popular ones.</p>
-<h3 id="&#128165;-B.-Aggregation">&#128165; B. Aggregation<a class="anchor-link" href="#&#128165;-B.-Aggregation"> </a></h3><p>The aggregation process determines how to combine the feature vectors to produce the <strong>node embeddings</strong>. The original paper presents three ways of aggregating features:</p>
+<h3 id="&#128165;-B.-Aggregation">&#128165; B. Aggregation<a class="anchor-link" href="#&#128165;-B.-Aggregation"> </a></h3><p>The aggregation process determines how to combine the feature vectors to produce the node embeddings. The original paper presents three ways of aggregating features:</p>
 <ul>
 <li><strong>Mean</strong> aggregator</li>
 <li><strong>LSTM</strong> aggregator</li>
@@ -549,14 +545,14 @@ Subgraph 3: Data(x=[189, 500], edge_index=[2, 229], y=[189], train_mask=[189], v
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The <strong>mean aggregator</strong> is the simplest one. The idea is close to a GCN approach:</p>
 <ol>
-<li>The hidden features of the target node $\textbf{h}_v$ are <strong>concatenated</strong> with the hidden features of its neighbors $\textbf{h}_u$;</li>
-<li>The resulting vector is <strong>averaged</strong>;</li>
-<li>A <strong>linear transformation</strong> with a weight matrix $\textbf{W}$ is applied.</li>
+<li>The hidden features of the target node and its selected neighbors are averaged.</li>
+<li>A linear transformation with a weight matrix $\textbf{W}$ is applied.</li>
 </ol>
+<p>In other words, we can write:</p>
 <p>
-$$\textbf{h}_v' = \textbf{W} \cdot mean([\textbf{h}_v||\textbf{h}_u])$$
+$$\textbf{h}_i' = \textbf{W} \cdot mean_{j \in \mathcal{\tilde{N}}_i}(\textbf{h}_j)$$
 </p>
-<p>The result can then be fed to a non-linear <strong>activation function</strong> $\sigma$ (like $tanh$ or $ReLU$). This is the technique we'll use with PyG and the one selected by UberEats.</p>
+<p>The result can then be fed to a non-linear activation function $\sigma$ (like $tanh$ or $ReLU$). This is the technique we'll use with PyG and the one selected by UberEats.</p>
 <p>The <strong>LSTM aggregator</strong> can seem like a weird idea because this architecture is sequential: it assigns an order to our unordered nodes. This is why the authors randomly shuffle them to force the LSTM to only consider the hidden features. It is the best performing technique in their benchmarks.</p>
 <p>The <strong>pooling aggregator</strong> feeds each neighbor's hidden vector to a feedforward neural network. A max-pooling operation is applied to the result.</p>
 
@@ -587,7 +583,8 @@ $$\textbf{h}_v' = \textbf{W}_1\textbf{h}_v + \textbf{W}_2 \cdot mean(\textbf{h}_
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">torch.nn</span> <span class="kn">import</span> <span class="n">Linear</span><span class="p">,</span> <span class="n">Dropout</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">torch.nn</span> <span class="kn">import</span> <span class="n">Linear</span><span class="p">,</span> <span class="n">Dropout</span>
 <span class="kn">from</span> <span class="nn">torch_geometric.nn</span> <span class="kn">import</span> <span class="n">SAGEConv</span><span class="p">,</span> <span class="n">GATv2Conv</span><span class="p">,</span> <span class="n">GCNConv</span>
 <span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
 
