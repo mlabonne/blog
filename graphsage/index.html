@@ -194,7 +194,7 @@ window.onload = wrap_img;
 <li>🖼️ <strong>Pinterest</strong> developed its own version called <a href="https://medium.com/pinterest-engineering/pinsage-a-new-graph-convolutional-neural-network-for-web-scale-recommender-systems-88795a107f48">PinSAGE</a> to recommend the most relevant images (pins) to its users. Their graph has 18 billion connections and 3 billion nodes.</li>
 <li>🍽️ <strong>UberEats</strong> also reported using a <a href="https://eng.uber.com/uber-eats-graph-learning/">modified version of GraphSAGE</a> to suggest dishes, restaurants, and cuisines. UberEats claims to support more than 600,000 restaurants and 66 million users. Meanwhile, it keeps recommending me tacos that gave me food poisoning.</li>
 </ul>
-<p>In this tutorial, we’ll use a dataset with 20k nodes instead of billions because Google Colab cannot handle our ambitions. We will stick to the <strong>original GraphSAGE</strong> architecture, but the previous variants also bring interesting features that we will comment on.</p>
+<p>In this tutorial, we'll use a dataset with 20k nodes instead of billions because Google Colab cannot handle our ambitions. We will stick to the <strong>original GraphSAGE</strong> architecture, but the previous variants also bring exciting features we will discuss.</p>
 <p>You can run the code with the following <a href="https://colab.research.google.com/drive/1udeUfWJzvMlLO7sGUDGsHo8cRPMicajl?usp=sharing">Google Colab notebook</a>.</p>
 
 </div>
@@ -230,10 +230,10 @@ window.onload = wrap_img;
 <h2 id="&#127760;-I.-PubMed-dataset">&#127760; I. PubMed dataset<a class="anchor-link" href="#&#127760;-I.-PubMed-dataset"> </a></h2><center><img src="https://mlabonne.github.io/blog/images/graphsage/pubmed.png" /></center><p>As we saw in the <a href="https://mlabonne.github.io/blog/gat/">previous article</a>, <strong>PubMed</strong> is part of the <strong>Planetoid</strong> dataset (MIT license). Here's a quick summary:</p>
 <ul>
 <li>It contains <strong>19,717 scientific publications</strong> about diabetes from PubMed's database;</li>
-<li>Node features are <strong><a href="https://en.wikipedia.org/wiki/Tf%E2%80%93idf">TF-IDF</a> weighted word vectors</strong> with 500 dimensions, which is a pretty cool way of summarizing documents without transformers;</li>
+<li>Node features are <strong><a href="https://en.wikipedia.org/wiki/Tf%E2%80%93idf">TF-IDF</a> weighted word vectors</strong> with 500 dimensions, which is an efficient way of summarizing documents without transformers</li>
 <li>The task is quite straightforward since it's a multi-class classification with <strong>three categories</strong>: diabetes mellitus experimental, diabetes mellitus type 1, and diabetes mellitus type 2.</li>
 </ul>
-<p>This is the beauty and the curse of deep learning: I don’t know anything about diabetes, but I’ll still feel pretty satisfied if we reach 70% accuracy. At least, we’re not building the next <a href="https://slate.com/technology/2022/01/ibm-watson-health-failure-artificial-intelligence.html">IBM Watson</a>.</p>
+<p>This is the beauty and the curse of deep learning: I don’t know anything about diabetes, but I’ll still feel pretty satisfied if we reach 70% accuracy. At least we’re not building the next <a href="https://slate.com/technology/2022/01/ibm-watson-health-failure-artificial-intelligence.html">IBM Watson</a>.</p>
 
 </div>
 </div>
@@ -306,8 +306,8 @@ Graph has loops: False
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>As we can see, PubMed has an insanely low number of training nodes compared to the full graph. There are only 60 samples to learn how to classify the 1000 test nodes.</p>
-<p>Despite this challenge, GNNs manage to obtain high levels of accuracy. Here’s the leaderboard of known techniques (a more complete benchmark can be found on <a href="https://paperswithcode.com/sota/node-classification-on-pubmed">PapersWithCode</a>):</p>
+<p>As we can see, PubMed has an insanely low number of training nodes compared to the whole graph. There are only 60 samples to learn how to classify the 1000 test nodes.</p>
+<p>Despite this challenge, GNNs manage to obtain high levels of accuracy. Here’s the leaderboard of known techniques (a more exhaustive benchmark can be found on <a href="https://paperswithcode.com/sota/node-classification-on-pubmed">PapersWithCode</a>):</p>
 <table>
 <thead><tr>
 <th style="text-align:left">Model</th>
@@ -395,7 +395,7 @@ Graph has loops: False
 
 <span class="c1"># Plot each subgraph</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">16</span><span class="p">))</span>
-<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">subdata</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">train_loader</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;221&#39;</span><span class="p">,</span> <span class="s1">&#39;222&#39;</span><span class="p">,</span> <span class="s1">&#39;223&#39;</span><span class="p">,</span> <span class="s1">&#39;224&#39;</span><span class="p">])):</span>
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">subdata</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">train_loader</span><span class="p">,</span> <span class="p">[</span><span class="mi">221</span><span class="p">,</span> <span class="mi">222</span><span class="p">,</span> <span class="mi">223</span><span class="p">,</span> <span class="mi">224</span><span class="p">])):</span>
     <span class="n">G</span> <span class="o">=</span> <span class="n">to_networkx</span><span class="p">(</span><span class="n">subdata</span><span class="p">,</span> <span class="n">to_undirected</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Subgraph </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -545,14 +545,14 @@ Subgraph 3: Data(x=[189, 500], edge_index=[2, 229], y=[189], train_mask=[189], v
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The <strong>mean aggregator</strong> is the simplest one. The idea is close to a GCN approach:</p>
 <ol>
-<li>The hidden features of the target node and its selected neighbors are averaged.</li>
+<li>The hidden features of the target node and its selected neighbors are averaged (nodes in $\mathcal{\tilde{N}}_i$).</li>
 <li>A linear transformation with a weight matrix $\textbf{W}$ is applied.</li>
 </ol>
 <p>In other words, we can write:</p>
 <p>
 $$\textbf{h}_i' = \textbf{W} \cdot mean_{j \in \mathcal{\tilde{N}}_i}(\textbf{h}_j)$$
 </p>
-<p>The result can then be fed to a non-linear activation function $\sigma$ (like $tanh$ or $ReLU$). This is the technique we'll use with PyG and the one selected by UberEats.</p>
+<p>The result can then be fed to a non-linear activation function like $ReLU$.</p>
 <p>The <strong>LSTM aggregator</strong> can seem like a weird idea because this architecture is sequential: it assigns an order to our unordered nodes. This is why the authors randomly shuffle them to force the LSTM to only consider the hidden features. It is the best performing technique in their benchmarks.</p>
 <p>The <strong>pooling aggregator</strong> feeds each neighbor's hidden vector to a feedforward neural network. A max-pooling operation is applied to the result.</p>
 
@@ -561,16 +561,16 @@ $$\textbf{h}_i' = \textbf{W} \cdot mean_{j \in \mathcal{\tilde{N}}_i}(\textbf{h}
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="&#129504;-III.-GraphSAGE-in-PyTorch-Geometric">&#129504; III. GraphSAGE in PyTorch Geometric<a class="anchor-link" href="#&#129504;-III.-GraphSAGE-in-PyTorch-Geometric"> </a></h2><p>We can easily implement a GraphSAGE architecture in PyTorch Geometric with the <code>SAGEConv</code> layer. This implementation is <strong>not exactly the same</strong> as in the paper since it uses 2 matrices instead of one:</p>
+<h2 id="&#129504;-III.-GraphSAGE-in-PyTorch-Geometric">&#129504; III. GraphSAGE in PyTorch Geometric<a class="anchor-link" href="#&#129504;-III.-GraphSAGE-in-PyTorch-Geometric"> </a></h2><p>We can easily implement a GraphSAGE architecture in PyTorch Geometric with the <code>SAGEConv</code> layer. This implementation uses two weight matrices instead of one, like UberEats' version of GraphSAGE:</p>
 <p>
-$$\textbf{h}_v' = \textbf{W}_1\textbf{h}_v + \textbf{W}_2 \cdot mean(\textbf{h}_u)$$
+$$\textbf{h}_i' = \textbf{W}_1\textbf{h}_i + \textbf{W}_2 \cdot mean_{j \in \mathcal{N}_i}(\textbf{h}_j)$$
 </p>
 <p>Let's create a network with two <code>SAGEConv</code> layers:</p>
 <ul>
 <li>The first one uses $ReLU$ as the activation function and a <strong>dropout layer</strong>;</li>
 <li>The second one directly outputs the <strong>node embeddings</strong>.</li>
 </ul>
-<p>As we're dealing with a*multi-class classification** task, we'll use the cross-entropy loss as our loss function.</p>
+<p>As we're dealing with a multi-class classification task, we'll use the cross-entropy loss as our loss function. I also added an L2 regularization of 0.0005 for good measure.</p>
 <p>To see the benefits of GraphSAGE, let's <strong>compare</strong> it with a GCN and a GAT without any sampling.</p>
 
 </div>
@@ -732,6 +732,7 @@ $$\textbf{h}_v' = \textbf{W}_1\textbf{h}_v + \textbf{W}_2 \cdot mean(\textbf{h}_
     <span class="sd">&quot;&quot;&quot;Calculate accuracy.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">((</span><span class="n">pred_y</span> <span class="o">==</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">))</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
 
+<span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Evaluate the model on test set and print the accuracy score.&quot;&quot;&quot;</span>
     <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
@@ -979,7 +980,7 @@ Wall time: 18min 7s
 <p>In this case, we can’t use the cross-entropy loss. We have to engineer a loss function that forces nodes that are nearby in the original graph to remain close to each other in the embedding space. Conversely, the same function must ensure that <strong>distant nodes</strong> in the graph must have <strong>distant representations</strong> in the embedding space. This is the loss that is presented in <a href="https://cs.stanford.edu/people/jure/pubs/graphsage-nips17.pdf">GraphSAGE’s paper</a>.</p>
 <p>In the case of PinSAGE and UberEeats’ modified GraphSAGE, we’re dealing with <strong>recommender systems</strong>.</p>
 <p>The goal is to correctly rank the most relevant items (pins, restaurants) for each user, which is very different. We don’t only want to know what the closest embeddings are, we have to produce the <strong>best rankings possible</strong>. This is why these systems are also trained in an unsupervised way, but with another loss function: a max-margin ranking loss.</p>
-<h2 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion"> </a></h2><p>GraphSAGE is an incredibly fast architecture to process large graphs. It might not be as accurate as a GCN or a GAT, but it is an essential model when dealing with a <strong>massive amount of data</strong>. It delivers this speed thanks to a clever combination of 1/ neighbor sampling to prune the graph and 2/ fast aggregation with a mean aggregator in this example. In this article,</p>
+<h2 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion"> </a></h2><p>GraphSAGE is an incredibly fast architecture to process large graphs. It might not be as accurate as a GCN or a GAT, but it is an essential model for handling <strong>massive amounts of data</strong>. It delivers this speed thanks to a clever combination of 1/ neighbor sampling to prune the graph and 2/ fast aggregation with a mean aggregator in this example. In this article,</p>
 <ul>
 <li>We explored a <strong>new dataset</strong> with PubMed, which is several times larger than the previous one;</li>
 <li>We explained the idea behind <strong>neighbor sampling</strong>, which only considers a predefined number of random neighbors at each hop;</li>
