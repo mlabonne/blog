@@ -188,13 +188,13 @@ window.onload = wrap_img;
         
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<center><img src="https://mlabonne.github.io/blog/images/graphsage/thumbnail.jpg" /></center><p>What do <strong>UberEats</strong> and <strong>Pinterest</strong> have in common?</p>
-<p>They both use GraphSAGE to power their recommender system on a massive scale: <strong>millions and billions</strong> of nodes and edges.</p>
+<center><img src="https://mlabonne.github.io/blog/images/graphsage/thumbnail.jpg" /></center><p>What do UberEats and Pinterest have in common?</p>
+<p>They both use GraphSAGE to power their recommender systems on a massive scale: millions and billions of nodes and edges.</p>
 <ul>
-<li>🖼️ <strong>Pinterest</strong> developed its own version called <a href="https://medium.com/pinterest-engineering/pinsage-a-new-graph-convolutional-neural-network-for-web-scale-recommender-systems-88795a107f48">PinSAGE</a> to recommend the most relevant images (pins) to its users. Their graph has 18 billion connections and 3 billion nodes.</li>
+<li>🖼️ <strong>Pinterest</strong> developed its own version called <a href="https://medium.com/pinterest-engineering/pinsage-a-new-graph-convolutional-neural-network-for-web-scale-recommender-systems-88795a107f48">PinSAGE</a> to recommend the most relevant images (pins) to its users. Their graph has 18 billion connections and three billion nodes.</li>
 <li>🍽️ <strong>UberEats</strong> also reported using a <a href="https://eng.uber.com/uber-eats-graph-learning/">modified version of GraphSAGE</a> to suggest dishes, restaurants, and cuisines. UberEats claims to support more than 600,000 restaurants and 66 million users. Meanwhile, it keeps recommending me tacos that gave me food poisoning.</li>
 </ul>
-<p>In this tutorial, we'll use a dataset with 20k nodes instead of billions because Google Colab cannot handle our ambitions. We will stick to the <strong>original GraphSAGE</strong> architecture, but the previous variants also bring exciting features we will discuss.</p>
+<p>In this tutorial, we'll use a dataset with 20k nodes instead of billions because Google Colab cannot handle our ambitions. We will stick to the original GraphSAGE architecture, but the previous variants also bring exciting features we will discuss.</p>
 <p>You can run the code with the following <a href="https://colab.research.google.com/drive/1udeUfWJzvMlLO7sGUDGsHo8cRPMicajl?usp=sharing">Google Colab notebook</a>.</p>
 
 </div>
@@ -211,7 +211,7 @@ window.onload = wrap_img;
 <span class="o">!</span>pip install torch-sparse -f https://data.pyg.org/whl/torch-<span class="si">${</span><span class="nv">TORCH</span><span class="si">}</span>+<span class="si">${</span><span class="nv">CUDA</span><span class="si">}</span>.html
 <span class="o">!</span>pip install torch-geometric
 
-<span class="c1"># Visualization</span>
+<span class="c1"># Visualizationrandomly nodes</span>
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;figure.dpi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">300</span>
@@ -227,13 +227,13 @@ window.onload = wrap_img;
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="&#127760;-I.-PubMed-dataset">&#127760; I. PubMed dataset<a class="anchor-link" href="#&#127760;-I.-PubMed-dataset"> </a></h2><center><img src="https://mlabonne.github.io/blog/images/graphsage/pubmed.png" /></center><p>As we saw in the <a href="https://mlabonne.github.io/blog/gat/">previous article</a>, <strong>PubMed</strong> is part of the <strong>Planetoid</strong> dataset (MIT license). Here's a quick summary:</p>
+<h2 id="&#127760;-I.-PubMed-dataset">&#127760; I. PubMed dataset<a class="anchor-link" href="#&#127760;-I.-PubMed-dataset"> </a></h2><center><img src="https://mlabonne.github.io/blog/images/graphsage/pubmed.png" /></center><p>As we saw in the <a href="https://mlabonne.github.io/blog/gat/">previous article</a>, PubMed is part of the Planetoid dataset (MIT license). Here's a quick summary:</p>
 <ul>
-<li>It contains <strong>19,717 scientific publications</strong> about diabetes from PubMed's database;</li>
+<li>It contains <strong>19,717 scientific publications</strong> about diabetes from PubMed's database</li>
 <li>Node features are <strong><a href="https://en.wikipedia.org/wiki/Tf%E2%80%93idf">TF-IDF</a> weighted word vectors</strong> with 500 dimensions, which is an efficient way of summarizing documents without transformers</li>
-<li>The task is quite straightforward since it's a multi-class classification with <strong>three categories</strong>: diabetes mellitus experimental, diabetes mellitus type 1, and diabetes mellitus type 2.</li>
+<li>The task is quite straightforward since it's a multi-class classification with <strong>three categories</strong>: diabetes mellitus experimental, diabetes mellitus type 1, and diabetes mellitus type 2</li>
 </ul>
-<p>This is the beauty and the curse of deep learning: I don’t know anything about diabetes, but I’ll still feel pretty satisfied if we reach 70% accuracy. At least we’re not building the next <a href="https://slate.com/technology/2022/01/ibm-watson-health-failure-artificial-intelligence.html">IBM Watson</a>.</p>
+<p>Let's load the dataset and print some information about the graph.</p>
 
 </div>
 </div>
@@ -307,7 +307,7 @@ Graph has loops: False
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>As we can see, PubMed has an insanely low number of training nodes compared to the whole graph. There are only 60 samples to learn how to classify the 1000 test nodes.</p>
-<p>Despite this challenge, GNNs manage to obtain high levels of accuracy. Here’s the leaderboard of known techniques (a more exhaustive benchmark can be found on <a href="https://paperswithcode.com/sota/node-classification-on-pubmed">PapersWithCode</a>):</p>
+<p>Despite this challenge, GNNs manage to obtain high levels of accuracy. Here's the leaderboard of known techniques (a more exhaustive benchmark can be found on <a href="https://paperswithcode.com/sota/node-classification-on-pubmed">PapersWithCode</a>):</p>
 <table>
 <thead><tr>
 <th style="text-align:left">Model</th>
@@ -321,11 +321,11 @@ Graph has loops: False
 </tr>
 <tr>
 <td style="text-align:left">Graph Convolutional Network</td>
-<td style="text-align:center"><strong>79.0%</strong></td>
+<td style="text-align:center"><strong>79.0%</strong> ± 0.3%</td>
 </tr>
 <tr>
 <td style="text-align:left">Graph Attention Network</td>
-<td style="text-align:center"><strong>79.0%</strong></td>
+<td style="text-align:center"><strong>79.0%</strong> ± 0.3%</td>
 </tr>
 <tr>
 <td style="text-align:left">GraphSAGE</td>
@@ -333,7 +333,7 @@ Graph has loops: False
 </tr>
 </tbody>
 </table>
-<p>I couldn’t find any result for GraphSAGE on PubMed with this specific setting (60 training nodes, 1000 test nodes), so I don’t expect a great accuracy. But another metric can be just as relevant when working with large graphs: <strong>training time</strong>.</p>
+<p>I couldn't find any result for GraphSAGE on PubMed with this specific setting (60 training nodes, 1000 test nodes), so I don't expect a great accuracy. But another metric can be just as relevant when working with large graphs: <strong>training time</strong>.</p>
 
 </div>
 </div>
@@ -345,28 +345,27 @@ Graph has loops: False
 <li><strong>Neighbor sampling</strong>;</li>
 <li><strong>Aggregation</strong>.</li>
 </ol>
-<h3 id="&#127920;-A.-Neighbor-sampling">&#127920; A. Neighbor sampling<a class="anchor-link" href="#&#127920;-A.-Neighbor-sampling"> </a></h3><p>Mini-batching is a common technique used in machine learning.</p>
-<p>It works by <strong>breaking down a dataset into smaller batches</strong>, which allows us to train models more effectively. Mini-batching has several benefits:</p>
+<h3 id="&#127920;-A.-Neighbor-sampling">&#127920; A. Neighbor sampling<a class="anchor-link" href="#&#127920;-A.-Neighbor-sampling"> </a></h3><p>Neighbor sampling relies on a classic technique used to train neural networks: mini-batch gradient descent.</p>
+<p>Mini-batch gradient descent works by breaking down a dataset into smaller batches. During training, we compute the gradient for every mini-batch instead of every epoch (batch gradient descent) or every training sample (stochastic gradient descent). Mini-batching has several benefits:</p>
 <ol>
-<li><strong>Improved accuracy</strong> — mini-batches help to reduce overfitting (gradients are averaged), as well as variance in error rates;</li>
-<li><strong>Increased speed</strong> — mini-batches are processed in parallel and take less time to train than larger batches;</li>
-<li><strong>Improved scalability</strong> — an entire dataset can exceed the GPU memory, but smaller batches can get around this limitation.</li>
+<li><strong>Improved accuracy</strong> — mini-batches help to reduce overfitting (gradients are averaged), as well as variance in error rates</li>
+<li><strong>Increased speed</strong> — mini-batches are processed in parallel and take less time to train than larger batches</li>
+<li><strong>Improved scalability</strong> — an entire dataset can exceed the GPU memory, but smaller batches can get around this limitation</li>
 </ol>
-<p>Mini-batching is so useful it became standard in regular neural networks. However, it is not as straightforward with graph data, since splitting the dataset into smaller chunks would <strong>break essential connections</strong> between nodes.</p>
+<p>More advanced optimizes like Adam also rely on mini-batching. However, it is not as straightforward with graph data since splitting the dataset into smaller chunks would break essential connections between nodes.</p>
 <p>So, what can we do? In recent years, researchers developed different strategies to create graph mini-batches. The one we're interested in is called <a href="https://arxiv.org/abs/1706.02216"><strong>neighbor sampling</strong></a>). There are many other techniques you can find on <a href="https://pytorch-geometric.readthedocs.io/en/latest/modules/loader.html">PyG's documentation</a>, such as <a href="https://arxiv.org/pdf/1905.07953.pdf">subgraph clustering</a>).</p>
 <center class="dark-bg">
     <video autoplay="" loop="" muted="" width="800" class="no-margin">
         <source src="https://mlabonne.github.io/blog/images/graphsage/sampling.mp4" type="video/mp4" />&lt;/source&gt;
     </video>
-</center><p>Neighbor sampling considers only a <strong>fixed number</strong> of random neighbors. Here’s the process:</p>
+</center><p>Neighbor sampling considers only a fixed number of random neighbors. Here's the process:</p>
 <ol>
-<li>We define the <strong>number of neighbors</strong> (1 hop), the number of neighbors of neighbors (2 hops), etc. we would like to have.</li>
-<li>The sampler looks at the list of neighbors, of neighbors of neighbors, etc. of a target node and <strong>randomly selects</strong> a predefined number of them;</li>
-<li>The sampler <strong>outputs a subgraph</strong> containing the target node and the randomly selected neighboring nodes.</li>
+<li>The sampler <strong>randomly selects</strong> a defined number of neighbors (1 hop), neighbors of neighbors (2 hops), etc. we would like to have</li>
+<li>The sampler <strong>outputs a subgraph</strong> containing the target and sampled nodes</li>
 </ol>
-<p>This process is <strong>repeated for every node</strong> in a list or the entirety of the graph. However, creating a subgraph for each node is not efficient, that is why we can process them in batches instead. In this case, each subgraph is shared by multiple target nodes.</p>
-<p>Neighbor sampling has an added benefit. Sometimes, we observe extremely popular nodes that act like hubs, such as celebrities on social media. Obtaining the hidden vectors of these nodes can be <strong>computationally very expensive</strong> since it requires calculating the hidden vectors of thousands or even millions of neighbors. GraphSAGE fixes this issue by simply ignoring most of the nodes!</p>
-<p>In PyG, neighbor sampling is implemented through the <code>NeighborLoader</code> object. Let's say we want <strong>5 neighbors and 10 of their neighbors</strong> (<code>num_neighbors</code>). As we discussed, we can also specify a <code>batch_size</code> to speed up the process by creating subgraphs for multiple target nodes.</p>
+<p>This process is repeated for every node in a list or the entirety of the graph. However, creating a subgraph for each node is not efficient, which is why we can process them in batches instead. In this case, each subgraph is shared by multiple target nodes.</p>
+<p>Neighbor sampling has an added benefit. Sometimes, we observe extremely popular nodes that act like hubs, such as celebrities on social media. Calculating embeddings for these nodes can be computationally very expensive since it requires calculating the hidden vectors of thousands or even millions of neighbors. GraphSAGE fixes this issue by only considering a fixed number of neighbors.</p>
+<p>In PyG, neighbor sampling is implemented through the <code>NeighborLoader</code> object. Let's say we want 5 neighbors and 10 of their neighbors (<code>num_neighbors</code>). As we discussed, we can also specify a <code>batch_size</code> to speed up the process by creating subgraphs for multiple target nodes.</p>
 
 </div>
 </div>
@@ -447,7 +446,7 @@ Subgraph 3: Data(x=[189, 500], edge_index=[2, 229], y=[189], train_mask=[189], v
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We created <strong>4 subgraphs</strong> of various sizes. It allows us to process them in parallel and they're easier to fit on a GPU since they're smaller.</p>
+<p>We created four subgraphs of various sizes. It allows us to process them in parallel and they're easier to fit on a GPU since they're smaller.</p>
 <p>The number of neighbors is an important parameter since pruning our graph removes a lot of information. How much, exactly? Well, quite a lot. We can visualize this effect by looking at the <strong>node degrees</strong> (number of neighbors).</p>
 
 </div>
@@ -464,19 +463,19 @@ Subgraph 3: Data(x=[189, 500], edge_index=[2, 229], y=[189], train_mask=[189], v
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
 
 <span class="k">def</span> <span class="nf">plot_degree</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-  <span class="c1"># Get list of degrees for each node</span>
-  <span class="n">degrees</span> <span class="o">=</span> <span class="n">degree</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">edge_index</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+    <span class="c1"># Get list of degrees for each node</span>
+    <span class="n">degrees</span> <span class="o">=</span> <span class="n">degree</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">edge_index</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
 
-  <span class="c1"># Count the number of nodes for each degree</span>
-  <span class="n">numbers</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">degrees</span><span class="p">)</span>
+    <span class="c1"># Count the number of nodes for each degree</span>
+    <span class="n">numbers</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">degrees</span><span class="p">)</span>
 
-  <span class="c1"># Bar plot</span>
-  <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-  <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Node degree&#39;</span><span class="p">)</span>
-  <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Number of nodes&#39;</span><span class="p">)</span>
-  <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">numbers</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>
-          <span class="n">numbers</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
-          <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#0A047A&#39;</span><span class="p">)</span>
+    <span class="c1"># Bar plot</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Node degree&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Number of nodes&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">numbers</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>
+            <span class="n">numbers</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span>
+            <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#0A047A&#39;</span><span class="p">)</span>
 
 <span class="c1"># Plot node degrees from the original graph</span>
 <span class="n">plot_degree</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -520,13 +519,8 @@ Subgraph 3: Data(x=[189, 500], edge_index=[2, 229], y=[189], train_mask=[189], v
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>In this example, the <strong>maximum node degree</strong> of our subgraphs is 5, which is much lower than the original max value. It’s important to remember this tradeoff when talking about GraphSAGE.</p>
-<p>PinSAGE implements another sampling solution using <strong>random walks</strong>. It has two main objectives:</p>
-<ol>
-<li>Sample a <strong>fixed number of neighbors</strong> (like GraphSAGE);</li>
-<li>Obtain their <strong>relative importance</strong> (important nodes are seen more frequently than others).</li>
-</ol>
-<p>This strategy feels a bit like a fast <strong>attention mechanism</strong>. It assigns weights to nodes and increases the relevance of the most popular ones.</p>
+<p>The first plot shows the original distribution of node degrees, and the second one shows the distribution we obtain after neighbor sampling. In this example, we chose to only consider five neighbors, which is much lower than the original maximal value. It's important to remember this tradeoff when talking about GraphSAGE.</p>
+<p>PinSAGE proposes another solution. Instead of neighbor sampling, PinSAGE simulates random walks for each node, which captures a better representation of their neighborhoods. Then, it selects a predefined number of neighbors with the highest visit counts. This technique allows PinSAGE to consider the importance of each neighbor while controlling the size of the computation graph.</p>
 <h3 id="&#128165;-B.-Aggregation">&#128165; B. Aggregation<a class="anchor-link" href="#&#128165;-B.-Aggregation"> </a></h3><p>The aggregation process determines how to combine the feature vectors to produce the node embeddings. The original paper presents three ways of aggregating features:</p>
 <ul>
 <li><strong>Mean</strong> aggregator</li>
@@ -552,9 +546,9 @@ Subgraph 3: Data(x=[189, 500], edge_index=[2, 229], y=[189], train_mask=[189], v
 <p>
 $$\textbf{h}_i' = \textbf{W} \cdot mean_{j \in \mathcal{\tilde{N}}_i}(\textbf{h}_j)$$
 </p>
-<p>The result can then be fed to a non-linear activation function like $ReLU$.</p>
-<p>The <strong>LSTM aggregator</strong> can seem like a weird idea because this architecture is sequential: it assigns an order to our unordered nodes. This is why the authors randomly shuffle them to force the LSTM to only consider the hidden features. It is the best performing technique in their benchmarks.</p>
-<p>The <strong>pooling aggregator</strong> feeds each neighbor's hidden vector to a feedforward neural network. A max-pooling operation is applied to the result.</p>
+<p>The result can then be fed to a nonlinear activation function like ReLU.</p>
+<p>The <strong>LSTM aggregator</strong> may seem counter-intuitive because this architecture is sequential: it assigns an order to our unordered nodes. This is why the authors randomly shuffle them to force the LSTM only to consider the hidden features. Nevertheless, it is the best-performing technique in their benchmarks.</p>
+<p>The <strong>pooling aggregator</strong> feeds each neighbor's hidden vector to a feedforward neural network. Then, an elementwise max operation is applied to the result to keep the highest value for each feature.</p>
 
 </div>
 </div>
@@ -571,7 +565,7 @@ $$\textbf{h}_i' = \textbf{W}_1\textbf{h}_i + \textbf{W}_2 \cdot mean_{j \in \mat
 <li>The second one directly outputs the <strong>node embeddings</strong>.</li>
 </ul>
 <p>As we're dealing with a multi-class classification task, we'll use the cross-entropy loss as our loss function. I also added an L2 regularization of 0.0005 for good measure.</p>
-<p>To see the benefits of GraphSAGE, let's <strong>compare</strong> it with a GCN and a GAT without any sampling.</p>
+<p>To see the benefits of GraphSAGE, let's compare it with a GCN and a GAT without any sampling.</p>
 
 </div>
 </div>
@@ -600,11 +594,10 @@ $$\textbf{h}_i' = \textbf{W}_1\textbf{h}_i + \textbf{W}_2 \cdot mean_{j \in \mat
                                       <span class="n">weight_decay</span><span class="o">=</span><span class="mf">5e-4</span><span class="p">)</span>
 
   <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">):</span>
-    <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sage1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">)</span>
-    <span class="n">h</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sage1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">)</span><span class="o">.</span><span class="n">relu</span><span class="p">()</span>
     <span class="n">h</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span>
     <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sage2</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">h</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
   <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">epochs</span><span class="p">):</span>
     <span class="n">criterion</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
@@ -620,7 +613,7 @@ $$\textbf{h}_i' = \textbf{W}_1\textbf{h}_i + \textbf{W}_2 \cdot mean_{j \in \mat
       <span class="c1"># Train on batches</span>
       <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">train_loader</span><span class="p">:</span>
         <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="n">batch</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">batch</span><span class="o">.</span><span class="n">edge_index</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="n">batch</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">batch</span><span class="o">.</span><span class="n">edge_index</span><span class="p">)</span>
         <span class="n">loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="n">batch</span><span class="o">.</span><span class="n">train_mask</span><span class="p">],</span> <span class="n">batch</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="n">batch</span><span class="o">.</span><span class="n">train_mask</span><span class="p">])</span>
         <span class="n">total_loss</span> <span class="o">+=</span> <span class="n">loss</span>
         <span class="n">acc</span> <span class="o">+=</span> <span class="n">accuracy</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="n">batch</span><span class="o">.</span><span class="n">train_mask</span><span class="p">]</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> 
@@ -656,7 +649,7 @@ $$\textbf{h}_i' = \textbf{W}_1\textbf{h}_i + \textbf{W}_2 \cdot mean_{j \in \mat
     <span class="n">h</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">elu</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
     <span class="n">h</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span>
     <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gat2</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">h</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
   <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">epochs</span><span class="p">):</span>
     <span class="n">criterion</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
@@ -666,7 +659,7 @@ $$\textbf{h}_i' = \textbf{W}_1\textbf{h}_i + \textbf{W}_2 \cdot mean_{j \in \mat
     <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
         <span class="c1"># Training</span>
         <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">edge_index</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">edge_index</span><span class="p">)</span>
         <span class="n">loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">train_mask</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">train_mask</span><span class="p">])</span>
         <span class="n">acc</span> <span class="o">=</span> <span class="n">accuracy</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">train_mask</span><span class="p">]</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
                        <span class="n">data</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">train_mask</span><span class="p">])</span>
@@ -696,11 +689,10 @@ $$\textbf{h}_i' = \textbf{W}_1\textbf{h}_i + \textbf{W}_2 \cdot mean_{j \in \mat
 
   <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">):</span>
     <span class="n">h</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span>
-    <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gcn1</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">)</span>
-    <span class="n">h</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gcn1</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">)</span><span class="o">.</span><span class="n">relu</span><span class="p">()</span>
     <span class="n">h</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">)</span>
     <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gcn2</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">h</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
   <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">epochs</span><span class="p">):</span>
     <span class="n">criterion</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
@@ -710,7 +702,7 @@ $$\textbf{h}_i' = \textbf{W}_1\textbf{h}_i + \textbf{W}_2 \cdot mean_{j \in \mat
     <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
         <span class="c1"># Training</span>
         <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">edge_index</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">edge_index</span><span class="p">)</span>
         <span class="n">loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">train_mask</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">train_mask</span><span class="p">])</span>
         <span class="n">acc</span> <span class="o">=</span> <span class="n">accuracy</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">train_mask</span><span class="p">]</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
                        <span class="n">data</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">train_mask</span><span class="p">])</span>
@@ -736,7 +728,7 @@ $$\textbf{h}_i' = \textbf{W}_1\textbf{h}_i + \textbf{W}_2 \cdot mean_{j \in \mat
 <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Evaluate the model on test set and print the accuracy score.&quot;&quot;&quot;</span>
     <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
-    <span class="n">_</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">edge_index</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">edge_index</span><span class="p">)</span>
     <span class="n">acc</span> <span class="o">=</span> <span class="n">accuracy</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="n">data</span><span class="o">.</span><span class="n">test_mask</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">test_mask</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">acc</span>
 </pre></div>
@@ -750,7 +742,7 @@ $$\textbf{h}_i' = \textbf{W}_1\textbf{h}_i + \textbf{W}_2 \cdot mean_{j \in \mat
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>With GraphSAGE, we loop through <strong>batches</strong> (our 4 subgraphs) created by the neighbor sampling process. The way we <strong>calculate the accuracy and the validation loss</strong> is also different because of that.</p>
+<p>With GraphSAGE, we loop through <strong>batches</strong> (our four subgraphs) created by the neighbor sampling process. The way we calculate the accuracy and the validation loss is also different because of that.</p>
 
 </div>
 </div>
@@ -967,28 +959,23 @@ Wall time: 18min 7s
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The three models obtain <strong>similar</strong> results in terms of accuracy. We expect the GAT to perform better because its aggregation mechanism is more nuanced, but it’s not always the case.</p>
-<p>The real difference is the training time: GraphSAGE is <strong>88 times faster</strong> than the GAT and 4 times faster than the GCN in this example!</p>
-<p>Here lies the true power of GraphSAGE. We do lose a lot of information by pruning our graph with neighbor sampling. The final node embeddings might <strong>not be as good</strong> as what we could find with a GCN or a GAT. But this is not the point: GraphSAGE is designed to improve scalability. In turn, it can lead to building larger graphs that can improve accuracy.</p>
-<center><img src="https://mlabonne.github.io/blog/images/graphsage/timechart.png" width="800" /></center>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>This work was done in a supervised training setting (node classification), but we could also train GraphSAGE in an <strong>unsupervised way</strong>.</p>
-<p>In this case, we can’t use the cross-entropy loss. We have to engineer a loss function that forces nodes that are nearby in the original graph to remain close to each other in the embedding space. Conversely, the same function must ensure that <strong>distant nodes</strong> in the graph must have <strong>distant representations</strong> in the embedding space. This is the loss that is presented in <a href="https://cs.stanford.edu/people/jure/pubs/graphsage-nips17.pdf">GraphSAGE’s paper</a>.</p>
-<p>In the case of PinSAGE and UberEeats’ modified GraphSAGE, we’re dealing with <strong>recommender systems</strong>.</p>
-<p>The goal is to correctly rank the most relevant items (pins, restaurants) for each user, which is very different. We don’t only want to know what the closest embeddings are, we have to produce the <strong>best rankings possible</strong>. This is why these systems are also trained in an unsupervised way, but with another loss function: a max-margin ranking loss.</p>
-<h2 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion"> </a></h2><p>GraphSAGE is an incredibly fast architecture to process large graphs. It might not be as accurate as a GCN or a GAT, but it is an essential model for handling <strong>massive amounts of data</strong>. It delivers this speed thanks to a clever combination of 1/ neighbor sampling to prune the graph and 2/ fast aggregation with a mean aggregator in this example. In this article,</p>
+<p>The three models obtain similar results in terms of accuracy. We expect the GAT to perform better because its aggregation mechanism is more nuanced, but it's not always the case.</p>
+<p>The real difference is the training time: GraphSAGE is <strong>88 times faster</strong> than the GAT and four times faster than the GCN in this example!</p>
+<p>This is the true benefit of GraphSAGE. While it loses a lot of information by pruning the graph with neighbor sampling, it greatly improves scalability. In turn, it can lead to building larger graphs that can improve accuracy.</p>
+<center><img src="https://mlabonne.github.io/blog/images/graphsage/timechart.png" width="800" /></center><p>GraphSAGE is a popular framework with many flavors.</p>
+<p>In this example, we have used GraphSAGE in a <strong>transductive</strong> setting. We masked information about test nodes during training, but we didn't hide their presence in the adjacency matrix. On the contrary, in an <strong>inductive</strong> setting, the test set is never encountered during training.</p>
+<p>This difference is essential: an inductive model can calculate embeddings for nodes that have never been seen before. On the other hand, a transductive model has to be re-trained, which can quickly become computationally costly. Thanks to neighbor sampling, GraphSAGE is designed to be an inductive model: it does not require seeing every neighbor to calculate an embedding.</p>
+<p>Besides these two settings, GraphSAGE can be trained in an <strong>unsupervised</strong> way. In this case, we can't use the cross-entropy loss. We have to engineer a loss function that forces nodes that are nearby in the original graph to remain close to each other in the embedding space. Conversely, the same function must ensure that distant nodes in the graph must have distant representations in the embedding space. This is the loss that is presented in <a href="https://cs.stanford.edu/people/jure/pubs/graphsage-nips17.pdf">GraphSAGE's paper</a>.</p>
+<p>PinSAGE and UberEeats' modified GraphSAGE are also slightly different since we're dealing with <strong>recommender systems</strong>. Their goal is to correctly rank the most relevant items (pins, restaurants) for each user. We don't only want to get the closest embeddings, but we also have to produce the best rankings possible. This is why these systems are trained in an unsupervised way but with another loss function: a max-margin ranking loss.</p>
+<h2 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion"> </a></h2><p>GraphSAGE is an incredibly fast architecture that can process large graphs. It might not be as accurate as a GCN or a GAT, but it is an essential model for handling massive amounts of data. It delivers this speed thanks to a clever combination of neighbor sampling and fast aggregation. In this article,</p>
 <ul>
-<li>We explored a <strong>new dataset</strong> with PubMed, which is several times larger than the previous one;</li>
-<li>We explained the idea behind <strong>neighbor sampling</strong>, which only considers a predefined number of random neighbors at each hop;</li>
-<li>We saw the <strong>three aggregators</strong> presented in GraphSAGE's paper and focused on the mean aggregator;</li>
-<li>We benchmarked three models (GraphSAGE, GAT, and GCN) in terms of <strong>accuracy</strong> and <strong>training time</strong>.</li>
+<li>We explored a new dataset with PubMed, which has almost ten times more connections than the previous one (CiteSeer)</li>
+<li>We explained the idea behind neighbor sampling, which only considers a predefined number of random neighbors at each hop</li>
+<li>We saw the three aggregators presented in GraphSAGE's paper and focused on the mean aggregator</li>
+<li>We benchmarked three models (GraphSAGE, GAT, and GCN) in terms of accuracy and training time</li>
 </ul>
-<p>We saw three architectures with the same end application: node classification. But GNNs have been successfully applied to other tasks. In the next tutorials, I’d like to use them in two different contexts: <strong>graph and edge prediction</strong>. This will be a good way to discover new datasets and applications where GNNs dominate the state of the art.</p>
-<p>If you enjoyed this article, let’s connect on Twitter <a href="https://twitter.com/maximelabonne">@maximelabonne</a> for more graph learning content.</p>
+<p>We saw three architectures with the same end application: node classification. But GNNs have been successfully applied to other tasks. In the next tutorials, I'd like to use them in two different contexts: graph and edge prediction. This will be a good way to discover new datasets and applications where GNNs dominate the state of the art.</p>
+<p>If you enjoyed this article, let's connect on Twitter <a href="https://twitter.com/maximelabonne">@maximelabonne</a> for more graph learning content.</p>
 <p>Thanks for your attention! 📣</p>
 <h2 id="&#127760;-Graph-Neural-Network-Course">&#127760; Graph Neural Network Course<a class="anchor-link" href="#&#127760;-Graph-Neural-Network-Course"> </a></h2><p><a href="https://github.com/mlabonne/Graph-Neural-Network-Course" class="related">🔎 Course overview</a></p>
 <p><a href="https://mlabonne.github.io/blog/intrognn/" class="related">📝 Chapter 1: Introduction to Graph Neural Networks</a></p>
