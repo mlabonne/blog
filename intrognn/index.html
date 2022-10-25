@@ -133,7 +133,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      29 min read
+      19 min read
     
 </span>
     </p>
@@ -188,9 +188,10 @@ window.onload = wrap_img;
         
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<center><div id="anim_container"><img alt="Illustration of GNN" src="https://mlabonne.github.io/blog/images/gnn/gnn.png" loading="lazy" id="anim_inner" /></div></center><p>Graph Neural Networks (GNNs) are one of the <strong>most interesting architectures in deep learning</strong>. In just a few years, they managed to apply neural networks to a whole new set of problems: drug discovery where they found a new antibiotic (Halicin), in Google Maps where they outperform any other method to estimate the time of arrival, and they now even recommend every article, video, or connection you see on social media. GNNs are a technology with tremendous potential and countless applications still untapped and yet to be discovered.</p>
-<p>Despite these achievements, GNNs are not as widely taught as other architectures like Convolutional Neural Networks. Because of their young age, educational resources are scarcer and more research-oriented, which can discourage many practitioners. In this article, we're going to perform node classification with graph data using PyTorch Geometric. Once we understand how to interact with this specific type of data, we will design our own graph convolutional layer. Finally, we'll implement a GNN and visualize how it learns and understands our graph data.</p>
-<p>The first step is to install the libraries we'll need throughout this article. We assume that <a href="https://pytorch.org/">PyTorch</a> is already installed, which is the case on Google Colab. If you don't have PyTorch in your environment, please follow the instructions given in the <a href="https://pytorch.org/get-started/locally/">official documentation</a>. Moreover, some extensions of PyTorch can be quite difficult to install because it depends on your version of PyTorch and CUDA. If the installation does not work for you, please check <a href="https://pytorch-geometric.readthedocs.io/en/latest/notes/installation.html">PyTorch Geometric's documentation</a>.</p>
+<center><img src="https://mlabonne.github.io/blog/images/gnn/gnn.png" /></center><p>Graph Neural Networks (GNNs) are one of the most interesting and fast-growing architectures in deep learning.</p>
+<p>In this series of tutorials, I would like to give a practical overview of this field and present new applications for machine learning practictioners.</p>
+<p>Among GNNs, the Graph Convolutional Networks (GCNs) are the most popular and widely-applied model. In this article, we will see how the GCN layer works and how to apply it to node classification using PyTorch Geometric.</p>
+<p>The first step is to install PyTorch Geometric. We assume that <a href="https://pytorch.org/">PyTorch</a> is already installed, which is the case on Google Colab. If you don't have PyTorch in your environment, please follow the instructions from the <a href="https://pytorch.org/get-started/locally/">official documentation</a>. Moreover, some extensions of PyTorch can be difficult to install because they depend on your version of PyTorch and CUDA. If the installation does not work for you, please check <a href="https://pytorch-geometric.readthedocs.io/en/latest/notes/installation.html">PyTorch Geometric's documentation</a>.</p>
 
 </div>
 </div>
@@ -203,11 +204,9 @@ window.onload = wrap_img;
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
-
-<span class="c1"># Install PyTorch Scatter, PyTorch Sparse, and PyTorch Geometric</span>
-<span class="o">!</span>pip install torch-scatter -f https://data.pyg.org/whl/torch-<span class="si">${</span><span class="nv">TORCH</span><span class="si">}</span>+<span class="si">${</span><span class="nv">CUDA</span><span class="si">}</span>.html
-<span class="o">!</span>pip install torch-sparse -f https://data.pyg.org/whl/torch-<span class="si">${</span><span class="nv">TORCH</span><span class="si">}</span>+<span class="si">${</span><span class="nv">CUDA</span><span class="si">}</span>.html
-<span class="o">!</span>pip install torch-geometric
+<span class="o">!</span>pip install -q torch-scatter -f https://data.pyg.org/whl/torch-<span class="o">{</span>torch.__version__<span class="o">}</span>.html
+<span class="o">!</span>pip install -q torch-sparse -f https://data.pyg.org/whl/torch-<span class="o">{</span>torch.__version__<span class="o">}</span>.html
+<span class="o">!</span>pip install -q git+https://github.com/pyg-team/pytorch_geometric.git
 
 <span class="c1"># Numpy for matrices</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -242,8 +241,10 @@ window.onload = wrap_img;
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="&#127760;-I.-Graph-data">&#127760; I. Graph data<a class="anchor-link" href="#&#127760;-I.-Graph-data"> </a></h2><p><a href="https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)">Graphs</a> are a type of data you can find pretty much everywhere: social networks, computer networks, molecules, etc. Even text and images can be seen as graphs, as we're gonna see later. In this article, we're gonna study the infamous and much-used <a href="https://en.wikipedia.org/wiki/Zachary%27s_karate_club">Zachary's karate club</a> dataset.</p>
-<center><div id="anim_container"><img alt="Zachary's karate club" src="https://mlabonne.github.io/blog/images/gnn/zachary.png" loading="lazy" id="anim_inner" width="600" /></div></center><p>Zachary's karate club simply represents the relationships within a karate club studied by Wayne W. Zachary in the 1970s. It is a kind of social network, where every node is a member, and members who interacted outside the club are connected together. In this example, the club is divided into 4 groups: we would like to <strong>assign the right group to every member</strong> (node classification) just by looking at their connections. You can see it's quite similar to friend suggestions on social media, which is another task you can perform with GNNs (link prediction).</p>
+<p>Now that PyTorch Geometric is installed and the main libraries have been imported, let's explore the dataste we will use in this tutorial.</p>
+<h2 id="&#127760;-I.-Graph-data">&#127760; I. Graph data<a class="anchor-link" href="#&#127760;-I.-Graph-data"> </a></h2><p><a href="https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)">Graphs</a> are a nonlinear type of data you can find everywhere: social networks, computer networks, molecules, text, images, and so on. In this article, we will study the infamous and much-used <a href="https://en.wikipedia.org/wiki/Zachary%27s_karate_club">Zachary's karate club</a> dataset.</p>
+<center><img src="https://mlabonne.github.io/blog/images/gnn/zachary.png" /></center><p>Zachary's karate club represents the relationships within a karate club studied by Wayne W. Zachary in the 1970s. It is a kind of social network, where every node is a member, and members who interacted outside the club are connected together.</p>
+<p>In this example, the club is divided into four groups: we would like to <strong>assign the right group to every member</strong> (node classification) just by looking at their connections. You can see it's quite similar to friend suggestions on social media, which is another task you can perform with GNNs (link prediction).</p>
 <p>Let's import the dataset with PyG's built-in function and try to understand the <code>Datasets</code> object it uses.</p>
 
 </div>
@@ -296,7 +297,7 @@ Number of classes: 4
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This dataset only has 1 graph, where each node has a <strong>feature vector of 34 dimensions</strong> and is part of one out of <strong>4 classes</strong> (our 4 groups). Actually, the <code>Datasets</code> object can be seen as a collection of <code>Data</code> (graph) objects. We can further inspect our unique graph to know more about it.</p>
+<p>This dataset only has 1 graph, where each node has a feature vector of 34 dimensions and is part of one out of four classes (our four groups). Actually, the <code>Datasets</code> object can be seen as a collection of <code>Data</code> (graph) objects. We can further inspect our unique graph to know more about it.</p>
 
 </div>
 </div>
@@ -341,7 +342,7 @@ Number of classes: 4
 <li><code>y=[34]</code> is the <strong>node ground-truth labels</strong>. In this problem, every node is assigned to one class (group), so we have one value for each node.</li>
 <li><code>train_mask=[34]</code> is an optional attribute that tells which nodes should be used for training with a list of <code>True</code> or <code>False</code> statements.</li>
 </ul>
-<p>Let's print each of these parameters to understand what they store.</p>
+<p>Let's print each of these tensors to understand what they store. Let's start with the node features.</p>
 
 </div>
 </div>
@@ -355,7 +356,6 @@ Number of classes: 4
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-<span class="c1"># Print x</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;x = </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
 </pre></div>
@@ -391,6 +391,7 @@ tensor([[1., 0., 0.,  ..., 0., 0., 0.],
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Here, the node feature matrix <code>x</code> is actually an identity matrix: it doesn't contain any relevant information about the nodes. It could contain information like age, skill level, etc. but this is not the case in this dataset. It means we'll have to classify our nodes just by looking at their connections.</p>
+<p>Now, let's print the edge index.</p>
 
 </div>
 </div>
@@ -447,8 +448,9 @@ tensor([[ 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  1,
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The <code>edge_index</code> has a quite counter-intuitive way of storing the graph connectivity. Here, we have 156 directed edges (78 bidirectional edges) twice because the first 156-dim array contains the sources and the second one the destinations. It is called a <strong>coordinate list (COO)</strong> and is just <a href="https://en.wikipedia.org/wiki/Sparse_matrix#Storing_a_sparse_matrix">one way of efficiently storing a sparse matrix</a>. A more intuitive way to represent the graph connectivity would be a simple adjacency matrix $A$, where nodes are rows and columns and 1s indicate a connection between two nodes.</p>
-<center><div id="anim_container"><img alt="Adjacency matrix" src="https://mlabonne.github.io/blog/images/gnn/adjacency.png" loading="lazy" id="anim_inner" /></div></center><p>The adjacency matrix can actually be calculated from the <code>edge_index</code> with a utility function.</p>
+<p>The <code>edge_index</code> has a quite counter-intuitive way of storing the graph connectivity. Here, we have two lists of 156 directed edges (78 bidirectional edges) because the first list contains the sources and the second one the destinations. It is called a coordinate list (COO) and is just <a href="https://en.wikipedia.org/wiki/Sparse_matrix#Storing_a_sparse_matrix">one way of efficiently storing a sparse matrix</a>.</p>
+<p>A more intuitive way to represent the graph connectivity would be a simple adjacency matrix $A$, where a non-zero element $A_{ij}$ indicates a connection from $i$ to $j$.</p>
+<center><img src="https://mlabonne.github.io/blog/images/gnn/adjacency.png" /></center><p>The adjacency matrix can be inferred from the <code>edge_index</code> with a utility function.</p>
 
 </div>
 </div>
@@ -497,7 +499,8 @@ tensor([[ 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  1,
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Unfortunately, it is not an optimal way of storing this information, since nodes are not highly interconnected. It means that our adjacency matrix is filled with zeros (sparse matrix). Storing so many zeros is not efficient at all, which is why the COO format is adopted by PyG.</p>
+<p>With graph data, nodes are rarely highly interconnected. For example, our adjacency matrix $A$ is very sparse (filled with zeros). Storing so many zeros is not efficient at all, which is why the COO format is adopted by PyG.</p>
+<p>On the contrary, ground-truth labels are easy to understand.</p>
 
 </div>
 </div>
@@ -538,7 +541,8 @@ tensor([1, 1, 1, 1, 3, 3, 3, 1, 0, 1, 3, 1, 1, 1, 0, 0, 3, 1, 0, 1, 0, 1, 0, 0,
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>On the contrary, node ground-truth labels <code>y</code> are quite straightforward: they simply encode the group number (0, 1, 2, 3) for each node.</p>
+<p>Our node ground-truth labels stored in <code>y</code> simply encode the group number (0, 1, 2, 3) for each node.</p>
+<p>Finally, let's print the train mask.</p>
 
 </div>
 </div>
@@ -581,8 +585,14 @@ tensor([ True, False, False, False,  True, False, False, False,  True, False,
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Finally, the <code>train_mask</code> shows which nodes are supposed to be used for training with <code>True</code> statements. This is not super useful because we don't have test data anyway...</p>
-<p>But we're not done yet! The <code>Data</code> object has a lot more to offer: numerous properties about graphs can be checked using utility functions. For instance, <code>is_directed()</code> can tell you if the graph is directed, which means that all the edges are directed only in one direction. Another useful one is <code>isolated_nodes()</code> to check if some nodes are not connected to the rest of the graph. Finally, <code>has_self_loops()</code> can tell you if at least one node is connected to itself. This is not the same as <a href="https://en.wikipedia.org/wiki/Loop_(graph_theory)#:~:text=In%20graph%20theory%2C%20a%20loop,connects%20a%20vertex%20to%20itself.&amp;text=Where%20graphs%20are%20defined%20so,calling%20it%20a%20simple%20graph.">loops</a>: loops mean that you can take a path that starts and ends at the same node.</p>
+<p>The train mask shows which nodes are supposed to be used for training with <code>True</code> statements. These nodes represent the training set, while the others can be considered as the test set.</p>
+<p>But we're not done yet! The <code>Data</code> object has a lot more to offer: numerous properties about graphs can be checked using utility functions. For example:</p>
+<ul>
+<li><code>is_directed()</code> tells you if the graph is directed, which means that the adjacency matrix is not symmetric</li>
+<li><code>isolated_nodes()</code> checks if some nodes are not connected to the rest of the graph (and will probably be harder to classify)</li>
+<li><code>has_self_loops()</code> indicates if at least one node is connected to itself. This is not the same as <a href="https://en.wikipedia.org/wiki/Loop_(graph_theory)#:~:text=In%20graph%20theory%2C%20a%20loop,connects%20a%20vertex%20to%20itself.&amp;text=Where%20graphs%20are%20defined%20so,calling%20it%20a%20simple%20graph.">loops</a>: loops mean that you can take a path that starts and ends at the same node.</li>
+</ul>
+<p>All of these properties return <code>False</code> for Zachary's karate club.</p>
 
 </div>
 </div>
@@ -624,7 +634,7 @@ Graph has loops: False
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>One of the most helpful utility functions available in PyG is <code>to_networkx</code>. It allows you to convert your <code>Data</code> instance into a <code>networkx.Graph</code> to easily visualize it. We can use <code>matplotlib</code> to plot the graph with colors corresponding to the label of every node.</p>
+<p>Finally, we can convert a graph from PyTorch Geometric to the popular graph library NetworkX using <code>to_networkx</code>. This is particularly useful to visualize a small graph with <code>networkx</code> and <code>matplotlib</code>. Let's plot our dataset with a different color for each group.</p>
 
 </div>
 </div>
@@ -681,230 +691,38 @@ Graph has loops: False
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This plot of Zachary's karate club allows us to visualize our <strong>34 nodes, 78 edges, and 4 labels with 4 different colours</strong>. I think our understanding of the problem is now good enough to start talking about Graph Neural Networks.</p>
-<h2 id="&#9993;&#65039;-II.-Graph-Neural-Network-Layer">&#9993;&#65039; II. Graph Neural Network Layer<a class="anchor-link" href="#&#9993;&#65039;-II.-Graph-Neural-Network-Layer"> </a></h2><h3 id="1.-From-image-convolution-to-graph-convolution">1. From image convolution to graph convolution<a class="anchor-link" href="#1.-From-image-convolution-to-graph-convolution"> </a></h3><center><img src="https://mlabonne.github.io/blog/images/gnn/convolutioncat.png" /></center><p>In image processing, filters to blur, sharpen, or detect edges are all based on the same operation: a convolution between a matrix and an image. In the case of a $3 \times 3$ matrix, this operation looks at the 8 pixels around each pixel and apply weights to their values. These values can be a single number, or a vector containing multiple numbers. In the previous figure, the same weight is applied to every neighboring pixel: each pixel becomes an average of its neighbors, which is why the result looks blurry. Different filters can be designed just by changing the value of these weights. Now, we could think of each pixel as a node and the entire image as a graph. The operation would be exactly the same.</p>
-<center><img src="https://mlabonne.github.io/blog/images/gnn/convolutiongraph.png" /></center><p>Why is that relevant? In most networks, we make the hypothesis that similar nodes are more likely to be connected to each other than dissimilar ones (it's called <a href="https://en.wikipedia.org/wiki/Network_homophily">network homophily</a>). Information about each node is stored in a feature vector, but we can enrich it by aggregating its features with those of its neighbors. This operation is called convolution, or neighborhood aggregation.</p>
-<p>Let's take an example: we want to aggregate the feature vectors of the pixel $5$ with those of its 8 neighbors. Usually, pixels contain 3 values to encode the 3 primary colors red, green, and blue, so each feature vector can be noted $x_i = [r_i, g_i, b_i]$. As in a convolution operation, we multiply $x_5$ and the neighboring nodes' feature vectors by a matrix $\mathbf{W}$. Note that in this case, $W_i$ are not single values, but vectors because they have to take into account three values for each $x_i$ ($r_i$, $g_i$, $b_i$). In other words, we have a weight matrix $\mathbf{W}$ containing 9 weight vectors $W_i$. We call the list of pixel $5$ and its neighbors $\mathcal{N}_5 = \{1, 2, 3, 4, 5, 6, 7, 8, 9\}$. The result $h_5$ of this aggregation can be calculated as follows:</p>
+<p>This plot of Zachary's karate club displays our 34 nodes, 78 (bidirectional) edges, and 4 labels with 4 different colours. Now that we've seen the essentials of loading and handling a dataset with PyTorch Geometric, we can introduce the Graph Convolutional Network.</p>
+<h2 id="&#9993;&#65039;-II.-Graph-Convolutional-Network">&#9993;&#65039; II. Graph Convolutional Network<a class="anchor-link" href="#&#9993;&#65039;-II.-Graph-Convolutional-Network"> </a></h2><p>To better understand it, let's try to redesign the graph convolutional layer from scratch.</p>
+<p>In neural networks, linear layers apply a linear transformation to the incoming data. They transform input features $x$ into hidden vectors $h$ using a weight matrix $W$. If we ignore biases, we can write:</p>
 <p>
-$$h_5 = W_1x_1 + \dots + W_9x_9 = \sum_{i \in \mathcal{N}_5} {W_ix_i}$$
+$$h = \mathbf{W} x$$
 </p>
-<p>We could apply the same idea to graphs in general, but there's a problem: <strong>nodes do not have a consistent order like pixels do</strong>. If we change the order from $\{1, 2, 3, 4, 5, 6, 7, 8, 9\}$ to $\{9, 3, 1, 4, 7, 6, 2, 5, 8\}$, we would obtain a different result. It makes sense with images, but nodes can't be to the left or to the right of other nodes, they don't have positions! It means that we never know if the nodes are going to be in the correct order, so we can't assign $W_i$ to $x_i$. A simple solution is to reuse the same weight vector $\mathbf{W}$ for every $x_i$, instead of having a unique weight vector $W_i$ for each node. That way, the same operation is performed on every node. The formula now becomes:</p>
+<p>With graph data, we have access to connections between nodes. Why is that relevant? In most networks, we make the hypothesis that similar nodes are more likely to be connected to each other than dissimilar ones (it's called <a href="https://en.wikipedia.org/wiki/Network_homophily">network homophily</a>).</p>
+<p>We can enrich our node representation by aggregating its features with those of its neighbors. This operation is called convolution, or neighborhood aggregation. Let's denote $\tilde{\mathcal{N}}_i$ the neighborhood of node $i$ including itself.</p>
 <p>
-$$h_5 = \sum_{i \in \mathcal{N}_5} \mathbf{W}x_i$$
+$$h_i = \sum_{j \in \tilde{\mathcal{N}}_i} \mathbf{W} x_j$$
 </p>
-<p>But unlike pixels, nodes do not have a fixed number of neighbors. What if one node only has 1 neighbor, and another one has 500 of them? We would add 500 values instead of just one, which means that the result $h$ would be much larger for the node with 500 neighbors. But it doesn't make sense: nodes should always be <strong>comparable so they need to have a similar range of values</strong>. To address this issue, we can normalize the result based on the number of connections. In graph theory, this number is called a degree. Let's divide the result of the previous formula by the number of neighbors of node $5$ (noted $deg(5)$):</p>
+<p>Unliked filters in Convolutional Neural Networks (CNNs), our weight matrix $W$ is unique and shared among every node.</p>
+<p>But there is another issue: nodes do not have a fixed number of neighbors like pixels do.</p>
+<p>What if one node only has 1 neighbor, and another one has 500 of them? We would add 500 values instead of just one: the resulting embedding $h$ would be much larger for the node with 500 neighbors.</p>
+<p>However, this doesn't make sense: nodes should always be comparable, so they need to have a similar range of values. To address this issue, we can normalize the result based on the number of connections. In graph theory, this number is called a degree.</p>
 <p>
-$$h_5 = \dfrac{1}{deg(5)} \sum_{i \in \mathcal{N}_5} \mathbf{W} x_i$$
+$$h_i = \dfrac{1}{\deg(i)} \sum_{j \in \tilde{\mathcal{N}}_i} \mathbf{W} x_j$$
 </p>
-<p>Excellent! We now have a graph convolutional layer. There are other types of layers, but this one is simple and works fairly well. We had to overcome two issues:</p>
-<ol>
-<li><strong>Nodes don't have any idea of order</strong>, which forced us to use a common weight $\mathbf{W}$;</li>
-<li><strong>Nodes have a variable number of neighbors</strong>, which pushed us to normalize our result by dividing it by the number of neighbors $deg(5)$.</li>
-</ol>
-<h3 id="2.-(Optional)-Message-passing-with-matrices">2. (Optional) Message passing with matrices<a class="anchor-link" href="#2.-(Optional)-Message-passing-with-matrices"> </a></h3><p>Naturally, this way of computing message passing node by node is not very efficient. Since we're talking about neural networks, it means that calculations are performed through matrix multiplication. Let's go back to our dataset and translate the previous operations into matrices. First, we have <code>data.x</code>, which is the feature node matrix $X$. In this particular dataset, $X$ is the identity matrix $I$ but, in general, it could store any information about the nodes.</p>
-
-</div>
-</div>
-</div>
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># a numpy array with integers instead of floats</span>
-<span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;X = </span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>X = (34, 34)
-[[1 0 0 ... 0 0 0]
- [0 1 0 ... 0 0 0]
- [0 0 1 ... 0 0 0]
- ...
- [0 0 0 ... 1 0 0]
- [0 0 0 ... 0 1 0]
- [0 0 0 ... 0 0 1]]
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Now we need $W$, the learnable weight matrix (like a filter) of our graph convolutional layer. Our layer is not trained yet, so we can initialize $W$ with arbitrary values. To keep things simple, let's take the identity matrix again, so $W X = I \cdot I = I$.</p>
-
-</div>
-</div>
-</div>
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">W</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;W = </span><span class="si">{</span><span class="n">W</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">W</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>W = (34, 34)
-[[1 0 0 ... 0 0 0]
- [0 1 0 ... 0 0 0]
- [0 0 1 ... 0 0 0]
- ...
- [0 0 0 ... 1 0 0]
- [0 0 0 ... 0 1 0]
- [0 0 0 ... 0 0 1]]
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We can apply the weights in $W$ to every feature vector by calculating $WX$, but this is not what we want to do! Indeed, we only need to include the neighboring nodes and not every node in the graph. A good way to find these neighbors is to look at the adjacency matrix $A$ we saw earlier.</p>
-
-</div>
-</div>
-</div>
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;A = </span><span class="si">{</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>A = (34, 34)
-[[0 1 1 ... 1 0 0]
- [1 0 1 ... 0 0 0]
- [1 1 0 ... 0 1 0]
- ...
- [1 0 0 ... 0 1 1]
- [0 0 1 ... 1 0 1]
- [0 0 0 ... 1 1 0]]
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>In our case, $A$ is symmetric because edges in this graph are bidirectional. This wouldn't be the case if connections were unidirectional. This is why we use $A^T X$ and not $AX$ in general in order to obtain the feature vectors of the neighboring nodes. This operation does not only select the relevant vectors, it also sums them in the process.</p>
-<center class="dark-bg">
-    <video autoplay="" loop="" muted="" width="800" class="no-margin">
-        <source src="https://mlabonne.github.io/blog/images/gnn/matrixmul.mp4" type="video/mp4" />&lt;/source&gt;
-    </video>
-</center><p>We just miss the "central" node itself, which can be fixed by adding a connection to itself (self-loops) in the adjacency matrix: $\tilde{A} = A + I$.</p>
-
-</div>
-</div>
-</div>
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">A_tilde</span> <span class="o">=</span> <span class="n">A</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">A_tilde = </span><span class="si">{</span><span class="n">A_tilde</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">A_tilde</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>
-A_tilde = (34, 34)
-[[1 1 1 ... 1 0 0]
- [1 1 1 ... 0 0 0]
- [1 1 1 ... 0 1 0]
- ...
- [1 0 0 ... 1 1 1]
- [0 0 1 ... 1 1 1]
- [0 0 0 ... 1 1 1]]
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>$\tilde{A}^TX$ selects the feature vectors of the neighboring nodes (and the node itself) and $WX$ applies the weights in $W$ to every feature vector in the graph. We can combine both expressions to apply these weights to the feature vectors of the neighboring nodes (and the node itself) with $\tilde{A}^T \ X \ W^T$. We can rewrite the previous operation as follows:</p>
+<p>We're almost there! Introduced by Kipf et al. in 2016, the <a href="https://arxiv.org/abs/1609.02907">graph convolutional layer</a> has one final improvement.</p>
+<p>Indeed, the authors noticed that features from nodes with a lot of neighbors will spread much more easily than those from more isolated nodes. To counterbalance this effect, they proposed to give bigger weights to features from nodes with few neighbors. This operation can be written as follows:</p>
 <p>
-$$h_i = \sum_{j \in \mathcal{N}_i} \mathbf{W} x_j$$
+$$h_i = \sum_{j \in \mathcal{N}_i} \dfrac{1}{\sqrt{\deg(i)}\sqrt{\deg(j)}} \mathbf{W} x_j$$
 </p>
-<center>becomes</center><p>
-$$H = \tilde{A}^T \ X \ W^T$$
-</p>
+<p>Notice that when $i$ and $j$ have the same number of neighbors, it is equivalent to our own layer. Now, let's see how to implement it in Python.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="&#129504;-III.-Implementing-a-GCN">&#129504; III. Implementing a GCN<a class="anchor-link" href="#&#129504;-III.-Implementing-a-GCN"> </a></h2><p>PyTorch Geometric directly implements the graph convolutional layer using <code>GCNConv</code>. In this example, we will create a simple GCN with only one GCN layer, a ReLU activation function, and one linear layer. This final layer will output four values, corresponding to our four groups. The highest value will determine the class of each node.</p>
+<p>In the following code block, we define the GCN layer with a 3-dim hidden layer.</p>
 
 </div>
 </div>
@@ -916,280 +734,22 @@ $$H = \tilde{A}^T \ X \ W^T$$
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">H</span> <span class="o">=</span> <span class="n">A_tilde</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">X</span> <span class="o">@</span> <span class="n">W</span><span class="o">.</span><span class="n">T</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;H = A_tilde.T @ X @ W.T </span><span class="si">{</span><span class="n">H</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>H = A_tilde.T @ X @ W.T (34, 34)
-[[1 1 1 ... 1 0 0]
- [1 1 1 ... 0 0 0]
- [1 1 1 ... 0 1 0]
- ...
- [1 0 0 ... 1 1 1]
- [0 0 1 ... 1 1 1]
- [0 0 0 ... 1 1 1]]
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Now we would like to normalize $H$ by the number of neighbors as seen previously. We can use the degree matrix $D$ that <strong>counts the number of neighbors for each node</strong>. In our case, we want the matrix $\tilde{D}$, based on $\tilde{A}$ instead of $A$.</p>
-
-</div>
-</div>
-</div>
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
-<span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">A</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;D = </span><span class="si">{</span><span class="n">D</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
-
-<span class="n">D_tilde</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">D</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
-<span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">D_tilde</span><span class="p">,</span> <span class="n">A_tilde</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">D_tilde = </span><span class="si">{</span><span class="n">D_tilde</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">D_tilde</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>D = (34, 34)
-[[16  0  0 ...  0  0  0]
- [ 0  9  0 ...  0  0  0]
- [ 0  0 10 ...  0  0  0]
- ...
- [ 0  0  0 ...  6  0  0]
- [ 0  0  0 ...  0 12  0]
- [ 0  0  0 ...  0  0 17]]
-
-D_tilde = (34, 34)
-[[17  0  0 ...  0  0  0]
- [ 0 10  0 ...  0  0  0]
- [ 0  0 11 ...  0  0  0]
- ...
- [ 0  0  0 ...  7  0  0]
- [ 0  0  0 ...  0 13  0]
- [ 0  0  0 ...  0  0 18]]
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We could use D to calculate either:</p>
-<ul>
-<li>$\tilde{D}^{-1} \tilde{A}$ to normalize every <strong>row</strong> in $\tilde{A}$;</li>
-<li>$\tilde{A} \tilde{D}^{-1}$ to normalize every <strong>column</strong> in $\tilde{A}$. </li>
-</ul>
-<p>In our case, $\tilde{A}$ is symmetric so the results would be the equivalent. We can thus translate the normalized operation as follows:</p>
-<p>
-$$h_i = \dfrac{1}{deg(i)} \sum_{j \in \mathcal{N}_i} \mathbf{W} x_j$$
-</p>
-<center>becomes</center><p>
-$$H = \tilde{D}^{-1} \ \tilde{A}^T \ X \ W^T$$
-</p>
-
-</div>
-</div>
-</div>
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">D_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">D_tilde</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;D_inv = </span><span class="si">{</span><span class="n">D_inv</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">D_inv</span><span class="p">)</span>
-
-<span class="n">H</span> <span class="o">=</span> <span class="n">D_inv</span> <span class="o">@</span> <span class="n">A_tilde</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">X</span> <span class="o">@</span> <span class="n">W</span><span class="o">.</span><span class="n">T</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">H = D_inv @ A.T @ X @ W.T </span><span class="si">{</span><span class="n">H</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>D_inv = (34, 34)
-[[0.05882353 0.         0.         ... 0.         0.         0.        ]
- [0.         0.1        0.         ... 0.         0.         0.        ]
- [0.         0.         0.09090909 ... 0.         0.         0.        ]
- ...
- [0.         0.         0.         ... 0.14285714 0.         0.        ]
- [0.         0.         0.         ... 0.         0.07692308 0.        ]
- [0.         0.         0.         ... 0.         0.         0.05555556]]
-
-H = D_inv @ A.T @ X @ W.T (34, 34)
-[[0.05882353 0.05882353 0.05882353 ... 0.05882353 0.         0.        ]
- [0.1        0.1        0.1        ... 0.         0.         0.        ]
- [0.09090909 0.09090909 0.09090909 ... 0.         0.09090909 0.        ]
- ...
- [0.14285714 0.         0.         ... 0.14285714 0.14285714 0.14285714]
- [0.         0.         0.07692308 ... 0.07692308 0.07692308 0.07692308]
- [0.         0.         0.         ... 0.05555556 0.05555556 0.05555556]]
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>And we're done! The previous operation is exactly what a Graph Neural Network could do. In reality, there are many ways to define a graph layer. The good news is that it's handled by PyTorch Geometric, so we don't need to reimplement GNN layers with matrix multiplication from scratch. Let's see how it's done.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="&#129504;-III.-Graph-Neural-Network">&#129504; III. Graph Neural Network<a class="anchor-link" href="#&#129504;-III.-Graph-Neural-Network"> </a></h2><p>One of the simplest GNN layer is called <code>GCNConv</code> in PyG for Graph Convolutional Network, and was introduced in <a href="https://arxiv.org/abs/1609.02907">Semi-Supervised Classification with Graph Convolutional Networks</a>. The main idea is that feature vectors from nodes with a lot of neighbors will <strong>spread very easily, unlike ones from more isolated nodes</strong>. The authors proposed to use a weighted average operation to counterbalance this effect, by giving bigger weights to feature vectors from nodes with few neighbors. This operation can be written as follows:</p>
-<p>
-$$h_i = \sum_{j \in \mathcal{N}_i} \dfrac{1}{\sqrt{deg(i)}\sqrt{deg(j)}} \mathbf{W} x_j$$
-</p>
-<p>Or with matrices:</p>
-<p>
-$$H = \tilde{D}^{-1/2} \tilde{A}^T \tilde{D}^{-1/2} X W^T$$
-</p>
-<p>Notice that is $v$ and $i$ have the same number of neighbors, it is equivalent to our own graph convolutional layer.</p>
-
-</div>
-</div>
-</div>
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">D_inv12</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">D_tilde</span><span class="p">)</span>
-<span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">D_inv12</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span> <span class="p">(</span><span class="n">D_tilde</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span><span class="o">**</span><span class="mf">0.5</span><span class="p">))</span>
-
-<span class="c1"># New H</span>
-<span class="n">H</span> <span class="o">=</span> <span class="n">D_inv12</span> <span class="o">@</span> <span class="n">A_tilde</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">D_inv12</span> <span class="o">@</span> <span class="n">X</span> <span class="o">@</span> <span class="n">W</span><span class="o">.</span><span class="n">T</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">H = D_inv12 @ A.T @ D_inv12 @ X @ W.T </span><span class="si">{</span><span class="n">H</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>
-H = D_inv12 @ A.T @ D_inv12 @ X @ W.T (34, 34)
-[[0.05882353 0.0766965  0.07312724 ... 0.09166985 0.         0.        ]
- [0.0766965  0.1        0.09534626 ... 0.         0.         0.        ]
- [0.07312724 0.09534626 0.09090909 ... 0.         0.0836242  0.        ]
- ...
- [0.09166985 0.         0.         ... 0.14285714 0.10482848 0.08908708]
- [0.         0.         0.0836242  ... 0.10482848 0.07692308 0.06537205]
- [0.         0.         0.         ... 0.08908708 0.06537205 0.05555556]]
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>However, edges are not always bidirectional so nodes can have different numbers of neighbors. This is why the result of this operation is different from the one we designed. It is a clever trick to take into account another difference between graphs and images.</p>
-<p>Actually, this layer is the only difference between GNNs and regular neural networks. Indeed, the result of the <code>GCNConv</code> layer is fed to a classic nonlinear activation function, such as $tanh$ or $ReLU$ (otherwise it's just a fancy linear regression). Finally, since it's a classification task, we add a linear layer $Z$ with 4 neurons (our 4 groups) that outputs logits. The maximum value of each row will determine the class of a node.</p>
-<p>
-$$X \to H(X) \to ReLU(H(X)) \to Z(ReLU(H(X)))$$
-</p>
-<p>The definition of a GNN looks like a regular PyTorch code, with the addition of the <code>GCNConv</code> layer (courtesy of PyG). Here is a simple example with only one layer:</p>
-
-</div>
-</div>
-</div>
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">from</span> <span class="nn">torch.nn</span> <span class="kn">import</span> <span class="n">Linear</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">torch.nn</span> <span class="kn">import</span> <span class="n">Linear</span>
 <span class="kn">from</span> <span class="nn">torch_geometric.nn</span> <span class="kn">import</span> <span class="n">GCNConv</span>
 
 
-<span class="k">class</span> <span class="nc">GNN</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">GCN</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gcn</span> <span class="o">=</span> <span class="n">GCNConv</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">num_features</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out</span> <span class="o">=</span> <span class="n">Linear</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">num_classes</span><span class="p">)</span>
 
-  <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">):</span>
-      <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gcn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">)</span>
-      <span class="n">embedding</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
-      <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="n">embedding</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">):</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gcn</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">edge_index</span><span class="p">)</span><span class="o">.</span><span class="n">relu</span><span class="p">()</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">h</span><span class="p">,</span> <span class="n">z</span>
 
-      <span class="k">return</span> <span class="n">h</span><span class="p">,</span> <span class="n">embedding</span><span class="p">,</span> <span class="n">z</span>
-
-<span class="n">model</span> <span class="o">=</span> <span class="n">GNN</span><span class="p">()</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">GCN</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 </pre></div>
 
@@ -1219,8 +779,11 @@ $$X \to H(X) \to ReLU(H(X)) \to Z(ReLU(H(X)))$$
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>As you can imagine, adding a second GCN layer would allow the network to not only aggregate feature vectors from the neighbors of each node, but also from the neighbors of these neighbors. We can stack several graph layers to aggregate more and more distant values, but there's a catch: if we add too many layers, the aggregation becomes so intense that all the nodes end up looking the same. This phenomenon is called <strong>over-smoothing</strong> and can be a real problem. Fortunately, we don't have to worry about it in this example because we only have one layer.</p>
-<p>Now that we've defined our GNN, let's write a simple training loop with PyTorch. I chose a regular cross-entropy loss since it's a multi-class classification task, with Adam as optimizer. We could use the <code>data.train_mask</code>, but since there is no test data, we can solemnly ignore it for the purpose of this exploratory exercise. The training loop is very standard: we try to predict the correct labels, and we compare the results given by $Z(ReLU(H))$ to the labels <code>data.y</code> from the dataset. The error calculated by the cross-entropy loss is backpropagated with Adam to fine-tune our GNN's weights and biases. Finally, we print metrics to see the progression every 10 epochs.</p>
+<p>Adding a second GCN layer allows the network to not only aggregate feature vectors from the neighbors of each node, but also from the neighbors of these neighbors.</p>
+<p>We can stack several graph layers to aggregate more and more distant values, but there's a catch: if we add too many layers, the aggregation becomes so intense that all the nodes end up looking the same.</p>
+<p>This phenomenon is called <strong>over-smoothing</strong> and can be a real problem. Fortunately, we don't have to worry about it in this example because we only have one layer.</p>
+<p>Now that we've defined our GNN, let's write a simple training loop with PyTorch. I chose a regular cross-entropy loss since it's a multi-class classification task, with Adam as optimizer. We could use the <code>data.train_mask</code>, but we will ignore it for the purpose of this exploratory exercise.</p>
+<p>The training loop is very standard: we try to predict the correct labels, and we compare the GCN's results to the values stored in <code>data.y</code>. The error calculated by the cross-entropy loss is backpropagated with Adam to fine-tune our GNN's weights and biases. Finally, we print metrics every 10 epochs.</p>
 
 </div>
 </div>
@@ -1232,8 +795,7 @@ $$X \to H(X) \to ReLU(H(X)) \to Z(ReLU(H(X)))$$
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">GNN</span><span class="p">()</span>
-<span class="n">criterion</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">criterion</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
 <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
 
 <span class="c1"># Calculate accuracy</span>
@@ -1252,7 +814,7 @@ $$X \to H(X) \to ReLU(H(X)) \to Z(ReLU(H(X)))$$
     <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
 
     <span class="c1"># Forward pass</span>
-    <span class="n">h</span><span class="p">,</span> <span class="n">embedding</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">edge_index</span><span class="p">)</span>
+    <span class="n">h</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">edge_index</span><span class="p">)</span>
 
     <span class="c1"># Calculate loss function</span>
     <span class="n">loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
@@ -1267,7 +829,7 @@ $$X \to H(X) \to ReLU(H(X)) \to Z(ReLU(H(X)))$$
     <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
 
     <span class="c1"># Store data for animations</span>
-    <span class="n">embeddings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">embedding</span><span class="p">)</span>
+    <span class="n">embeddings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
     <span class="n">losses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
     <span class="n">accuracies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">acc</span><span class="p">)</span>
     <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
@@ -1320,7 +882,8 @@ Epoch 200 | Loss: 0.12 | Acc: 100.00%
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Great! Without much surprise, we reach 100% accuracy on the training set. It means that our model learned to correctly assign every member of the karate club to its correct group. We can produce a neat visualization by animating the graph to see the evolution of the GNN's predictions during the training process.</p>
+<p>Great! Without much surprise, we reach 100% accuracy on the training set. It means that our model learned to correctly assign every member of the karate club to its correct group.</p>
+<p>We can produce a neat visualization by animating the graph and see the evolution of the GNN's predictions during the training process.</p>
 
 </div>
 </div>
@@ -9853,9 +9416,9 @@ cHBsAAAAAAAAAAAAAAAALWlsc3QAAAAlqXRvbwAAAB1kYXRhAAAAAQAAAABMYXZmNTcuODMuMTAw
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The GCN struggles a bit at the beginning, but it perfectly labels every node after a while. Indeed, the final graph is the same than the one we plotted at the end of the first part of this article. Okay this is nice, but what does the GNN really learn?</p>
-<p>By aggregating features from neighboring nodes, the GNN learns a vector representation of every node in the network, also called embedding. In our model, the linear classifier $Z$ on top of it just learns how to use these embeddings to produce the best classifications, but the embeddings are the real product of GNNs.</p>
-<p>Let's print the 3D embeddings for each of the 34 nodes with the result of the ReLU layer $ReLU(H(x))$, aptly named <code>embedding</code>.</p>
+<p>The first predictions are random, but the GCN perfectly labels every node after a while. Indeed, the final graph is the same than the one we plotted at the end of the first section. But what does the GCN really learn?</p>
+<p>By aggregating features from neighboring nodes, the GNN learns a vector representation of every node in the network, also called embeddings. In our model, the final layer $Z$ just learns how to use these representations to produce the best classifications. However, embeddings are the real products of GNNs.</p>
+<p>Let's print the embeddings learned by our model.</p>
 
 </div>
 </div>
@@ -9867,8 +9430,8 @@ cHBsAAAAAAAAAAAAAAAALWlsc3QAAAAlqXRvbwAAAB1kYXRhAAAAAQAAAABMYXZmNTcuODMuMTAw
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Final embeddings = </span><span class="si">{</span><span class="n">embedding</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">embedding</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Final embeddings = </span><span class="si">{</span><span class="n">h</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -9928,7 +9491,7 @@ tensor([[2.3756e+00, 5.1330e-01, 0.0000e+00],
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>As you can see, embeddings do not need to have the same dimensions as feature vectors. Here, I chose to reduce the number of dimensions from 34 (<code>dataset.num_features</code>) to 3 to get a nice visualization in 3D. Let's plot these embeddings before any training happens, at epoch 0.</p>
+<p>As you can see, embeddings do not need to have the same dimensions as feature vectors. Here, I chose to reduce the number of dimensions from 34 (<code>dataset.num_features</code>) to three to get a nice visualization in 3D. Let's plot these embeddings before any training happens, at epoch 0.</p>
 
 </div>
 </div>
@@ -9940,7 +9503,7 @@ tensor([[2.3756e+00, 5.1330e-01, 0.0000e+00],
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">embed</span> <span class="o">=</span> <span class="n">embeddings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">embed</span> <span class="o">=</span> <span class="n">h</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
 
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
@@ -9980,8 +9543,8 @@ tensor([[2.3756e+00, 5.1330e-01, 0.0000e+00],
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We see every node from our graph, with the color corresponding to its real group (and not the model's prediction). For now, they're all over the place since the GNN is not trained yet. But if we plot these embeddings at each step of the training loop, we'd be able to visualize what the GNN truly learns. We would see how the embeddings change over time, as the GNN gets better and better at classifying nodes.</p>
-<p>This is exactly what the following animation does.</p>
+<p>We see every node from Zachary's karate club with their true labels (and not the model's predictions). For now, they're all over the place since the GNN is not trained yet. But if we plot these embeddings at each step of the training loop, we'd be able to visualize what the GNN truly learns.</p>
+<p>Let's see how they evolve over time, as the GCN gets better and better at classifying nodes.</p>
 
 </div>
 </div>
@@ -20065,16 +19628,19 @@ AAAAAExhdmY1Ny44My4xMDA=
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Let's unpack it. During training, we know that GNNs learn to produce the best embeddings possible for a specific task. In practice, we see that it means nodes from the same class are grouped into nice clusters. It makes the job of the linear classification layer quite simple because you can easily draw planes to separate each cluster.</p>
-<p>Embeddings are not unique to GNNs: they can be found everywhere in deep learning. They don't have to be 3D either: actually, they rarely are. For instance, language models like <a href="https://arxiv.org/abs/1810.04805">BERT</a> produce embeddings with 768 or even 1024 dimensions. Additional dimensions allow to store more information about nodes, text, images, etc. but they also create bigger models that are more difficult and take longer to train. This is why it's better to keep low-dimensional embeddings as long as it's possible.</p>
-<h2 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion"> </a></h2><p>Graph Neural Networks are a powerful architecture that is less difficult to understand than at first glance. In this article,</p>
+<p>We see that our GCN learned embeddings that group nodes from the same classes into nice clusters. Then, the final layer can easily separate them into different classes.</p>
+<p>Embeddings are not unique to GNNs: they can be found everywhere in deep learning. They don't have to be 3D either: actually, they rarely are. For instance, language models like <a href="https://arxiv.org/abs/1810.04805">BERT</a> produce embeddings with 768 or even 1024 dimensions.</p>
+<p>Additional dimensions allow to store more information about nodes, text, images, etc. but they also create bigger models that are more difficult to train. This is why it's better to keep low-dimensional embeddings as long as it is possible.</p>
+<h2 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion"> </a></h2><p>Graph Convolutional Networks are an incredibly versatile architecture that can be applied in many contexts. In this article,</p>
 <ul>
-<li>We learned to use the PyTorch Geometric library to explore graph data with the <code>Datasets</code> and <code>Data</code> objects;</li>
-<li>We redesigned a graph convolutional layer from scratch to work with graphs and not just images;</li>
-<li>We implemented a real GNN with a GCN layer that is very close to our own design;</li>
-<li>We visualized what and how our GNN learns with the clustering of the node embeddings.</li>
+<li>We learned to use the PyTorch Geometric library to explore graph data with the <code>Datasets</code> and <code>Data</code> objects</li>
+<li>We redesigned a graph convolutional layer from scratch</li>
+<li>We implemented a GNN with a GCN layer</li>
+<li>We visualized what training means for a GCN</li>
 </ul>
-<p>Zachary's karate club is a simplistic dataset, but it is good enough to understand the most important concepts in graph data and GNNs. We only talked about node classification in this article, but there are other tasks GNNs can accomplish: <strong>link prediction</strong> (e.g., to recommend a friend), <strong>graph classification</strong> (e.g., to label molecules), <strong>graph generation</strong> (e.g., to create new molecules), and so on. Beyond GCN, numerous GNN layers and architectures have been proposed by researchers. In the next article, we're gonna talk about <a href="https://mlabonne.github.io/blog/gat/">Graph Attention Networks</a> (GATs), which implicitly compute GCN's normalization factor and the importance of each connection with an attention mechanism.</p>
+<p>Zachary's karate club is a simplistic dataset, but it is good enough to understand the most important concepts in graph data and GNNs.</p>
+<p>We only talked about node classification in this article, but there are other tasks GNNs can accomplish: <strong>link prediction</strong> (e.g., to recommend a friend), <strong>graph classification</strong> (e.g., to label molecules), <strong>graph generation</strong> (e.g., to create new molecules), and so on.</p>
+<p>Beyond GCN, numerous GNN layers and architectures have been proposed by researchers. In the next article, we're gonna talk about <a href="https://mlabonne.github.io/blog/gat/">Graph Attention Networks</a> (GATs), which implicitly compute GCN's normalization factor and the importance of each connection with an attention mechanism.</p>
 <p>If you enjoyed this article, feel free to <a href="https://twitter.com/maximelabonne">follow me on Twitter</a> for more GNN content. Thank you and have a great day! 📣</p>
 <h2 id="&#127760;-Graph-Neural-Network-Course">&#127760; Graph Neural Network Course<a class="anchor-link" href="#&#127760;-Graph-Neural-Network-Course"> </a></h2><p><a href="https://github.com/mlabonne/Graph-Neural-Network-Course" class="related">🔎 Course overview</a></p>
 <p><a href="https://mlabonne.github.io/blog/intrognn/" class="related">📝 Chapter 1: Introduction to Graph Neural Networks</a></p>
