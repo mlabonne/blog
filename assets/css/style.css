@@ -367,6 +367,8 @@ hr { margin-bottom: 3rem !important; margin-top: 3rem !important; border: 0 !imp
 
 pre, code { background-color: #efeeea; border: 0px !important; border-radius: 5px !important; }
 
+tt, code { font-size: 20px !important; }
+
 .highlight pre, .highlight code { font-size: 120%; }
 
 .katex-display { overflow-x: auto; overflow-y: hidden; margin: 2.5rem 0 !important; }
