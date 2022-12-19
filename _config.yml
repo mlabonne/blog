@@ -60,8 +60,8 @@ minima:
     - { platform: twitter, user_url: "https://twitter.com/maximelabonne" }
     - { platform: linkedin, user_url: "https://www.linkedin.com/in/maxime-labonne/" }
     - { platform: github, user_url: "https://github.com/mlabonne" }
-    - { platform: medium, user_url: "https://medium.com/@mlabonne" }
-    - { platform: scholar, user_url: "https://scholar.google.com/citations?user=r4PsgrcAAAAJ&hl=en" }
+   # - { platform: medium, user_url: "https://medium.com/@mlabonne" }
+   # - { platform: scholar, user_url: "https://scholar.google.com/citations?user=r4PsgrcAAAAJ&hl=en" }
 
 # Set this to true to get LaTeX math equation support
 use_math: true
