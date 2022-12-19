@@ -638,9 +638,8 @@ $$minimize \ \sum_{u \in units} (food + wood + gold) \cdot u$$
   <span class="c1"># 1. Create the variables we want to optimize</span>
   <span class="n">units</span> <span class="o">=</span> <span class="p">[</span><span class="n">solver</span><span class="o">.</span><span class="n">IntVar</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">solver</span><span class="o">.</span><span class="n">infinity</span><span class="p">(),</span> <span class="n">unit</span><span class="p">)</span> <span class="k">for</span> <span class="n">unit</span> <span class="ow">in</span> <span class="n">UNITS</span><span class="p">]</span>
 
-  <span class="c1"># 2. Add constraints for each resource</span>
-  <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">RESOURCES</span><span class="p">):</span>
-    <span class="n">solver</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="nb">sum</span><span class="p">((</span><span class="mi">10</span> <span class="o">*</span> <span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">))</span> <span class="o">&gt;=</span> <span class="mi">1000001</span><span class="p">)</span>
+  <span class="c1"># 2. Add power constraint</span>
+  <span class="n">solver</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="nb">sum</span><span class="p">((</span><span class="mi">10</span> <span class="o">*</span> <span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">))</span> <span class="o">&gt;=</span> <span class="mi">1000001</span><span class="p">)</span>
 
   <span class="c1"># 3. Minimize the objective function</span>
   <span class="n">solver</span><span class="o">.</span><span class="n">Minimize</span><span class="p">(</span><span class="nb">sum</span><span class="p">((</span><span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">DATA</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">units</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">units</span><span class="p">)))</span>
@@ -895,7 +894,28 @@ Resources:
       </div>
     </div>
 
-    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/mlabonne" target="_blank" title="mlabonne"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://www.linkedin.com/in/maxime-labonne" target="_blank" title="maxime-labonne"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#linkedin"></use></svg></a></li><li><a rel="me" href="https://twitter.com/maximelabonne" target="_blank" title="maximelabonne"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+    <div class="social-links"><ul class="social-media-list"><li>
+  <a rel="me" href="https://twitter.com/maximelabonne" target="_blank" title="twitter">
+    <svg class="svg-icon grey">
+      <use xlink:href="/blog/assets/minima-social-icons.svg#twitter"></use>
+    </svg>
+  </a>
+</li>
+<li>
+  <a rel="me" href="https://www.linkedin.com/in/maxime-labonne/" target="_blank" title="linkedin">
+    <svg class="svg-icon grey">
+      <use xlink:href="/blog/assets/minima-social-icons.svg#linkedin"></use>
+    </svg>
+  </a>
+</li>
+<li>
+  <a rel="me" href="https://github.com/mlabonne" target="_blank" title="github">
+    <svg class="svg-icon grey">
+      <use xlink:href="/blog/assets/minima-social-icons.svg#github"></use>
+    </svg>
+  </a>
+</li>
+</ul>
 </div>
 
   </div>
