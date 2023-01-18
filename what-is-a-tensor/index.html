@@ -407,6 +407,12 @@ tensor([[1, 2, 3],
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>As we can see, PyTorch tensors completed outperformed NumPy arrays: they completed the multiplication <strong>52 times faster</strong>!</p>
+<p>We could attribute this performance to different factors, such as:</p>
+<ul>
+<li>NumPy arrays use a <code>float64</code> format, whereas PyTorch tensors leverage the more efficient <code>float32</code> format. However, even when NumPy arrays are converted to use <code>float32</code>, PyTorch tensors are still 40 times faster.</li>
+<li>PyTorch tensors are stored on a GPU, unlike NumPy arrays. But if we repeat the same experiment on a CPU, PyTorch tensors still manage to be 2.8 times faster on average.</li>
+</ul>
+<p>Even when combining both, PyTorch tensors prove to be 1.4 times faster, showing that NumPy arrays are truly less performant for matrix multiplication.</p>
 <p>This is the true power of tensors: they're <strong>blazingly fast</strong>! Performance might vary depending on the dimensions, the implementation, and the hardware, but this speed is the reason why tensors (and not arrays) are so common in deep learning.</p>
 <h2 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion"> </a></h2><p>In this article, we wrote a definition of tensors based on:</p>
 <ol>
@@ -447,7 +453,7 @@ tensor([[1, 2, 3],
     <div class="footer-col-wrapper">
       <div class="footer-col">
         <p class="feed-subscribe">
-          <a href="/blog/feed.xml">
+          <a href="https://mlabonne.github.io/blog/feed.xml">
             <svg class="svg-icon orange">
               <use xlink:href="/blog/assets/minima-social-icons.svg#rss"></use>
             </svg><span>Subscribe</span>
