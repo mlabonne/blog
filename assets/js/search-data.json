@@ -137,20 +137,9 @@
   
 
   
-      ,"page2": {
-          "title": "Book",
-          "content": "I am thrilled to introduce my book on graph neural networks, which is the result of almost a year’s worth of hard work, research, and collaboration with fellow experts in the field. As someone who’s passionate about GNNs, I wanted to create a comprehensive guide that could help both beginners and advanced practitioners. This book has been carefully crafted to provide a step-by-step guide for those new to the world of GNNs, while also offering advanced use cases and examples for experienced practitioners. What’s more, the entire code with examples and use cases is freely available on Github, making it easy for you to get started with implementing GNNs in Python. . If you’re interested in graph neural networks, I highly recommend checking it out. I’m confident that you’ll find it to be an invaluable resource as you explore this exciting and rapidly growing field. . &lt;img src=&quot;../images/gnnbook/gnnbook.jpg&quot; alt=&quot;Hands-On Graph Neural Networks Using Python&quot;, width=50%&gt; Unlock the power of graph neural networks to analyze complex data and solve real-world problems with this comprehensive guide. . 📘 Key Features . Implement state-of-the-art graph neural network architectures in Python | Create your own graph datasets from tabular data | Build powerful traffic forecasting, recommender systems, and anomaly detection applications | . 💼 Book Description . Graph neural networks are a highly effective tool for analyzing data that can be represented as a graph, such as social networks, chemical compounds, or transportation networks. The past few years have seen an explosion in the use of graph neural networks, with their application ranging from natural language processing and computer vision to recommendation systems and drug discovery. . Hands-On Graph Neural Networks Using Python begins with the fundamentals of graph theory and shows you how to create graph datasets from tabular data. As you advance, you’ll explore major graph neural network architectures and learn essential concepts such as graph convolution, self-attention, link prediction, and heterogeneous graphs. Finally, the book proposes applications to solve real-life problems, enabling you to build a professional portfolio. The code is readily available online and can be easily adapted to other datasets and apps. . By the end of this book, you’ll have learned to create graph datasets, implement graph neural networks using Python and PyTorch Geometric, and apply them to solve real-world problems, along with building and training graph neural network models for node and graph classification, link prediction, and much more. . 🔑 What you will learn . Understand the fundamental concepts of graph neural networks | Implement graph neural networks using Python and PyTorch Geometric | Classify nodes, graphs, and edges using millions of samples | Predict and generate realistic graph topologies | Combine heterogeneous sources to improve performance | Forecast future events using topological information | Apply graph neural networks to solve real-world problems | . 💡 Who this book is for . This book is for machine learning practitioners and data scientists interested in learning about graph neural networks and their applications, as well as students looking for a comprehensive reference on this rapidly growing field. Whether you’re new to graph neural networks or looking to take your knowledge to the next level, this book has something for you. Basic knowledge of machine learning and Python programming will help you get the most out of this book. . 🔗 Get your copy now! . Amazon US | Amazon EU | Packt .",
-          "url": "https://mlabonne.github.io/blog/gnnbook/",
-          "relUrl": "/gnnbook/",
-          "date": ""
-      }
-      
-  
 
   
-
-  
-      ,"page4": {
+      ,"page3": {
           "title": "Publications",
           "content": "📜 Thesis . Anomaly-based network intrusion detection using machine learningMaxime LabonnePolytechnic Institute of Paris (Institut Polytechnique de Paris), 2020 | . 📝 Proceedings . Anomaly detection in vehicle-to-infrastructure communicationsMichele Russo, Maxime Labonne, Alexis Olivereau, Mohammad Rmayti2018 IEEE 87th Vehicular Technology Conference (VTC Spring) | A Cascade-structured Meta-Specialists Approach for Neural Network-based Intrusion DetectionMaxime Labonne, Alexis Olivereau, Baptiste Polvé, Djamal Zeghlache2019 16th IEEE Annual Consumer Communications &amp; Networking Conference (CCNC) | Unsupervised protocol-based intrusion detection for real-world networksMaxime Labonne, Alexis Olivereau, Baptise Polvé, Djamal Zeghlache2020 International Conference on Computing, Networking and Communications (ICNC) | Predicting Bandwidth Utilization on Network Links Using Machine LearningMaxime Labonne, Charalampos Chatzinakis, Alexis Olivereau2020 European Conference on Networks and Communications (EuCNC) | Priority flow admission and routing in sdn: Exact and heuristic approachesJorge López, Maxime Labonne, Claude Poletti, Dallal Belabed2020 IEEE 19th International Symposium on Network Computing and Applications (NCA) | Short-Term Flow-Based Bandwidth Forecasting using Machine LearningMaxime Labonne, Jorge López, Claude Poletti, Jean-Baptiste Munier2021 IEEE 22nd International Symposium on a World of Wireless, Mobile and Multimedia Networks (WoWMoM) | Toward Formal Data Set Verification for Building Effective Machine Learning ModelsJorge López, Maxime Labonne, Claude PolettiKDIR 2021 - 13th International Conference on Knowledge Discovery and Information Retrieval | .",
           "url": "https://mlabonne.github.io/blog/publications/",
@@ -163,7 +152,7 @@
   
 
   
-      ,"page6": {
+      ,"page5": {
           "title": "",
           "content": "User-agent: * Sitemap: https://mlabonne.github.io/blog/sitemap.xml .",
           "url": "https://mlabonne.github.io/blog/robots.txt",
