@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.326">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Maxime Labonne">
+<meta name="dcterms.date" content="2022-03-02">
+<meta name="description" content="A guide to mathematical optimization with Google OR-Tools">
+
+<title>Maxime Labonne - Introduction to Linear Programming in Python</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../images/favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-4DWYJM47PC"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../styles.css">
+<meta property="og:title" content="Maxime Labonne - Introduction to Linear Programming in Python">
+<meta property="og:description" content="A guide to mathematical optimization with Google OR-Tools">
+<meta property="og:image" content="https://mlabonne.github.io/images/linearoptimization/thumbnail.jpg">
+<meta property="og:site-name" content="Maxime Labonne">
+<meta name="twitter:title" content="Maxime Labonne - Introduction to Linear Programming in Python">
+<meta name="twitter:description" content="A guide to mathematical optimization with Google OR-Tools">
+<meta name="twitter:image" content="https://mlabonne.github.io/images/linearoptimization/thumbnail.jpg">
+<meta name="twitter:creator" content="@maximelabonne">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Maxime Labonne</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../publications.html" rel="" target="">
+ <span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../book.html" rel="" target="">
+ <span class="menu-text">Book</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/mlabonne" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Introduction to Linear Programming in Python</h1>
+                  <div>
+        <div class="description">
+          A guide to mathematical optimization with Google OR-Tools
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">linear optimization</div>
+                <div class="quarto-category">linear programming</div>
+                <div class="quarto-category">OR-Tools</div>
+                <div class="quarto-category">ortools</div>
+                <div class="quarto-category">python</div>
+                <div class="quarto-category">tutorial</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Maxime Labonne </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">March 2, 2022</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<center>
+<img src="https://mlabonne.github.io/blog/images/linearoptimization/thumbnail.jpg">
+</center>
+<p>Linear programming is a technique to <strong>optimize any problem</strong> with multiple variables and constraints. It’s a simple but powerful tool every data scientist should master.</p>
+<p>Imagine you are a strategist recruiting an army. You have: * <strong>Three resources</strong>: 🌾food, 🪵wood, and 🪙gold * <strong>Three units</strong>: 🗡️swordsmen, 🏹bowmen, and 🐎horsemen.</p>
+<p>Horsemen are stronger than bowmen, who are in turn stronger than swordsmen. The following table provides the cost and power of each unit:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Unit</th>
+<th style="text-align: center;">🌾Food</th>
+<th style="text-align: center;">🪵Wood</th>
+<th style="text-align: center;">🪙Gold</th>
+<th style="text-align: center;">💪Power</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">🗡️Swordsman</td>
+<td style="text-align: center;">60</td>
+<td style="text-align: center;">20</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">70</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">🏹Bowman</td>
+<td style="text-align: center;">80</td>
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">40</td>
+<td style="text-align: center;">95</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">🐎Horseman</td>
+<td style="text-align: center;">140</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">100</td>
+<td style="text-align: center;">230</td>
+</tr>
+</tbody>
+</table>
+<p>Now we have 1200 🌾food, 800 🪵wood, and 600 🪙gold. How should we <strong>maximize the power of our army</strong> considering these resources?</p>
+<p>We could simply find the unit with the best power/cost ratio, take as many of them as possible, and repeat the process with the other two units. But this “guess and check” solution might <strong>not even be optimal</strong>…</p>
+<p>Now imagine we have <strong>millions of units and resources</strong>: the previous greedy strategy is likely to completely miss the optimal solution. It is possible to use a machine learning algorithm (e.g., a genetic algorithm) to solve this problem, but we have no guarantee that the solution will be optimal either.</p>
+<p>Fortunately for us, there is a method that can solve our problem in an optimal way: <strong>linear programming</strong> (or linear optimization), which is part of the field of <a href="https://en.wikipedia.org/wiki/Operations_research">operations research</a> (OR). In this article, we’ll use it to find the best numbers of swordsmen, bowmen, and horsemen to build the <strong>army with the highest power possible</strong>.</p>
+<p>You can run the code from this tutorial with the following <a href="https://colab.research.google.com/drive/1dbrFJwFv80kgUi13MfPO3KyumG-SVIHG?usp=sharing"><strong>Google Colab notebook</strong></a>.</p>
+<section id="i.-solvers" class="level2">
+<h2 class="anchored" data-anchor-id="i.-solvers">🧠 I.&nbsp;Solvers</h2>
+<p>In Python, there are different libraries for linear programming such as the multi-purposed <strong>SciPy</strong>, the beginner-friendly <strong>PuLP</strong>, the exhaustive <strong>Pyomo</strong>, and many others.</p>
+<p>Today, we are going to use <a href="https://developers.google.com/optimization"><strong>Google OR-Tools</strong></a>, which is quite user-friendly, comes with several prepackaged solvers, and has by far the most stars on <a href="https://github.com/google/or-tools">GitHub</a>.</p>
+<p>If the installation doesn’t work, please restart the kernel and try again: it can fail sometimes. ¯\_(ツ)_/¯</p>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>python <span class="op">-</span>m pip install <span class="op">--</span>upgrade <span class="op">--</span>user <span class="op">-</span>q ortools</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>All these libraries have a hidden benefit: they act as interfaces to <strong>use the same model with different solvers</strong>. Solvers like <a href="https://www.gurobi.com/">Gurobi</a>, <a href="https://www.ibm.com/analytics/cplex-optimizer">Cplex</a>, or <a href="https://www.scipopt.org/">SCIP</a> have their own APIs, but the models they create are <strong>tied to a specific solver</strong>.</p>
+<p>OR-Tools allows us to use an abstract (and quite pythonic) way of modeling our problems. We can then choose <strong>one or several solvers</strong> to find an optimal solution. The model we built is thus highly reusable!</p>
+<center class="dark-bg">
+<video autoplay="" loop="" muted="" width="800" class="no-margin">
+<source src="https://mlabonne.github.io/blog/images/linearoptimization/solvers.mp4" type="video/mp4">
+
+</video>
+</center>
+<p>OR-Tools comes with its own linear programming solver, called <strong>GLOP</strong> (Google Linear Optimization Package). It is an open-source project created by Google’s Operations Research Team and written in C++.</p>
+<p>Other solvers are available such as <strong>SCIP</strong>, an excellent non-commercial solver created in 2005 and updated and maintained to this day. We could also use popular commercial options like <strong>Gurobi</strong> and <strong>Cplex</strong>. However, we would need to install them on top of OR-Tools and get the appropriate licenses (which can be quite costly). For now, let’s try GLOP.</p>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import OR-Tools wrapper for linear programming</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ortools.linear_solver <span class="im">import</span> pywraplp</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a solver using the GLOP backend</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>solver <span class="op">=</span> pywraplp.Solver(<span class="st">'Maximize army power'</span>, pywraplp.Solver.GLOP_LINEAR_PROGRAMMING)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="ii.-variables" class="level2">
+<h2 class="anchored" data-anchor-id="ii.-variables">🧮 II. Variables</h2>
+<p>We created an instance of the OR-Tools solver using GLOP. Now, how to use linear programming? The first thing we want to define is the <strong>variables we want to optimize</strong>.</p>
+<p>In our example, we have three variables: the number of 🗡️swordsmen, 🏹bowmen, and 🐎horsemen in the army. OR-Tools accepts three types of variables:</p>
+<ul>
+<li><a href="https://google.github.io/or-tools/python/ortools/linear_solver/pywraplp.html#Solver.NumVar"><code>NumVar</code></a> for <strong>continuous</strong> variables;</li>
+<li><a href="https://google.github.io/or-tools/python/ortools/linear_solver/pywraplp.html#Solver.IntVar"><code>IntVar</code></a> for <strong>integer</strong> variables;</li>
+<li><a href="https://google.github.io/or-tools/python/ortools/linear_solver/pywraplp.html#Solver.BoolVar"><code>BoolVar</code></a> for <strong>boolean</strong> variables.</li>
+</ul>
+<p>We’re looking for <strong>round numbers</strong> of units, so let’s choose <code>IntVar</code>. We then need to specify lower and upper bounds for these variables. We want at least 0 unit, but we don’t really have an upper bound. So we can say that our upper bound is infinity (or any big number we will never reach). It can be written as:</p>
+<p><span class="math display">\[0 \leq swordsmen &lt; \infty \\
+0 \leq bowmen &lt; \infty \\
+0 \leq horsemen &lt; \infty\]</span></p>
+<p>Let’s translate it into code. Infinity is replaced by <code>solver.infinity()</code> in OR-Tools. Other than that, the syntax is <strong>quite straightforward</strong>:</p>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the variables we want to optimize</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>swordsmen <span class="op">=</span> solver.IntVar(<span class="dv">0</span>, solver.infinity(), <span class="st">'swordsmen'</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>bowmen <span class="op">=</span> solver.IntVar(<span class="dv">0</span>, solver.infinity(), <span class="st">'bowmen'</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>horsemen <span class="op">=</span> solver.IntVar(<span class="dv">0</span>, solver.infinity(), <span class="st">'horsemen'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="iii.-constraints" class="level2">
+<h2 class="anchored" data-anchor-id="iii.-constraints">⛓️ III. Constraints</h2>
+<p>We defined our variables, but the <strong>constraints</strong> are just as important.</p>
+<p>Perhaps counter-intuitively, adding more constraints helps the solver to <strong>find an optimal solution faster</strong>. Why is this the case? Think of the solver as a tree: constraints help it trim branches and reduce the search space.</p>
+<p>In our case, we have a limited number of resources we can use to produce units. In other words, <strong>we can’t spend more resources than we have</strong>. For instance, the 🌾food spent to recruit units cannot be higher than 1200. The same is true with 🪵wood (800) and 🪙gold (600).</p>
+<p>According to our table, units have the following costs:</p>
+<ul>
+<li>1 <strong>swordsman</strong> = 🌾60 + 🪵20;</li>
+<li>1 <strong>bowman</strong> = 🌾80 + 🪵10 + 🪙40;</li>
+<li>1 <strong>horseman</strong> = 🌾140 + 🪙100.</li>
+</ul>
+<p>We can write one constraint per resource as follows:</p>
+<p><span class="math display">\[60\times swordsmen + 80\times bowmen + 140\times horsemen \leq 1200 \\
+20\times swordsmen + 10\times bowmen \leq 800 \\
+40\times bowmen + 100\times horsemen \leq 600\]</span></p>
+<p>In OR-Tools, we simply add the constraints to our solver instance with <a href="https://google.github.io/or-tools/python/ortools/linear_solver/pywraplp.html#Solver.Add"><code>solver.Add()</code></a>.</p>
+<div class="cell" data-outputid="5ea3e83b-2079-4e03-d956-65375d393e5b">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add constraints for each resource</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>solver.Add(swordsmen<span class="op">*</span><span class="dv">60</span> <span class="op">+</span> bowmen<span class="op">*</span><span class="dv">80</span> <span class="op">+</span> horsemen<span class="op">*</span><span class="dv">140</span> <span class="op">&lt;=</span> <span class="dv">1200</span>) <span class="co"># Food</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>solver.Add(swordsmen<span class="op">*</span><span class="dv">20</span> <span class="op">+</span> bowmen<span class="op">*</span><span class="dv">10</span> <span class="op">&lt;=</span> <span class="dv">800</span>)                 <span class="co"># Wood</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>solver.Add(bowmen<span class="op">*</span><span class="dv">40</span> <span class="op">+</span> horsemen<span class="op">*</span><span class="dv">100</span> <span class="op">&lt;=</span> <span class="dv">600</span>)                 <span class="co"># Gold</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="iv.-objective" class="level2">
+<h2 class="anchored" data-anchor-id="iv.-objective">🎯 IV. Objective</h2>
+<p>Now that we have our variables and constraints, we want to <strong>define our goal</strong> (or objective function).</p>
+<p>In linear programming, this function <strong>has to be linear</strong> (like the constraints), so of the form <span class="math inline">\(ax + by + cz + d\)</span>. In our example, the objective is quite clear: we want to recruit the army with the highest power. The table gives us the following power values:</p>
+<ul>
+<li>1 <strong>swordsman</strong> = 💪70;</li>
+<li>1 <strong>bowman</strong> = 💪95;</li>
+<li>1 <strong>horseman</strong> = 💪230.</li>
+</ul>
+<p>Maximizing the power of the army amounts to <strong>maximizing the sum of the power of each unit</strong>. Our objective function can be written as:</p>
+<p><span class="math display">\[max\ 70\times swordsmen + 95\times bowmen + 230\times horsemen\]</span></p>
+<p>In general, there are two types of objective functions: <strong>maximizing</strong> and <strong>minimizing</strong>. In OR-Tools, we declare this goal with <a href="https://google.github.io/or-tools/python/ortools/linear_solver/pywraplp.html#Solver.Maximize"><code>solver.Maximize()</code></a> or <a href="https://google.github.io/or-tools/python/ortools/linear_solver/pywraplp.html#Solver.Minimize"><code>solver.Minimize()</code></a>.</p>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Maximize the objective function</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>solver.Maximize(swordsmen<span class="op">*</span><span class="dv">70</span> <span class="op">+</span> bowmen<span class="op">*</span><span class="dv">95</span> <span class="op">+</span> horsemen<span class="op">*</span><span class="dv">230</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>And we’re done! There are three steps to model any linear optimization problem:</p>
+<ol type="1">
+<li>Declaring the <strong>variables</strong> to optimize with lower and upper bounds;</li>
+<li>Adding <strong>constraints</strong> to these variables;</li>
+<li>Defining the <strong>objective function</strong> to maximize or to minimize.</li>
+</ol>
+<p>Now that is clear, we can ask the solver to find an optimal solution for us.</p>
+</section>
+<section id="v.-optimize" class="level2">
+<h2 class="anchored" data-anchor-id="v.-optimize">🥇 V. Optimize!</h2>
+<p>Calculating the optimal solution is done with <a href="https://google.github.io/or-tools/python/ortools/linear_solver/pywraplp.html#Solver.Solve"><code>solver.Solve()</code></a>. This function returns a status that can be used to <strong>check that the solution is indeed optimal</strong>.</p>
+<p>Let’s print the highest total power we can get with the best army configuration.</p>
+<div class="cell" data-outputid="9192b161-8737-430c-b548-12bb4bc18a0a" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Solve problem</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>status <span class="op">=</span> solver.Solve()</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># If an optimal solution has been found, print results</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> status <span class="op">==</span> pywraplp.Solver.OPTIMAL:</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="st">'================= Solution ================='</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f'Solved in </span><span class="sc">{</span>solver<span class="sc">.</span>wall_time()<span class="sc">:.2f}</span><span class="ss"> milliseconds in </span><span class="sc">{</span>solver<span class="sc">.</span>iterations()<span class="sc">}</span><span class="ss"> iterations'</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>()</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f'Optimal power = </span><span class="sc">{</span>solver<span class="sc">.</span>Objective()<span class="sc">.</span>Value()<span class="sc">}</span><span class="ss"> 💪power'</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="st">'Army:'</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f' - 🗡️Swordsmen = </span><span class="sc">{</span>swordsmen<span class="sc">.</span>solution_value()<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f' - 🏹Bowmen = </span><span class="sc">{</span>bowmen<span class="sc">.</span>solution_value()<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f' - 🐎Horsemen = </span><span class="sc">{</span>horsemen<span class="sc">.</span>solution_value()<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="st">'The solver could not find an optimal solution.'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>================= Solution =================
+Solved in 87.00 milliseconds in 2 iterations
+
+Optimal power = 1800.0 💪power
+Army:
+ - 🗡️Swordsmen = 6.0000000000000036
+ - 🏹Bowmen = 0.0
+ - 🐎Horsemen = 5.999999999999999</code></pre>
+</div>
+</div>
+<p>Great! The solver found an optimal solution: our army has a <strong>total power of 💪1800</strong> with 6 🗡️swordsmen and 6 🐎horsemen (sorry bowmen!).</p>
+<p>Let’s unpack this result:</p>
+<ul>
+<li>The solver decided to take the <strong>maximum number of 🐎horsemen</strong> (6, since we only have 🪙600 and they each cost 🪙100);</li>
+<li>The remaining resources are spent in 🗡️<strong>swordsmen</strong>: we have <span class="math inline">\(1200 – 6*140 = 360\)</span>🌾food left, which is why the solver chose 6 🗡️swordsmen;</li>
+<li>We can deduce that the horsemen are the best unit and the <strong>bowmen are the worst one</strong> because they haven’t been chosen at all.</li>
+</ul>
+<p>Okay, but there’s something quite weird: these numbers are not round, even though we specified that we wanted <strong>integers</strong> (<code>IntVar</code>). So what happened?</p>
+<p>Unfortunately, answering this question requires a deep dive into linear programming… To keep things simple in this introduction, let’s say it’s because of GLOP. Solvers have characteristics we have to take into account, and <strong>GLOP doesn’t handle integers</strong>. This is another proof that building reusable models is more than just convenient.</p>
+<p>We’ll explain why GLOP has this strange behavior and <strong>how to fix it</strong> in a <a href="https://mlabonne.github.io/blog/integerprogramming/">more advanced tutorial</a>.</p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>We saw through this example the five main steps of any linear optimization problem:</p>
+<ol type="1">
+<li><strong>Choosing a solver</strong>: in our case, we selected GLOP for convenience.</li>
+<li><strong>Declaring variables</strong>: the parameters to optimize were the number of swordsmen, bowmen, and horsemen.</li>
+<li><strong>Declaring constraints</strong>: each of these units has a cost. The total cost could not exceed our limited resources.</li>
+<li><strong>Defining objective</strong>: the criterion to maximize was the total power of this army. It could have been something else, like the number of units.</li>
+<li><strong>Optimizing</strong>: GLOP found an optimal solution to this problem in less than a second.</li>
+</ol>
+<center>
+<img src="https://mlabonne.github.io/blog/images/linearoptimization/infographic.png" width="600">
+</center>
+<p>This is the main benefit of linear programming: the algorithm gives us a <strong>guarantee that the solution that was found is optimal</strong> (with a certain error). This guarantee is powerful, but comes at a cost: the model can be so complex that the solver takes years (or more) to find an optimal solution. In this scenario, we have two options:</p>
+<ul>
+<li>We can <strong>stop the solver</strong> after a certain time (and probably obtain a suboptimal answer);</li>
+<li>We can use a <strong>metaheuristic</strong> like a genetic algorithm to calculate an excellent solution in a short amount of time.</li>
+</ul>
+<p>In the next article, we’ll talk about the different types of optimization problems and generalize our approach to an entire class of them.</p>
+<p>I hope you enjoyed this introduction! Feel free to share it and spread the knowledge about linear optimization. <a href="https://twitter.com/maximelabonne"><strong>Let’s connect on Twitter</strong></a> where I post summaries of these articles. Cheers!</p>
+</section>
+<section id="linear-programming-course" class="level2">
+<h2 class="anchored" data-anchor-id="linear-programming-course">🥇 Linear Programming Course</h2>
+<p><a href="https://github.com/mlabonne/Linear-Programming-Course" class="related">🔎 Course overview</a></p>
+<p><a href="https://mlabonne.github.io/blog/linearoptimization/" class="related">📝 Chapter 1: Introduction to Linear Programming</a></p>
+<p><a href="https://mlabonne.github.io/blog/integerprogramming/" class="related">📝 Chapter 2: Integer vs.&nbsp;Linear Programming</a></p>
+<p><a href="https://mlabonne.github.io/blog/constraintprogramming/" class="related">📝 Chapter 3: Constraint Programming</a></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

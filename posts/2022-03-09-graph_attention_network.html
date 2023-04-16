@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.326">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Maxime Labonne">
+<meta name="dcterms.date" content="2022-03-09">
+<meta name="description" content="Graph Neural Network Course: Chapter 2">
+
+<title>Maxime Labonne - Graph Attention Networks: Self-Attention for GNNs</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../images/favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-4DWYJM47PC"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../styles.css">
+<meta property="og:title" content="Maxime Labonne - Graph Attention Networks: Self-Attention for GNNs">
+<meta property="og:description" content="Graph Neural Network Course: Chapter 2">
+<meta property="og:image" content="https://mlabonne.github.io/images/gat/thumbnail.jpg">
+<meta property="og:site-name" content="Maxime Labonne">
+<meta name="twitter:title" content="Maxime Labonne - Graph Attention Networks: Self-Attention for GNNs">
+<meta name="twitter:description" content="Graph Neural Network Course: Chapter 2">
+<meta name="twitter:image" content="https://mlabonne.github.io/images/gat/thumbnail.jpg">
+<meta name="twitter:creator" content="@maximelabonne">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Maxime Labonne</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../publications.html" rel="" target="">
+ <span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../book.html" rel="" target="">
+ <span class="menu-text">Book</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/mlabonne" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Graph Attention Networks: Self-Attention for GNNs</h1>
+                  <div>
+        <div class="description">
+          Graph Neural Network Course: Chapter 2
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">graph neural networks</div>
+                <div class="quarto-category">GNN</div>
+                <div class="quarto-category">graph attention networks</div>
+                <div class="quarto-category">GAT</div>
+                <div class="quarto-category">self-attention</div>
+                <div class="quarto-category">python</div>
+                <div class="quarto-category">pytorch</div>
+                <div class="quarto-category">tutorial</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Maxime Labonne </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">March 9, 2022</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<center>
+<img src="https://mlabonne.github.io/blog/images/gat/thumbnail.jpg">
+</center>
+<p>Graph Attention Networks (GATs) are one of the most popular types of Graph Neural Networks.</p>
+<p>Instead of calculating static weights based on node degrees like Graph Convolutional Networks (GCNs), they assign dynamic weights to node features through a process called <strong>self-attention</strong>. The main idea behind GATs is that some neighbors are more important than others, regardless of their node degrees.</p>
+<center>
+<img src="https://mlabonne.github.io/blog/images/gat/graph_attention_empty.png" width="400">Node 4 is more important than node 3, which is more important than node 2
+</center>
+<p>In this article, we will see how to calculate these attention scores and implement an efficient GAT in PyTorch Geometric (PyG). You can run the code of this tutorial with the following <a href="https://colab.research.google.com/drive/1B0vLpH_gSfrOLgsc2UZVyXrcofzA-t0L?usp=sharing">Google Colab notebook</a>.</p>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install PyTorch Geometric</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">-</span>q torch<span class="op">-</span>scatter <span class="op">-</span>f https:<span class="op">//</span>data.pyg.org<span class="op">/</span>whl<span class="op">/</span>torch<span class="op">-</span>{torch.__version__}.html</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">-</span>q torch<span class="op">-</span>sparse <span class="op">-</span>f https:<span class="op">//</span>data.pyg.org<span class="op">/</span>whl<span class="op">/</span>torch<span class="op">-</span>{torch.__version__}.html</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">-</span>q git<span class="op">+</span>https:<span class="op">//</span>github.com<span class="op">/</span>pyg<span class="op">-</span>team<span class="op">/</span>pytorch_geometric.git</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Numpy for matrices</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">0</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualization</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.manifold <span class="im">import</span> TSNE</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>plt.rcParams[<span class="st">'figure.dpi'</span>] <span class="op">=</span> <span class="dv">300</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>plt.rcParams.update({<span class="st">'font.size'</span>: <span class="dv">24</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="i.-graph-data" class="level2">
+<h2 class="anchored" data-anchor-id="i.-graph-data">🌐 I. Graph data</h2>
+<center>
+<img alt="CiteSeer" src="https://mlabonne.github.io/blog/images/gat/citeseer_yed.png" width="800">CiteSeer dataset
+</center>
+<p>Let’s perform a node classification task with a GAT. We can use three classic graph datasets (MIT license) for this work. They represent networks of research papers, where each connection is a citation.</p>
+<ul>
+<li><a href="http://www.kamalnigam.com/papers/cora-jnl.pdf"><strong>Cora</strong></a>: it consists of 2,708 machine learning papers that belong to one of seven categories. ➡️ Node features represent the presence (1) or absence (0) of 1,433 words in a paper (binary <a href="https://en.wikipedia.org/wiki/Bag-of-words_model">bag of words</a>).</li>
+<li><a href="https://clgiles.ist.psu.edu/papers/DL-1998-citeseer.pdf"><strong>CiteSeer</strong></a>: it is a bigger but similar dataset of 3,327 scientific papers to classify into one of six categories. ➡️ Node features represent the presence (1) or absence (0) of 3,703 words in a paper.</li>
+<li><a href="http://eliassi.org/papers/ai-mag-tr08.pdf"><strong>PubMed</strong></a>: it is an even bigger dataset with 19,717 scientific publications about diabetes from PubMed’s database, classified into three categories. ➡️ Node features are <a href="https://en.wikipedia.org/wiki/Tf%E2%80%93idf">TF-IDF weighted word vector</a> from a dictionary of 500 unique words.</li>
+</ul>
+<p>These datasets have been widely used by the scientific community. As a challenge, we can compare our accuracy scores to those obtained in the <a href="https://arxiv.org/pdf/1710.10903.pdf">literature</a> (with standard deviation) using <strong>Multilayer Perceptrons</strong> (MLPs), <strong>GCNs</strong>, and <strong>GATs</strong>:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Dataset</th>
+<th style="text-align: center;">📝Cora</th>
+<th style="text-align: center;">📝CiteSeer</th>
+<th style="text-align: center;">📝PubMed</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">MLP</td>
+<td style="text-align: center;">55.1%</td>
+<td style="text-align: center;">46.5%</td>
+<td style="text-align: center;">71.4%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GCN</td>
+<td style="text-align: center;">81.4 ± 0.5%</td>
+<td style="text-align: center;">70.9% ± 0.5%</td>
+<td style="text-align: center;"><strong>79.0%</strong> ± 0.3%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">GAT</td>
+<td style="text-align: center;"><strong>83.0%</strong> ± 0.7%</td>
+<td style="text-align: center;"><strong>72.5%</strong> ± 0.7%</td>
+<td style="text-align: center;"><strong>79.0%</strong> ± 0.3%</td>
+</tr>
+</tbody>
+</table>
+<p>PubMed is quite large, so it would take longer to process and train a GNN on it. On the other hand, Cora is the most studied one in the literature, so let’s focus on <strong>CiteSeer</strong> as a middle ground.</p>
+<p>We can directly import any of these datasets in PyTorch Geometric with the <a href="https://pytorch-geometric.readthedocs.io/en/latest/modules/datasets.html#torch_geometric.datasets.Planetoid">Planetoid class</a>:</p>
+<div class="cell" data-outputid="5c480d6d-0962-4c9d-f72a-1417972e82e2" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch_geometric.datasets <span class="im">import</span> Planetoid</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Import dataset from PyTorch Geometric</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>dataset <span class="op">=</span> Planetoid(root<span class="op">=</span><span class="st">"."</span>, name<span class="op">=</span><span class="st">"CiteSeer"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> dataset[<span class="dv">0</span>]</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Print information about the dataset</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Number of graphs: </span><span class="sc">{</span><span class="bu">len</span>(dataset)<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Number of nodes: </span><span class="sc">{</span>data<span class="sc">.</span>x<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Number of features: </span><span class="sc">{</span>dataset<span class="sc">.</span>num_features<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Number of classes: </span><span class="sc">{</span>dataset<span class="sc">.</span>num_classes<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Has isolated nodes: </span><span class="sc">{</span>data<span class="sc">.</span>has_isolated_nodes()<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Number of graphs: 1
+Number of nodes: 3327
+Number of features: 3703
+Number of classes: 6
+Has isolated nodes: True</code></pre>
+</div>
+</div>
+<p>The CiteSeer dataset correctly exhibits the characteristics we previously described. However, <strong>some nodes are isolated</strong> (48 to be precise)! Correctly classifying these isolated nodes will be a challenge since we cannot rely on any aggregation. This is how an MLP processes nodes: it cannot consider the adjacency matrix, which decreases its accuracy.</p>
+<p>Let’s plot the number of connections of each node with <code>degree</code>:</p>
+<div class="cell" data-outputid="7d05d7b8-4565-4808-dbb2-97fb18bdc402" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch_geometric.utils <span class="im">import</span> degree</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the list of degrees for each node</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>degrees <span class="op">=</span> degree(data.edge_index[<span class="dv">0</span>]).numpy()</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Count the number of nodes for each degree</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>numbers <span class="op">=</span> Counter(degrees)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Bar plot</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">18</span>, <span class="dv">6</span>))</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Node degree'</span>)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Number of nodes'</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>plt.bar(numbers.keys(),</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        numbers.values(),</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        color<span class="op">=</span><span class="st">'#0A047A'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>&lt;BarContainer object of 32 artists&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-03-09-Graph_Attention_Network_files/figure-html/cell-4-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Most nodes only have <strong>1 or 2 neighbors</strong>. It could explain why CiteSeer obtains lower accuracy scores than the two other datasets…</p>
+</section>
+<section id="ii.-graph-attention-layer" class="level2">
+<h2 class="anchored" data-anchor-id="ii.-graph-attention-layer">⚠️ II. Graph Attention Layer</h2>
+<p>Introduced by <a href="https://arxiv.org/abs/1710.10903">Veličković et al.</a> in 2017, self-attention in GATs relies on a simple idea: <strong>some nodes are more important than others</strong>. In this context, we talk about <em>self</em>-attention (and not just attention) because inputs are compared to each other.</p>
+<center>
+<img src="https://mlabonne.github.io/blog/images/gat/graph_attention.png" width="400">
+</center>
+<p>In the previous figure, self-attention calculates the importance of nodes 2, 3, and 4’s features to node 1. We denote <span class="math inline">\(\alpha_{ij}\)</span> the importance of node <span class="math inline">\(j\)</span>’s features to node <span class="math inline">\(i\)</span>.</p>
+<p>Each node <span class="math inline">\(i\)</span> has an attribute vector <span class="math inline">\(x_i\)</span>. The GAT layer calculates the embedding of node 1 as a sum of attention coefficients multiplied by a shared weight matrix <span class="math inline">\(\mathbf{W}\)</span> :</p>
+<p><span class="math display">\[h_i = \alpha_{11}\mathbf{W}x_1 + \alpha_{12}\mathbf{W}x_2 + \alpha_{13}\mathbf{W}x_3 + \alpha_{14}\mathbf{W}x_4\]</span></p>
+<p>But how do we calculate these attention coefficients? We could write a static formula, but there’s a smarter solution: we can learn their values with a neural network. There are four steps in this process:</p>
+<ol type="1">
+<li>Linear transformation</li>
+<li>Activation function</li>
+<li>Softmax normalization</li>
+<li>Multi-head attention</li>
+</ol>
+<section id="linear-transformation" class="level3">
+<h3 class="anchored" data-anchor-id="linear-transformation">1. Linear transformation</h3>
+<p>To calculate the attention coefficient, we need to consider pairs of nodes. An easy way to create these pairs is to concatenate attribute vectors from both nodes.</p>
+<p>Then, we can apply a new <strong>linear transformation</strong> with a weight matrix <span class="math inline">\(W_{att}\)</span>:</p>
+<p><span class="math display">\[a_{ij} = W_{att}^t[\mathbf{W}x_i\mathbin\Vert \mathbf{W}x_j]\]</span></p>
+<center>
+<img src="https://mlabonne.github.io/blog/images/gat/attention_calculation1.png" height="400">
+</center>
+</section>
+<section id="activation-function" class="level3">
+<h3 class="anchored" data-anchor-id="activation-function">2. Activation function</h3>
+<p>We’re building a neural network, so the second step is to add nonlinearity with an activation function. In this case, the paper’s authors chose the <em>LeakyReLU</em> function.</p>
+<p><span class="math display">\[e_{ij} = LeakyReLU(a_{ij})\]</span></p>
+<center>
+<img src="https://mlabonne.github.io/blog/images/gat/attention_calculation2.png" height="400">
+</center>
+</section>
+<section id="softmax-normalization" class="level3">
+<h3 class="anchored" data-anchor-id="softmax-normalization">3. Softmax normalization</h3>
+<p>The output of our neural network is <strong>not normalized</strong>, which is a problem since we want to compare these coefficients. For example, to be able to say if node 2 is more important to node 1 than node 3 (<span class="math inline">\(\alpha_{12} &gt; \alpha_{13}\)</span>), we need to use the same scale.</p>
+<p>A common way to do it with neural networks is to use the softmax function. Here, we apply it to every neighboring node, including the target node itself:</p>
+<p><span class="math display">\[\alpha_{ij} = softmax_j(e_{ij}) = \frac{exp(e_{ij})}{\sum_{k \in \mathcal{N}_i}{exp(e_{ik})}}\]</span></p>
+<center>
+<img src="https://mlabonne.github.io/blog/images/gat/attention_calculation3.png" height="400">
+</center>
+<p>This equation produces the final attention coefficients <span class="math inline">\(\alpha_{ij}\)</span>. The only problem is… <strong>self-attention is not very stable</strong>. In order to improve performance, <a href="https://arxiv.org/abs/1706.03762">Vaswani et al.</a> introduced multi-head attention in the transformer architecture.</p>
+</section>
+<section id="multi-head-attention" class="level3">
+<h3 class="anchored" data-anchor-id="multi-head-attention">4. Multi-head attention</h3>
+<p>This should not be a big surprise if you’re familiar with the transformer architecture, but <a href="https://thegradient.pub/transformers-are-graph-neural-networks/">transformers are a special case of GNNs</a>. This is why GATs look so much like a simplified version of transformers. The good thing is that we can reuse some ideas from Natural Language Processing here, like multi-head attention.</p>
+<center>
+<img src="https://mlabonne.github.io/blog/images/gat/attention_calculation4.png" height="400">
+</center>
+<p>In GATs, multi-head attention consists of <strong>replicating the same three steps several times</strong> in order to average or concatenate the results. Instead of a single embedding <span class="math inline">\(h_1\)</span>, we get one embedding per attention head (denoted <span class="math inline">\(h_1^k\)</span> for the head <span class="math inline">\(k\)</span>). One of the two following schemes can then be applied:</p>
+<ul>
+<li><strong>Average</strong>: we sum the different <span class="math inline">\(h_i^k\)</span> and normalize the result by the number of attention heads <span class="math inline">\(n\)</span>;</li>
+</ul>
+<p><span class="math display">\[h_i = \frac{1}{n}\sum_{k=1}^n{h_i^k}\]</span></p>
+<ul>
+<li><strong>Concatenation</strong>: we concatenate the different <span class="math inline">\(h_i^k\)</span>.</li>
+</ul>
+<p><span class="math display">\[h_i = \mathbin\Vert_{k=1}^n{h_i^k}\]</span></p>
+<p>In practice, we use the <strong>concatenation scheme</strong> when it’s a hidden layer and the <strong>average scheme</strong> when it’s the last (output) layer. Most of the time, we will stack several GAT layers to aggregate a larger neighborhood and thus combine these two schemes in the same GAT model.</p>
+</section>
+</section>
+<section id="iii.-implementing-a-graph-attention-network" class="level2">
+<h2 class="anchored" data-anchor-id="iii.-implementing-a-graph-attention-network">🧠 III. Implementing a Graph Attention Network</h2>
+<p>Let’s now implement a GAT in PyTorch Geometric. This library has two different graph attention layers: <code>GATConv</code> and <code>GATv2Conv</code>.</p>
+<p>The layer we talked about in the previous section is the <code>GatConv</code> layer, but in 2021 <a href="https://arxiv.org/abs/2105.14491">Brody et al.</a> introduced an improved layer by modifying the order of operations. In <code>Gatv2Conv</code>, the weight matrix <span class="math inline">\(\mathbf{W}\)</span> is applied after the concatenation and the attention weight matrix <span class="math inline">\(W_{att}\)</span> after the <span class="math inline">\(LeakyReLU\)</span> function. In summary:</p>
+<ul>
+<li><code>GatConv</code>: <span class="math inline">\(e_{ij} = LeakyReLU(W_{att}^t[\mathbf{W}x_i\mathbin\Vert \mathbf{W}x_j])\)</span></li>
+<li><code>Gatv2Conv</code>: <span class="math inline">\(e_{ij} = W_{att}^tLeakyReLU(\mathbf{W}[x_i\mathbin\Vert x_j])\)</span></li>
+</ul>
+<p>Which one should you use? According to the authors, <code>Gatv2Conv</code> consistently outperforms <code>GatConv</code> and thus should be preferred. We’ll follow their advice and implement this improved layer in our example.</p>
+<p>Okay, let’s classify the papers from CiteSeer! I tried to (roughly) reproduce the experiments of the original authors without adding too much complexity. You can find the official implementation of GAT <a href="https://github.com/PetarV-/GAT">on GitHub</a>.</p>
+<p>Note that we use graph attention layers in two configurations:</p>
+<ul>
+<li>The <strong>first layer</strong> concatenates <strong>8 outputs</strong> (multi-head attention);</li>
+<li>The <strong>second layer</strong> only has <strong>1 head</strong>, which produces our final embeddings.</li>
+</ul>
+<p>We’re also going to train and test a GCN with two GCN layers (and dropout) to compare the accuracy scores.</p>
+<div class="cell" data-execution_count="63">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.nn <span class="im">import</span> Linear, Dropout</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch_geometric.nn <span class="im">import</span> GCNConv, GATv2Conv</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> GCN(torch.nn.Module):</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Graph Convolutional Network"""</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim_in, dim_h, dim_out):</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>      <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>      <span class="va">self</span>.gcn1 <span class="op">=</span> GCNConv(dim_in, dim_h)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>      <span class="va">self</span>.gcn2 <span class="op">=</span> GCNConv(dim_h, dim_out)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>      <span class="va">self</span>.optimizer <span class="op">=</span> torch.optim.Adam(<span class="va">self</span>.parameters(),</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>                                        lr<span class="op">=</span><span class="fl">0.01</span>,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>                                        weight_decay<span class="op">=</span><span class="fl">5e-4</span>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x, edge_index):</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> F.dropout(x, p<span class="op">=</span><span class="fl">0.5</span>, training<span class="op">=</span><span class="va">self</span>.training)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> <span class="va">self</span>.gcn1(h, edge_index).relu()</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> F.dropout(h, p<span class="op">=</span><span class="fl">0.5</span>, training<span class="op">=</span><span class="va">self</span>.training)</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> <span class="va">self</span>.gcn2(h, edge_index)</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> h, F.log_softmax(h, dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> GAT(torch.nn.Module):</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Graph Attention Network"""</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim_in, dim_h, dim_out, heads<span class="op">=</span><span class="dv">8</span>):</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.gat1 <span class="op">=</span> GATv2Conv(dim_in, dim_h, heads<span class="op">=</span>heads)</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.gat2 <span class="op">=</span> GATv2Conv(dim_h<span class="op">*</span>heads, dim_out, heads<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.optimizer <span class="op">=</span> torch.optim.Adam(<span class="va">self</span>.parameters(),</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>                                          lr<span class="op">=</span><span class="fl">0.005</span>,</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>                                          weight_decay<span class="op">=</span><span class="fl">5e-4</span>)</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x, edge_index):</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> F.dropout(x, p<span class="op">=</span><span class="fl">0.6</span>, training<span class="op">=</span><span class="va">self</span>.training)</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> <span class="va">self</span>.gat1(h, edge_index)</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> F.elu(h)</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> F.dropout(h, p<span class="op">=</span><span class="fl">0.6</span>, training<span class="op">=</span><span class="va">self</span>.training)</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> <span class="va">self</span>.gat2(h, edge_index)</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> h, F.log_softmax(h, dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> accuracy(pred_y, y):</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Calculate accuracy."""</span></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ((pred_y <span class="op">==</span> y).<span class="bu">sum</span>() <span class="op">/</span> <span class="bu">len</span>(y)).item()</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train(model, data):</span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Train a GNN model and return the trained model."""</span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>    criterion <span class="op">=</span> torch.nn.CrossEntropyLoss()</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>    optimizer <span class="op">=</span> model.optimizer</span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>    epochs <span class="op">=</span> <span class="dv">200</span></span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>    model.train()</span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(epochs<span class="op">+</span><span class="dv">1</span>):</span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Training</span></span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>        optimizer.zero_grad()</span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>        _, out <span class="op">=</span> model(data.x, data.edge_index)</span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>        loss <span class="op">=</span> criterion(out[data.train_mask], data.y[data.train_mask])</span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>        acc <span class="op">=</span> accuracy(out[data.train_mask].argmax(dim<span class="op">=</span><span class="dv">1</span>), data.y[data.train_mask])</span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>        loss.backward()</span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a>        optimizer.step()</span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Validation</span></span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>        val_loss <span class="op">=</span> criterion(out[data.val_mask], data.y[data.val_mask])</span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a>        val_acc <span class="op">=</span> accuracy(out[data.val_mask].argmax(dim<span class="op">=</span><span class="dv">1</span>), data.y[data.val_mask])</span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Print metrics every 10 epochs</span></span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(epoch <span class="op">%</span> <span class="dv">10</span> <span class="op">==</span> <span class="dv">0</span>):</span>
+<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f'Epoch </span><span class="sc">{</span>epoch<span class="sc">:&gt;3}</span><span class="ss"> | Train Loss: </span><span class="sc">{</span>loss<span class="sc">:.3f}</span><span class="ss"> | Train Acc: '</span></span>
+<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a>                  <span class="ss">f'</span><span class="sc">{</span>acc<span class="op">*</span><span class="dv">100</span><span class="sc">:&gt;6.2f}</span><span class="ss">% | Val Loss: </span><span class="sc">{</span>val_loss<span class="sc">:.2f}</span><span class="ss"> | '</span></span>
+<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a>                  <span class="ss">f'Val Acc: </span><span class="sc">{</span>val_acc<span class="op">*</span><span class="dv">100</span><span class="sc">:.2f}</span><span class="ss">%'</span>)</span>
+<span id="cb6-71"><a href="#cb6-71" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb6-72"><a href="#cb6-72" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model</span>
+<span id="cb6-73"><a href="#cb6-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-74"><a href="#cb6-74" aria-hidden="true" tabindex="-1"></a><span class="at">@torch.no_grad</span>()</span>
+<span id="cb6-75"><a href="#cb6-75" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> test(model, data):</span>
+<span id="cb6-76"><a href="#cb6-76" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Evaluate the model on test set and print the accuracy score."""</span></span>
+<span id="cb6-77"><a href="#cb6-77" aria-hidden="true" tabindex="-1"></a>    model.<span class="bu">eval</span>()</span>
+<span id="cb6-78"><a href="#cb6-78" aria-hidden="true" tabindex="-1"></a>    _, out <span class="op">=</span> model(data.x, data.edge_index)</span>
+<span id="cb6-79"><a href="#cb6-79" aria-hidden="true" tabindex="-1"></a>    acc <span class="op">=</span> accuracy(out.argmax(dim<span class="op">=</span><span class="dv">1</span>)[data.test_mask], data.y[data.test_mask])</span>
+<span id="cb6-80"><a href="#cb6-80" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> acc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-outputid="4b3b42c5-6cef-4c9d-a21b-a2cbfe3a692a" data-execution_count="64">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>time</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create GCN model</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>gcn <span class="op">=</span> GCN(dataset.num_features, <span class="dv">16</span>, dataset.num_classes)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gcn)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Train and test</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>train(gcn, data)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>acc <span class="op">=</span> test(gcn, data)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'</span><span class="ch">\n</span><span class="ss">GCN test accuracy: </span><span class="sc">{</span>acc<span class="op">*</span><span class="dv">100</span><span class="sc">:.2f}</span><span class="ss">%</span><span class="ch">\n</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>GCN(
+  (gcn1): GCNConv(3703, 16)
+  (gcn2): GCNConv(16, 6)
+)
+Epoch   0 | Train Loss: 1.782 | Train Acc:  20.83% | Val Loss: 1.79 | Val Acc: 17.40%
+Epoch  10 | Train Loss: 0.580 | Train Acc:  89.17% | Val Loss: 1.31 | Val Acc: 55.40%
+Epoch  20 | Train Loss: 0.165 | Train Acc:  95.00% | Val Loss: 1.30 | Val Acc: 56.20%
+Epoch  30 | Train Loss: 0.113 | Train Acc:  97.50% | Val Loss: 1.49 | Val Acc: 54.40%
+Epoch  40 | Train Loss: 0.069 | Train Acc:  99.17% | Val Loss: 1.66 | Val Acc: 54.60%
+Epoch  50 | Train Loss: 0.037 | Train Acc: 100.00% | Val Loss: 1.65 | Val Acc: 55.60%
+Epoch  60 | Train Loss: 0.053 | Train Acc:  99.17% | Val Loss: 1.50 | Val Acc: 56.60%
+Epoch  70 | Train Loss: 0.084 | Train Acc:  97.50% | Val Loss: 1.50 | Val Acc: 58.00%
+Epoch  80 | Train Loss: 0.054 | Train Acc: 100.00% | Val Loss: 1.67 | Val Acc: 54.40%
+Epoch  90 | Train Loss: 0.048 | Train Acc:  98.33% | Val Loss: 1.54 | Val Acc: 57.80%
+Epoch 100 | Train Loss: 0.062 | Train Acc:  99.17% | Val Loss: 1.62 | Val Acc: 56.20%
+Epoch 110 | Train Loss: 0.082 | Train Acc:  96.67% | Val Loss: 1.52 | Val Acc: 56.60%
+Epoch 120 | Train Loss: 0.043 | Train Acc: 100.00% | Val Loss: 1.66 | Val Acc: 55.00%
+Epoch 130 | Train Loss: 0.058 | Train Acc:  98.33% | Val Loss: 1.55 | Val Acc: 59.80%
+Epoch 140 | Train Loss: 0.058 | Train Acc:  98.33% | Val Loss: 1.68 | Val Acc: 58.40%
+Epoch 150 | Train Loss: 0.031 | Train Acc: 100.00% | Val Loss: 1.65 | Val Acc: 58.40%
+Epoch 160 | Train Loss: 0.037 | Train Acc: 100.00% | Val Loss: 1.44 | Val Acc: 64.20%
+Epoch 170 | Train Loss: 0.025 | Train Acc: 100.00% | Val Loss: 1.58 | Val Acc: 58.40%
+Epoch 180 | Train Loss: 0.036 | Train Acc:  99.17% | Val Loss: 1.65 | Val Acc: 58.00%
+Epoch 190 | Train Loss: 0.041 | Train Acc:  97.50% | Val Loss: 1.69 | Val Acc: 57.60%
+Epoch 200 | Train Loss: 0.093 | Train Acc:  95.83% | Val Loss: 1.73 | Val Acc: 56.80%
+
+GCN test accuracy: 67.70%
+
+CPU times: user 25.1 s, sys: 847 ms, total: 25.9 s
+Wall time: 32.4 s</code></pre>
+</div>
+</div>
+<div class="cell" data-outputid="26880f90-3aae-4d78-f48b-0e6d7f873024" data-execution_count="65">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>time</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create GAT model</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>gat <span class="op">=</span> GAT(dataset.num_features, <span class="dv">8</span>, dataset.num_classes)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gat)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Train and test</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>train(gat, data)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>acc <span class="op">=</span> test(gat, data)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'</span><span class="ch">\n</span><span class="ss">GAT test accuracy: </span><span class="sc">{</span>acc<span class="op">*</span><span class="dv">100</span><span class="sc">:.2f}</span><span class="ss">%</span><span class="ch">\n</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>GAT(
+  (gat1): GATv2Conv(3703, 8, heads=8)
+  (gat2): GATv2Conv(64, 6, heads=1)
+)
+Epoch   0 | Train Loss: 1.790 | Train Acc:  17.50% | Val Loss: 1.81 | Val Acc: 12.80%
+Epoch  10 | Train Loss: 0.114 | Train Acc:  96.67% | Val Loss: 1.05 | Val Acc: 67.20%
+Epoch  20 | Train Loss: 0.040 | Train Acc:  98.33% | Val Loss: 1.21 | Val Acc: 64.80%
+Epoch  30 | Train Loss: 0.021 | Train Acc:  99.17% | Val Loss: 1.30 | Val Acc: 65.80%
+Epoch  40 | Train Loss: 0.027 | Train Acc:  99.17% | Val Loss: 1.20 | Val Acc: 67.20%
+Epoch  50 | Train Loss: 0.012 | Train Acc:  99.17% | Val Loss: 1.18 | Val Acc: 67.20%
+Epoch  60 | Train Loss: 0.009 | Train Acc: 100.00% | Val Loss: 1.11 | Val Acc: 67.00%
+Epoch  70 | Train Loss: 0.007 | Train Acc: 100.00% | Val Loss: 1.19 | Val Acc: 64.80%
+Epoch  80 | Train Loss: 0.013 | Train Acc: 100.00% | Val Loss: 1.16 | Val Acc: 66.80%
+Epoch  90 | Train Loss: 0.009 | Train Acc: 100.00% | Val Loss: 1.10 | Val Acc: 66.60%
+Epoch 100 | Train Loss: 0.013 | Train Acc: 100.00% | Val Loss: 1.07 | Val Acc: 67.20%
+Epoch 110 | Train Loss: 0.012 | Train Acc: 100.00% | Val Loss: 1.14 | Val Acc: 67.20%
+Epoch 120 | Train Loss: 0.014 | Train Acc: 100.00% | Val Loss: 1.12 | Val Acc: 66.40%
+Epoch 130 | Train Loss: 0.009 | Train Acc: 100.00% | Val Loss: 1.12 | Val Acc: 68.20%
+Epoch 140 | Train Loss: 0.007 | Train Acc: 100.00% | Val Loss: 1.19 | Val Acc: 65.40%
+Epoch 150 | Train Loss: 0.008 | Train Acc: 100.00% | Val Loss: 1.14 | Val Acc: 66.80%
+Epoch 160 | Train Loss: 0.007 | Train Acc: 100.00% | Val Loss: 1.16 | Val Acc: 68.40%
+Epoch 170 | Train Loss: 0.008 | Train Acc: 100.00% | Val Loss: 1.11 | Val Acc: 68.20%
+Epoch 180 | Train Loss: 0.006 | Train Acc: 100.00% | Val Loss: 1.13 | Val Acc: 68.60%
+Epoch 190 | Train Loss: 0.005 | Train Acc: 100.00% | Val Loss: 1.14 | Val Acc: 68.60%
+Epoch 200 | Train Loss: 0.007 | Train Acc: 100.00% | Val Loss: 1.13 | Val Acc: 68.40%
+
+GAT test accuracy: 70.00%
+
+CPU times: user 53.4 s, sys: 2.68 s, total: 56.1 s
+Wall time: 55.9 s</code></pre>
+</div>
+</div>
+<p>This experiment is not super rigorous: we’d need to repeat it <span class="math inline">\(n\)</span> times and report the average accuracy with a standard deviation as the final result.</p>
+<p>In this example, we can see that the <strong>GAT outperforms the GCN</strong> in terms of accuracy (70.00% vs.&nbsp;67.70%), but takes longer to train (55.9s vs.&nbsp;32.4s). It’s a tradeoff that can cause scalability issues when working with large graphs.</p>
+<p>The authors obtained 72.5% for the GAT and 70.3% for the GCN, which is significantly better than what we got. The difference can be explained by additional preprocessing steps, some tweaks in the models, and a different training setting (e.g., a patience of 100 instead of a fixed number of epochs). We kept the code as simple as possible here, but feel free to modify it to improve the results.</p>
+<p>Beyond the accuracy score, it is interesting to see what the GAT actually learned. We can visualize it with <a href="https://en.wikipedia.org/wiki/T-distributed_stochastic_neighbor_embedding">t-SNE</a> plot, a powerful method to plot high-dimensional data in 2D or 3D. First, let’s see what the embeddings looked like before any training: it should be random since they’re produced by randomly initialized weight matrices.</p>
+<div class="cell" data-outputid="ae9c79aa-2976-4537-b8da-2f468afbcb44" data-execution_count="66">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize new untrained model</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>untrained_gat <span class="op">=</span> GAT(dataset.num_features, <span class="dv">8</span>, dataset.num_classes)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Get embeddings</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>h, _ <span class="op">=</span> untrained_gat(data.x, data.edge_index)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Train TSNE</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>tsne <span class="op">=</span> TSNE(n_components<span class="op">=</span><span class="dv">2</span>, learning_rate<span class="op">=</span><span class="st">'auto'</span>,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>         init<span class="op">=</span><span class="st">'pca'</span>).fit_transform(h.detach())</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot TSNE</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>))</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>plt.scatter(tsne[:, <span class="dv">0</span>], tsne[:, <span class="dv">1</span>], s<span class="op">=</span><span class="dv">50</span>, c<span class="op">=</span>data.y)</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/usr/local/lib/python3.7/dist-packages/sklearn/manifold/_t_sne.py:986: FutureWarning: The PCA initialization in TSNE will change to have the standard deviation of PC1 equal to 1e-4 in 1.2. This will ensure better convergence.
+  FutureWarning,</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-03-09-Graph_Attention_Network_files/figure-html/cell-8-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Indeed, there’s no apparent structure. But do the embeddings produced by our trained model look better?</p>
+<div class="cell" data-outputid="a6b1a570-2fff-4014-da2f-a0e457ce11b8" data-execution_count="67">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get embeddings</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>h, _ <span class="op">=</span> gat(data.x, data.edge_index)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Train TSNE</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>tsne <span class="op">=</span> TSNE(n_components<span class="op">=</span><span class="dv">2</span>, learning_rate<span class="op">=</span><span class="st">'auto'</span>,</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>         init<span class="op">=</span><span class="st">'pca'</span>).fit_transform(h.detach())</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot TSNE</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">10</span>))</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>plt.scatter(tsne[:, <span class="dv">0</span>], tsne[:, <span class="dv">1</span>], s<span class="op">=</span><span class="dv">50</span>, c<span class="op">=</span>data.y)</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/usr/local/lib/python3.7/dist-packages/sklearn/manifold/_t_sne.py:986: FutureWarning: The PCA initialization in TSNE will change to have the standard deviation of PC1 equal to 1e-4 in 1.2. This will ensure better convergence.
+  FutureWarning,</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-03-09-Graph_Attention_Network_files/figure-html/cell-9-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>The difference is noticeable: <strong>nodes belonging to the same classes cluster together</strong>. We can see six clusters, corresponding to the six classes of papers. There are outliers, but this was to be expected: our accuracy score is far from perfect.</p>
+<p>Previously, I speculated that poorly connected nodes might <strong>negatively impact</strong> performance on CiteSeer. So let’s verify that by calculating the model’s accuracy for each degree.</p>
+<div class="cell" data-outputid="1c3bd2a9-8dda-4348-9da9-c469e2046562" data-execution_count="68">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch_geometric.utils <span class="im">import</span> degree</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Get model's classifications</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>_, out <span class="op">=</span> gat(data.x, data.edge_index)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the degree of each node</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>degrees <span class="op">=</span> degree(data.edge_index[<span class="dv">0</span>]).numpy()</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Store accuracy scores and sample sizes</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>accuracies <span class="op">=</span> []</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>sizes <span class="op">=</span> []</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Accuracy for degrees between 0 and 5</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="dv">6</span>):</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  mask <span class="op">=</span> np.where(degrees <span class="op">==</span> i)[<span class="dv">0</span>]</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  accuracies.append(accuracy(out.argmax(dim<span class="op">=</span><span class="dv">1</span>)[mask], data.y[mask]))</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  sizes.append(<span class="bu">len</span>(mask))</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Accuracy for degrees &gt; 5</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>mask <span class="op">=</span> np.where(degrees <span class="op">&gt;</span> <span class="dv">5</span>)[<span class="dv">0</span>]</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>accuracies.append(accuracy(out.argmax(dim<span class="op">=</span><span class="dv">1</span>)[mask], data.y[mask]))</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>sizes.append(<span class="bu">len</span>(mask))</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Bar plot</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">18</span>, <span class="dv">9</span>))</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Node degree'</span>)</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Accuracy score'</span>)</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>ax.set_facecolor(<span class="st">'#EFEEEA'</span>)</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>plt.bar([<span class="st">'0'</span>,<span class="st">'1'</span>,<span class="st">'2'</span>,<span class="st">'3'</span>,<span class="st">'4'</span>,<span class="st">'5'</span>,<span class="st">'&gt;5'</span>],</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>        accuracies,</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>        color<span class="op">=</span><span class="st">'#0A047A'</span>)</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="dv">7</span>):</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>    plt.text(i, accuracies[i], <span class="ss">f'</span><span class="sc">{</span>accuracies[i]<span class="op">*</span><span class="dv">100</span><span class="sc">:.2f}</span><span class="ss">%'</span>,</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>             ha<span class="op">=</span><span class="st">'center'</span>, color<span class="op">=</span><span class="st">'#0A047A'</span>)</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="dv">7</span>):</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>    plt.text(i, accuracies[i]<span class="op">//</span><span class="dv">2</span>, sizes[i],</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>             ha<span class="op">=</span><span class="st">'center'</span>, color<span class="op">=</span><span class="st">'white'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-03-09-Graph_Attention_Network_files/figure-html/cell-10-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>These results confirm our intuition: nodes with few neighbors are indeed <strong>harder to classify</strong>. This is due to the nature of GNNs: the more relevant connections you have, the more information you can aggregate.</p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>While they take longer to train, GATs often provide a substantial improvement over GCNs in terms of accuracy. The self-attention mechanism automatically calculates weights instead of static coefficients to produce better embeddings. In this article,</p>
+<ul>
+<li>We learned how to calculate dynamic weights using self-attention</li>
+<li>We implemented and compared two architectures (a GCN and a GAT) in PyTorch Geometric</li>
+<li>We visualized what the GAT learned with a t-SNE plot and the accuracy score for each degree</li>
+</ul>
+<p>GATs are a standard architecture in a lot of GNN applications. However, their slow training time can become a problem when applied to massive graph datasets. Scalability is an important factor in deep learning: more data can often lead to better performance.</p>
+<p>In the next article, we’ll see how to improve scalability with mini-batching and a new GNN architecture, called GraphSAGE.</p>
+<p>If you enjoyed this tutorial, feel free to <strong><a href="https://twitter.com/maximelabonne">follow me on Twitter</a></strong> for more GNN content. Thank you, and see you in the next article! 📣</p>
+</section>
+<section id="graph-neural-network-course" class="level2">
+<h2 class="anchored" data-anchor-id="graph-neural-network-course">🌐 Graph Neural Network Course</h2>
+<p><a href="https://github.com/mlabonne/Graph-Neural-Network-Course" class="related">🔎 Course overview</a></p>
+<p><a href="https://mlabonne.github.io/blog/intrognn/" class="related">📝 Chapter 1: Introduction to Graph Neural Networks</a></p>
+<p><a href="https://mlabonne.github.io/blog/gat/" class="related">📝 Chapter 2: Graph Attention Network</a></p>
+<p><a href="https://mlabonne.github.io/blog/graphsage/" class="related">📝 Chapter 3: GraphSAGE</a></p>
+<p><a href="https://mlabonne.github.io/blog/gin/" class="related">📝 Chapter 4: Graph Isomorphism Network</a></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,188 +1,745 @@
-<div class="home"><h1 id="newest-articles">Newest articles</h1>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.326">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
+<title>Maxime Labonne - Articles</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
 
-  
 
-  <!-- Hide posts if front matter flag hide:true -->
-  
-  
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./images/favicon.ico" rel="icon">
+<script src="site_libs/quarto-listing/list.min.js"></script>
+<script src="site_libs/quarto-listing/quarto-listing.js"></script>
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script>
 
-  <!-- Sort posts by rank, then date -->
-  
-  
-  
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
 
- 
-  
+    const options = {
+      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description"],
+    };
 
-   <!-- Assemble final sorted posts array -->
-  
-  <ul class="post-list"><li><div class="Box box-shadow-medium rounded-1 col-12"><div class="col-4 d-table-cell p-3 v-align-middle">
-      <a class="post-link" href="/blog/minecraft/">
-        <img class="image-preview " src="/blog/images/minerl/thumbnail.jpg" />
-      </a>
-    </div><div class="col-8 d-table-cell p-3">
-        <h3>
-          <a class="post-link" href="/blog/minecraft/">
-            Create a Bot to Find Diamonds in Minecraft
-          </a>
-        </h3>
-        <p class="post-meta-description">Reinforcement Learning and Behavior Cloning in Python with MineRL</p>
-          <p class="post-meta">
-            <img src="/blog/images/icons/icon-calendar.svg" class="icon-watch"> May 25, 2022 • <a href= https://colab.research.google.com/drive/1hRxR_UM72JAe32YveLxqoC6eX6Lqd9c2?usp=sharing class="codeincolab"><img src="/blog/assets/badges/colab-home.svg" class="icon-colab"> Open in Colab</a>
-          </p>
-      </div>
-  </div></li><li><div class="Box box-shadow-medium rounded-1 col-12"><div class="col-4 d-table-cell p-3 v-align-middle">
-      <a class="post-link" href="/blog/constraintprogramming/">
-        <img class="image-preview " src="/blog/images/cp/thumbnail.jpg" />
-      </a>
-    </div><div class="col-8 d-table-cell p-3">
-        <h3>
-          <a class="post-link" href="/blog/constraintprogramming/">
-            Introduction to Constraint Programming in Python
-          </a>
-        </h3>
-        <p class="post-meta-description">The Programming Paradigm to Find One Solution Among 8,080,104 Candidates</p>
-          <p class="post-meta">
-            <img src="/blog/images/icons/icon-calendar.svg" class="icon-watch"> May 2, 2022 • <a href= https://colab.research.google.com/drive/1huTlPTaahdEEO29KKdlW9ic5zAwB3D58?usp=sharing class="codeincolab"><img src="/blog/assets/badges/colab-home.svg" class="icon-colab"> Open in Colab</a>
-          </p>
-      </div>
-  </div></li><li><div class="Box box-shadow-medium rounded-1 col-12"><div class="col-4 d-table-cell p-3 v-align-middle">
-      <a class="post-link" href="/blog/gin/">
-        <img class="image-preview " src="/blog/images/gin/thumbnail.png" />
-      </a>
-    </div><div class="col-8 d-table-cell p-3">
-        <h3>
-          <a class="post-link" href="/blog/gin/">
-            GIN: How to Design the Most Powerful Graph Neural Network
-          </a>
-        </h3>
-        <p class="post-meta-description">Graph Neural Network Course: Chapter 4</p>
-          <p class="post-meta">
-            <img src="/blog/images/icons/icon-calendar.svg" class="icon-watch"> Apr 25, 2022 • <a href= https://colab.research.google.com/drive/1b6SWugNKnxsI0L9auX1zwszlXf3rRZyS?usp=sharing class="codeincolab"><img src="/blog/assets/badges/colab-home.svg" class="icon-colab"> Open in Colab</a>
-          </p>
-      </div>
-  </div></li><li><div class="Box box-shadow-medium rounded-1 col-12"><div class="col-4 d-table-cell p-3 v-align-middle">
-      <a class="post-link" href="/blog/graphsage/">
-        <img class="image-preview " src="/blog/images/graphsage/thumbnail.jpg" />
-      </a>
-    </div><div class="col-8 d-table-cell p-3">
-        <h3>
-          <a class="post-link" href="/blog/graphsage/">
-            GraphSAGE: Scaling up Graph Neural Networks
-          </a>
-        </h3>
-        <p class="post-meta-description">Graph Neural Network Course: Chapter 3</p>
-          <p class="post-meta">
-            <img src="/blog/images/icons/icon-calendar.svg" class="icon-watch"> Apr 6, 2022 • <a href= https://colab.research.google.com/drive/1b6SWugNKnxsI0L9auX1zwszlXf3rRZyS?usp=sharing class="codeincolab"><img src="/blog/assets/badges/colab-home.svg" class="icon-colab"> Open in Colab</a>
-          </p>
-      </div>
-  </div></li><li><div class="Box box-shadow-medium rounded-1 col-12"><div class="col-4 d-table-cell p-3 v-align-middle">
-      <a class="post-link" href="/blog/what-is-a-tensor/">
-        <img class="image-preview " src="/blog/images/tensor/thumbnail.png" />
-      </a>
-    </div><div class="col-8 d-table-cell p-3">
-        <h3>
-          <a class="post-link" href="/blog/what-is-a-tensor/">
-            What is a Tensor in Machine Learning?
-          </a>
-        </h3>
-        <p class="post-meta-description">The difference between tensors, arrays, and matrices</p>
-          <p class="post-meta">
-            <img src="/blog/images/icons/icon-calendar.svg" class="icon-watch"> Mar 28, 2022 • <a href= https://colab.research.google.com/drive/1azq12DApWgLgdWuYB3wh0TcwJVAfVxCL?usp=sharing class="codeincolab"><img src="/blog/assets/badges/colab-home.svg" class="icon-colab"> Open in Colab</a>
-          </p>
-      </div>
-  </div></li><li><div class="Box box-shadow-medium rounded-1 col-12"><div class="col-4 d-table-cell p-3 v-align-middle">
-      <a class="post-link" href="/blog/iterating-over-rows-pandas-dataframe/">
-        <img class="image-preview " src="/blog/images/dataframe/thumbnail.jpg" />
-      </a>
-    </div><div class="col-8 d-table-cell p-3">
-        <h3>
-          <a class="post-link" href="/blog/iterating-over-rows-pandas-dataframe/">
-            Efficiently iterating over rows in a Pandas DataFrame
-          </a>
-        </h3>
-        <p class="post-meta-description">Never use iterrows and itertuples again!</p>
-          <p class="post-meta">
-            <img src="/blog/images/icons/icon-calendar.svg" class="icon-watch"> Mar 21, 2022 • <a href= https://colab.research.google.com/drive/1v9v4j1MnklaCd9eFcuGnB5x_5FoINmRe?usp=sharing class="codeincolab"><img src="/blog/assets/badges/colab-home.svg" class="icon-colab"> Open in Colab</a>
-          </p>
-      </div>
-  </div></li><li><div class="Box box-shadow-medium rounded-1 col-12"><div class="col-4 d-table-cell p-3 v-align-middle">
-      <a class="post-link" href="/blog/gat/">
-        <img class="image-preview " src="/blog/images/gat/thumbnail.jpg" />
-      </a>
-    </div><div class="col-8 d-table-cell p-3">
-        <h3>
-          <a class="post-link" href="/blog/gat/">
-            Graph Attention Networks: Self-Attention for GNNs
-          </a>
-        </h3>
-        <p class="post-meta-description">Graph Neural Network Course: Chapter 2</p>
-          <p class="post-meta">
-            <img src="/blog/images/icons/icon-calendar.svg" class="icon-watch"> Mar 9, 2022 • <a href= https://colab.research.google.com/drive/1B0vLpH_gSfrOLgsc2UZVyXrcofzA-t0L?usp=sharing class="codeincolab"><img src="/blog/assets/badges/colab-home.svg" class="icon-colab"> Open in Colab</a>
-          </p>
-      </div>
-  </div></li><li><div class="Box box-shadow-medium rounded-1 col-12"><div class="col-4 d-table-cell p-3 v-align-middle">
-      <a class="post-link" href="/blog/integerprogramming/">
-        <img class="image-preview " src="/blog/images/integerprogramming/thumbnail.jpg" />
-      </a>
-    </div><div class="col-8 d-table-cell p-3">
-        <h3>
-          <a class="post-link" href="/blog/integerprogramming/">
-            Integer vs. Linear Programming in Python
-          </a>
-        </h3>
-        <p class="post-meta-description">Mixed Integer Programming for optimization with Google OR-Tools</p>
-          <p class="post-meta">
-            <img src="/blog/images/icons/icon-calendar.svg" class="icon-watch"> Mar 5, 2022 • <a href= https://colab.research.google.com/drive/1aIKnXPEiXFo1M3U0EM6arE2teD9KkJdF?usp=sharing class="codeincolab"><img src="/blog/assets/badges/colab-home.svg" class="icon-colab"> Open in Colab</a>
-          </p>
-      </div>
-  </div></li><li><div class="Box box-shadow-medium rounded-1 col-12"><div class="col-4 d-table-cell p-3 v-align-middle">
-      <a class="post-link" href="/blog/linearoptimization/">
-        <img class="image-preview " src="/blog/images/linearoptimization/thumbnail.jpg" />
-      </a>
-    </div><div class="col-8 d-table-cell p-3">
-        <h3>
-          <a class="post-link" href="/blog/linearoptimization/">
-            Introduction to Linear Programming in Python
-          </a>
-        </h3>
-        <p class="post-meta-description">A guide to mathematical optimization with Google OR-Tools</p>
-          <p class="post-meta">
-            <img src="/blog/images/icons/icon-calendar.svg" class="icon-watch"> Mar 2, 2022 • <a href= https://colab.research.google.com/drive/1dbrFJwFv80kgUi13MfPO3KyumG-SVIHG?usp=sharing class="codeincolab"><img src="/blog/assets/badges/colab-home.svg" class="icon-colab"> Open in Colab</a>
-          </p>
-      </div>
-  </div></li><li><div class="Box box-shadow-medium rounded-1 col-12"><div class="col-4 d-table-cell p-3 v-align-middle">
-      <a class="post-link" href="/blog/intrognn/">
-        <img class="image-preview " src="/blog/images/gnn/thumbnail.png" />
-      </a>
-    </div><div class="col-8 d-table-cell p-3">
-        <h3>
-          <a class="post-link" href="/blog/intrognn/">
-            Graph Convolutional Networks: Introduction to GNNs
-          </a>
-        </h3>
-        <p class="post-meta-description">Graph Neural Network Course: Chapter 1</p>
-          <p class="post-meta">
-            <img src="/blog/images/icons/icon-calendar.svg" class="icon-watch"> Feb 20, 2022
-          </p>
-      </div>
-  </div></li><li><div class="Box box-shadow-medium rounded-1 col-12"><div class="col-4 d-table-cell p-3 v-align-middle">
-      <a class="post-link" href="/blog/reinforcement%20learning/q-learning/frozen%20lake/gym/tutorial/2022/02/13/Q_learning.html">
-        <img class="image-preview " src="/blog/images/qlearning/frozenlake_thumbnail.png" />
-      </a>
-    </div><div class="col-8 d-table-cell p-3">
-        <h3>
-          <a class="post-link" href="/blog/reinforcement%20learning/q-learning/frozen%20lake/gym/tutorial/2022/02/13/Q_learning.html">
-            Q-learning for beginners
-          </a>
-        </h3>
-        <p class="post-meta-description">Train an AI to solve the Frozen Lake environment</p>
-          <p class="post-meta">
-            <img src="/blog/images/icons/icon-calendar.svg" class="icon-watch"> Feb 13, 2022
-          </p>
-      </div>
-  </div></li></ul>
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
 
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-4DWYJM47PC"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="styles.css">
+<link rel="alternate" type="application/rss+xml" title="Maxime Labonne" href="index.xml"><meta property="og:title" content="Maxime Labonne - Articles">
+<meta property="og:image" content="https://mlabonne.github.io/images/minerl/thumbnail.jpg">
+<meta property="og:site-name" content="Maxime Labonne">
+<meta name="twitter:title" content="Maxime Labonne - Articles">
+<meta name="twitter:image" content="https://mlabonne.github.io/images/minerl/thumbnail.jpg">
+<meta name="twitter:creator" content="@maximelabonne">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Maxime Labonne</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./publications.html" rel="" target="">
+ <span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./book.html" rel="" target="">
+ <span class="menu-text">Book</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/mlabonne" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page">
+      <h1 class="title">Articles</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+    
+      
     </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block column-page" id="quarto-document-content">
+
+
+
+
+
+
+
+
+<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
+<div class="list quarto-listing-default">
+<div class="quarto-post image-right" data-index="0" data-categories="reinforcement learning,minecraft,behavior cloning,minerl,python" data-listing-date-sort="1653433200000" data-listing-file-modified-sort="1681674851912" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8">
+<div class="thumbnail">
+<p><a href="./posts/2022-05-25-minecraft.html"> <img src="./images/minerl/thumbnail.jpg" class="thumbnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./posts/2022-05-25-minecraft.html">
+<h3 class="no-anchor listing-title">
+Create a Bot to Find Diamonds in Minecraft
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+<p>Reinforcement Learning and Behavior Cloning in Python with MineRL</p>
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/2022-05-25-minecraft.html">
+<div class="listing-date">
+May 25, 2022
+</div>
+<div class="listing-author">
+Maxime Labonne
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-categories="constraint programming,linear programming,OR-Tools,python,tutorial" data-listing-date-sort="1651446000000" data-listing-file-modified-sort="1681666372161" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8">
+<div class="thumbnail">
+<p><a href="./posts/2022-05-02-constraint_programming.html"> <img src="./images/cp/thumbnail.jpg" class="thumbnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./posts/2022-05-02-constraint_programming.html">
+<h3 class="no-anchor listing-title">
+Introduction to Constraint Programming in Python
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+<p>The Programming Paradigm to Find One Solution Among 8,080,104 Candidates</p>
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/2022-05-02-constraint_programming.html">
+<div class="listing-date">
+May 2, 2022
+</div>
+<div class="listing-author">
+Maxime Labonne
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="2" data-categories="graph neural networks,GIN,graph classification,tutorial,python" data-listing-date-sort="1650841200000" data-listing-file-modified-sort="1681666373679" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8">
+<div class="thumbnail">
+<p><a href="./posts/2022-04-25-graph_isomorphism_network.html"> <img src="./images/gin/thumbnail.png" class="thumbnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./posts/2022-04-25-graph_isomorphism_network.html">
+<h3 class="no-anchor listing-title">
+GIN: How to Design the Most Powerful Graph Neural Network
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+<p>Graph Neural Network Course: Chapter 4</p>
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/2022-04-25-graph_isomorphism_network.html">
+<div class="listing-date">
+Apr 25, 2022
+</div>
+<div class="listing-author">
+Maxime Labonne
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="3" data-categories="graph neural networks,GraphSAGE,scalability,neighbor sampling,tutorial,python" data-listing-date-sort="1649199600000" data-listing-file-modified-sort="1681666378235" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10">
+<div class="thumbnail">
+<p><a href="./posts/2022-04-06-graphsage.html"> <img src="./images/graphsage/thumbnail.jpg" class="thumbnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./posts/2022-04-06-graphsage.html">
+<h3 class="no-anchor listing-title">
+GraphSAGE: Scaling up Graph Neural Networks
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+<p>Graph Neural Network Course: Chapter 3</p>
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/2022-04-06-graphsage.html">
+<div class="listing-date">
+Apr 6, 2022
+</div>
+<div class="listing-author">
+Maxime Labonne
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="4" data-categories="data science,tensor,numpy,pytorch,tensorflow,deep learning" data-listing-date-sort="1648422000000" data-listing-file-modified-sort="1681666379677" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5">
+<div class="thumbnail">
+<p><a href="./posts/2022-03-28-what_is_a_tensor_in_deep_learning.html"> <img src="./images/tensor/thumbnail.png" class="thumbnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./posts/2022-03-28-what_is_a_tensor_in_deep_learning.html">
+<h3 class="no-anchor listing-title">
+What is a Tensor in Machine Learning?
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+<p>The difference between tensors, arrays, and&nbsp;matrices</p>
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/2022-03-28-what_is_a_tensor_in_deep_learning.html">
+<div class="listing-date">
+Mar 28, 2022
+</div>
+<div class="listing-author">
+Maxime Labonne
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="5" data-categories="data science,pandas,dataframe,itertuples,iterrows" data-listing-date-sort="1647820800000" data-listing-file-modified-sort="1681667654676" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6">
+<div class="thumbnail">
+<p><a href="./posts/2022-03-21-efficiently_iterating_over_rows_in_a_pandas_dataframe.html"> <img src="./images/dataframe/thumbnail.jpg" class="thumbnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./posts/2022-03-21-efficiently_iterating_over_rows_in_a_pandas_dataframe.html">
+<h3 class="no-anchor listing-title">
+Efficiently iterating over rows in a Pandas DataFrame
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+<p>Never use iterrows and itertuples again!</p>
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/2022-03-21-efficiently_iterating_over_rows_in_a_pandas_dataframe.html">
+<div class="listing-date">
+Mar 21, 2022
+</div>
+<div class="listing-author">
+Maxime Labonne
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="6" data-categories="graph neural networks,GNN,graph attention networks,GAT,self-attention,python,pytorch,tutorial" data-listing-date-sort="1646784000000" data-listing-file-modified-sort="1681666375627" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9">
+<div class="thumbnail">
+<p><a href="./posts/2022-03-09-graph_attention_network.html"> <img src="./images/gat/thumbnail.jpg" class="thumbnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./posts/2022-03-09-graph_attention_network.html">
+<h3 class="no-anchor listing-title">
+Graph Attention Networks: Self-Attention for GNNs
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+<p>Graph Neural Network Course: Chapter 2</p>
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/2022-03-09-graph_attention_network.html">
+<div class="listing-date">
+Mar 9, 2022
+</div>
+<div class="listing-author">
+Maxime Labonne
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="7" data-categories="integer optimization,integer programming,OR-Tools,ortools,python,tutorial" data-listing-date-sort="1646438400000" data-listing-file-modified-sort="1681666382552" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9">
+<div class="thumbnail">
+<p><a href="./posts/2022-03-05-integer_programming.html"> <img src="./images/integerprogramming/thumbnail.jpg" class="thumbnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./posts/2022-03-05-integer_programming.html">
+<h3 class="no-anchor listing-title">
+Integer vs.&nbsp;Linear Programming in Python
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+<p>Mixed Integer Programming for optimization with Google OR-Tools</p>
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/2022-03-05-integer_programming.html">
+<div class="listing-date">
+Mar 5, 2022
+</div>
+<div class="listing-author">
+Maxime Labonne
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="8" data-categories="linear optimization,linear programming,OR-Tools,ortools,python,tutorial" data-listing-date-sort="1646179200000" data-listing-file-modified-sort="1681666135241" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8">
+<div class="thumbnail">
+<p><a href="./posts/2022-03-02-linear_programming.html"> <img src="./images/linearoptimization/thumbnail.jpg" class="thumbnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./posts/2022-03-02-linear_programming.html">
+<h3 class="no-anchor listing-title">
+Introduction to Linear Programming in Python
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+<p>A guide to mathematical optimization with Google OR-Tools</p>
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/2022-03-02-linear_programming.html">
+<div class="listing-date">
+Mar 2, 2022
+</div>
+<div class="listing-author">
+Maxime Labonne
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="9" data-categories="graph neural networks,GNN,graph convolutional network,GCN,python,pytorch,tutorial" data-listing-date-sort="1645315200000" data-listing-file-modified-sort="1681666136102" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11">
+<div class="thumbnail">
+<p><a href="./posts/2022-02-20-graph_convolution_network.html"> <img src="./images/gnn/thumbnail.png" class="thumbnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./posts/2022-02-20-graph_convolution_network.html">
+<h3 class="no-anchor listing-title">
+Graph Convolutional Networks: Introduction to GNNs
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+<p>Graph Neural Network Course: Chapter 1</p>
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/2022-02-20-graph_convolution_network.html">
+<div class="listing-date">
+Feb 20, 2022
+</div>
+<div class="listing-author">
+Maxime Labonne
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="10" data-categories="reinforcement learning,q-learning,frozen lake,gym,tutorial" data-listing-date-sort="1644710400000" data-listing-file-modified-sort="1681666420021" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="20">
+<div class="thumbnail">
+<p><a href="./posts/2022-02-13-q_learning.html"> <img src="./images/qlearning/frozenlake_thumbnail.png" class="thumbnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./posts/2022-02-13-q_learning.html">
+<h3 class="no-anchor listing-title">
+Q-learning for beginners
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+<p>Train an AI to solve the Frozen Lake environment</p>
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/2022-02-13-q_learning.html">
+<div class="listing-date">
+Feb 13, 2022
+</div>
+<div class="listing-author">
+Maxime Labonne
+</div>
+</a>
+</div>
+</div>
+</div>
+<div class="listing-no-matching d-none">
+No matching items
+</div>
+</div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
