@@ -220,7 +220,7 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 
 
 <center>
-<img src="https://mlabonne.github.io/blog/images/graphsage/thumbnail.jpg">
+<img src="../images/graphsage/thumbnail.jpg">
 </center>
 <p>What do UberEats and Pinterest have in common?</p>
 <p>They both use GraphSAGE to power their recommender systems on a massive scale: millions and billions of nodes and edges.</p>
@@ -246,7 +246,7 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 <section id="i.-pubmed-dataset" class="level2">
 <h2 class="anchored" data-anchor-id="i.-pubmed-dataset">🌐 I. PubMed dataset</h2>
 <center>
-<img src="https://mlabonne.github.io/blog/images/graphsage/pubmed.png">
+<img src="../images/graphsage/pubmed.png">
 </center>
 <p>As we saw in the <a href="https://mlabonne.github.io/blog/gat/">previous article</a>, PubMed is part of the Planetoid dataset (MIT license). Here’s a quick summary:</p>
 <ul>
@@ -329,7 +329,7 @@ Graph has loops: False</code></pre>
 <section id="ii.-graphsage-in-theory" class="level2">
 <h2 class="anchored" data-anchor-id="ii.-graphsage-in-theory">🧙‍♂️ II. GraphSAGE in theory</h2>
 <center>
-<img src="https://mlabonne.github.io/blog/images/graphsage/architecture.png">
+<img src="../images/graphsage/architecture.png">
 </center>
 <p>The <strong>GraphSAGE</strong> algorithm can be divided into two steps:</p>
 <ol type="1">
@@ -349,7 +349,7 @@ Graph has loops: False</code></pre>
 <p>So, what can we do? In recent years, researchers developed different strategies to create graph mini-batches. The one we’re interested in is called <a href="https://arxiv.org/abs/1706.02216"><strong>neighbor sampling</strong></a>). There are many other techniques you can find on <a href="https://pytorch-geometric.readthedocs.io/en/latest/modules/loader.html">PyG’s documentation</a>, such as <a href="https://arxiv.org/pdf/1905.07953.pdf">subgraph clustering</a>).</p>
 <center class="dark-bg">
 <video autoplay="" loop="" muted="" width="800" class="no-margin">
-<source src="https://mlabonne.github.io/blog/images/graphsage/sampling.mp4" type="video/mp4">
+<source src="../images/graphsage/sampling.mp4" type="video/mp4">
 
 </video>
 </center>
@@ -449,7 +449,7 @@ Subgraph 3: Data(x=[189, 500], edge_index=[2, 229], y=[189], train_mask=[189], v
 </ul>
 <center class="dark-bg">
 <video autoplay="" loop="" muted="" width="800" class="no-margin">
-<source src="https://mlabonne.github.io/blog/images/graphsage/aggregation.mp4" type="video/mp4">
+<source src="../images/graphsage/aggregation.mp4" type="video/mp4">
 
 </video>
 </center>
@@ -764,7 +764,7 @@ Wall time: 18min 7s</code></pre>
 <p>The real difference is the training time: GraphSAGE is <strong>88 times faster</strong> than the GAT and four times faster than the GCN in this example!</p>
 <p>This is the true benefit of GraphSAGE. While it loses a lot of information by pruning the graph with neighbor sampling, it greatly improves scalability. In turn, it can lead to building larger graphs that can improve accuracy.</p>
 <center>
-<img src="https://mlabonne.github.io/blog/images/graphsage/timechart.png" width="800">
+<img src="../images/graphsage/timechart.png" width="800">
 </center>
 <p>GraphSAGE is a popular framework with many flavors.</p>
 <p>In this example, we have used GraphSAGE in a <strong>transductive</strong> setting. We masked information about test nodes during training, but we didn’t hide their presence in the adjacency matrix. On the contrary, in an <strong>inductive</strong> setting, the test set is never encountered during training.</p>

@@ -223,7 +223,7 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 
 
 <center>
-<img src="https://mlabonne.github.io/blog/images/gin/thumbnail.png">
+<img src="../images/gin/thumbnail.png">
 </center>
 <p>Graph Neural Networks are not limited to classifying nodes.</p>
 <p>One of the most popular applications is <strong>graph classification</strong>. This is a common task when dealing with molecules: they are represented as graphs and features about each atom (node) can be used to predict the behavior of the entire molecule.</p>
@@ -250,7 +250,7 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 <section id="i.-proteins-dataset" class="level2">
 <h2 class="anchored" data-anchor-id="i.-proteins-dataset">🌐 I. PROTEINS dataset</h2>
 <center>
-<img src="https://mlabonne.github.io/blog/images/gin/proteinimager.png"><i>3D plot of a protein by DeepMind.</i>
+<img src="../images/gin/proteinimager.png"><i>3D plot of a protein by DeepMind.</i>
 </center>
 <p><a href="https://chrsmrrs.github.io/datasets/docs/datasets/">PROTEINS</a> is a popular dataset in bioinformatics. It is a collection of <strong>1113 graphs</strong> representing proteins, where nodes are amino acids. Two nodes are connected by an edge when they are close enough (&lt; 0.6 nanometers). The goal is to classify each protein as an <strong>enzyme</strong> or <strong>not</strong>.</p>
 <p>Enzymes are a particular type of <strong>proteins</strong> that act as catalysts to speed up chemical reactions in the cell. They are essential for digestion (e.g., lipases), respiration (e.g., oxidases), and other crucial functions of the human body. They are also used in commercial applications, like the production of antibiotics.</p>
@@ -383,7 +383,7 @@ Test loader:
 <h3 class="anchored" data-anchor-id="a.-weisfeiler-lehman-test">A. Weisfeiler-Lehman test</h3>
 <p>A way to characterize the “power” of a GNN is to use the Weisfeiler-Lehman (WL) graph isomorphism test. <a href="https://en.wikipedia.org/wiki/Graph_isomorphism">Isomorphic graphs</a> mean that they have the <strong>same structure</strong>: identical connections but a permutation of nodes. The WL test is able to tell if two graphs are non-isomorphic, but it cannot guarantee that they are isomorphic.</p>
 <center>
-<img src="https://mlabonne.github.io/blog/images/gin/isomorphic_graphs.png"><i>Two isomorphic graphs.</i>
+<img src="../images/gin/isomorphic_graphs.png"><i>Two isomorphic graphs.</i>
 </center>
 <p>This might not seem like much, but it can be <strong>extremely difficult</strong> to tell two large graphs apart. In fact, this problem is not known to be solvable in polynomial time, nor to be NP-complete. It might even be somewhere in between, in the computational complexity class <a href="https://en.wikipedia.org/wiki/Graph_isomorphism_problem">NP-intermediate</a> (if it only exists).</p>
 <p>Okay, but how is it <strong>related</strong> to GNNs? Some researchers in graph learning noticed that <strong>this test and the way GNNs learn are oddly similar</strong>. In the WL test, 1. Every node starts with the <strong>same label</strong>; 2. Labels from neighboring nodes are aggregated and <strong>hashed</strong> to produce a new label; 3. The previous step is repeated until the labels <strong>stop changing</strong>.</p>
@@ -429,11 +429,11 @@ Test loader:
 <p>There is a <strong>second GIN layer</strong> in PyTorch Geometric, called <code>GINEConv</code>. It comes from <a href="https://arxiv.org/pdf/1905.12265.pdf">this paper’s implementation</a> of GIN, which applies a <span class="math inline">\(ReLU\)</span> function to the neighbors’ features. We won’t use it in this tutorial, since the benefits are not clear.</p>
 <p>We still need to design a MLP for the <code>GINConv</code> layer. Here’s the design we’ll implement, inspired by the original paper:</p>
 <center>
-<img src="https://mlabonne.github.io/blog/images/gin/mlp.png" width="800">
+<img src="../images/gin/mlp.png" width="800">
 </center>
 <p>The paper stacks <strong>5 layers</strong> but we’ll be more humble with <strong>3 layers</strong> instead. Here is what the entire architecture looks like:</p>
 <center>
-<img src="https://mlabonne.github.io/blog/images/gin/architecture.png">
+<img src="../images/gin/architecture.png">
 </center>
 <p>I could not find any implementation of GIN with graph embedding <strong>concatenation</strong>, so here is my version (it improves the accuracy by 1% on average). Let’s compare it to a GCN with a simple mean pooling (and no concatenation).</p>
 <div class="cell" data-execution_count="14">

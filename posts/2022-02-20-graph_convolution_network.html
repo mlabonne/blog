@@ -228,7 +228,7 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 
 
 <center>
-<img src="https://mlabonne.github.io/blog/images/gnn/gnn.png">
+<img src="../images/gnn/gnn.png">
 </center>
 <p><strong>Graph Neural Networks</strong> (GNNs) are one of the most interesting and fast-growing architectures in deep learning.</p>
 <p>In this series of tutorials, I would like to give a practical overview of this field and present new applications for machine learning practictioners.</p>
@@ -253,7 +253,7 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 <h2 class="anchored" data-anchor-id="i.-graph-data">🌐 I. Graph data</h2>
 <p><a href="https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)">Graphs</a> are a nonlinear type of data you can find everywhere: social networks, computer networks, molecules, text, images, and so on. In this article, we will study the infamous and much-used <a href="https://en.wikipedia.org/wiki/Zachary%27s_karate_club">Zachary’s karate club</a> dataset.</p>
 <center>
-<img src="https://mlabonne.github.io/blog/images/gnn/zachary.png" width="600">
+<img src="../images/gnn/zachary.png" width="600">
 </center>
 <p>Zachary’s karate club represents the relationships within a karate club studied by Wayne W. Zachary in the 1970s. It is a kind of social network, where every node is a member, and members who interacted outside the club are connected to each other.</p>
 <p>In this example, the club is divided into four groups: we would like to <strong>assign the right group to every member</strong> (node classification) just by looking at their connections.</p>
@@ -335,7 +335,7 @@ tensor([[ 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  1,
 <p>The <code>edge_index</code> has a quite counter-intuitive way of storing the graph connectivity. Here, we have two lists of 156 directed edges (78 bidirectional edges) because the first list contains the sources and the second one the destinations. It is called a <strong>coordinate list</strong> (COO) and is just <a href="https://en.wikipedia.org/wiki/Sparse_matrix#Storing_a_sparse_matrix">one way of efficiently storing a sparse matrix</a>.</p>
 <p>A more intuitive way to represent the graph connectivity would be a simple <strong>adjacency matrix</strong> <span class="math inline">\(A\)</span>, where a non-zero element <span class="math inline">\(A_{ij}\)</span> indicates a connection from <span class="math inline">\(i\)</span> to <span class="math inline">\(j\)</span>.</p>
 <center>
-<img src="https://mlabonne.github.io/blog/images/gnn/adjacency.png">
+<img src="../images/gnn/adjacency.png">
 </center>
 <p>The adjacency matrix can be inferred from the <code>edge_index</code> with a utility function.</p>
 <div class="cell" data-outputid="da8a67a1-f899-4b52-d92a-f3cf17daac53" data-execution_count="6">

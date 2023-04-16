@@ -271,17 +271,17 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>env.play()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <center>
-<img src="https://mlabonne.github.io/blog/images/minerl/start.png">
+<img src="../images/minerl/start.png">
 </center>
 <p>We are in front of a tree. As you can see, the resolution is <strong>quite low</strong>. A low resolution means fewer pixels, which speeds things up. Fortunately for us, neural networks don’t need a 4K resolution to understand what’s happening on screen.</p>
 <p>Now, we would like to <strong>interact</strong> with the game. What can our agent do? Here’s the <a href="https://minerl.io/docs/environments/#id14">list of possible actions</a>:</p>
 <center>
-<img src="https://mlabonne.github.io/blog/images/minerl/actions.png" width="800">
+<img src="../images/minerl/actions.png" width="800">
 </center>
 <p>The first step to find diamonds is to <strong>get wood</strong> to make a crafting table and a wooden pickaxe.</p>
 <p>Let’s try to get closer to the tree. It means that we need to hold the “forward” button for less than a second. With MineRL, there are <strong>20 actions processed per second</strong>: we don’t need a full second so let’s process it 5 times, and wait for 40 more ticks.</p>
 <center>
-<img src="https://mlabonne.github.io/blog/images/minerl/sequence1.png">
+<img src="../images/minerl/sequence1.png">
 </center>
 <div class="cell" data-outputid="5550ae9b-f82a-4cb5-e083-baa1a6916169">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the sequence of actions</span></span>
@@ -376,7 +376,7 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 <p>We don’t have that much time to spend, so we’re going for the Imitation Learning solution. This technique is also called <strong>Behavior Cloning</strong>, which is the simplest form of imitation.</p>
 <p>Note that Imitation Learning is not always more efficient than RL. If you want to know more about it, Kumar et al.&nbsp;wrote a great <a href="https://bair.berkeley.edu/blog/2022/04/25/rl-or-bc/">blog post</a> about this topic.</p>
 <center>
-<img src="https://mlabonne.github.io/blog/images/minerl/cnn.png">
+<img src="../images/minerl/cnn.png">
 </center>
 <p>The problem is reduced to a multi-class classification task. Our dataset consists of mp4 videos, so we’ll use a <a href="https://en.wikipedia.org/wiki/Convolutional_neural_network">Convolutional Neural Network</a> (CNN) to translate these images into relevant actions. Our goal is also to <strong>limit the number of actions</strong> (classes) that can be taken so the CNN has fewer options, which means it’ll be trained more efficiently.</p>
 <div class="cell" data-execution_count="3">
@@ -597,7 +597,7 @@ Wall time: 26min 46s</code></pre>
 <p>A simple yet powerful approach consists of <strong>combining</strong> scripted actions with artificial intelligence. Learn the boring stuff, script the knowledge.</p>
 <p>In this paradigm, we’ll use the CNN to get a healthy amount of wood (3000 steps). Then, we can <strong>script a sequence</strong> to craft planks, sticks, a crafting table, a wooden pickaxe, and start mining stone (it should be below our feet). This stone can then be used to craft a stone pickaxe, which can mine iron ore.</p>
 <center>
-<img src="https://mlabonne.github.io/blog/images/minerl/sequence3.png">
+<img src="../images/minerl/sequence3.png">
 </center>
 <p>This is when things get complicated: iron ore is <strong>quite rare</strong>, so we would need to run the game for a while to find a deposit. Then, we would have to craft a furnace and melt it to get the iron pickaxe. Finally, we would have to go even deeper and be <strong>even luckier</strong> to obtain a diamond without falling into lava.</p>
 <p>As you can see, it’s doable but the outcome is fairly random. We could train another agent to <a href="https://minerl.readthedocs.io/en/latest/environments/index.html#minerlobtaindiamond-v0">find diamonds</a>, and even a third one to <a href="https://minerl.readthedocs.io/en/latest/environments/index.html#minerlobtainironpickaxe-v0">create the iron pickaxe</a>. If you’re interested in more complex approaches, you can read the results of the <a href="https://arxiv.org/abs/2202.10583">MineRL Diamond 2021 Competition</a> by Kanervisto et al.&nbsp;It describes several solutions using different clever techniques, including end-to-end deep learning architectures. Nonetheless, it is a complex problem and no team managed to consistently find diamonds, if at all.</p>

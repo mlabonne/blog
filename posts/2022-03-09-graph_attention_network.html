@@ -222,12 +222,12 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 
 
 <center>
-<img src="https://mlabonne.github.io/blog/images/gat/thumbnail.jpg">
+<img src="../images/gat/thumbnail.jpg">
 </center>
 <p>Graph Attention Networks (GATs) are one of the most popular types of Graph Neural Networks.</p>
 <p>Instead of calculating static weights based on node degrees like Graph Convolutional Networks (GCNs), they assign dynamic weights to node features through a process called <strong>self-attention</strong>. The main idea behind GATs is that some neighbors are more important than others, regardless of their node degrees.</p>
 <center>
-<img src="https://mlabonne.github.io/blog/images/gat/graph_attention_empty.png" width="400">Node 4 is more important than node 3, which is more important than node 2
+<img src="../images/gat/graph_attention_empty.png" width="400">Node 4 is more important than node 3, which is more important than node 2
 </center>
 <p>In this article, we will see how to calculate these attention scores and implement an efficient GAT in PyTorch Geometric (PyG). You can run the code of this tutorial with the following <a href="https://colab.research.google.com/drive/1B0vLpH_gSfrOLgsc2UZVyXrcofzA-t0L?usp=sharing">Google Colab notebook</a>.</p>
 <div class="cell" data-execution_count="4">
@@ -251,7 +251,7 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 <section id="i.-graph-data" class="level2">
 <h2 class="anchored" data-anchor-id="i.-graph-data">🌐 I. Graph data</h2>
 <center>
-<img alt="CiteSeer" src="https://mlabonne.github.io/blog/images/gat/citeseer_yed.png" width="800">CiteSeer dataset
+<img alt="CiteSeer" src="../images/gat/citeseer_yed.png" width="800">CiteSeer dataset
 </center>
 <p>Let’s perform a node classification task with a GAT. We can use three classic graph datasets (MIT license) for this work. They represent networks of research papers, where each connection is a citation.</p>
 <ul>
@@ -345,7 +345,7 @@ Has isolated nodes: True</code></pre>
 <h2 class="anchored" data-anchor-id="ii.-graph-attention-layer">⚠️ II. Graph Attention Layer</h2>
 <p>Introduced by <a href="https://arxiv.org/abs/1710.10903">Veličković et al.</a> in 2017, self-attention in GATs relies on a simple idea: <strong>some nodes are more important than others</strong>. In this context, we talk about <em>self</em>-attention (and not just attention) because inputs are compared to each other.</p>
 <center>
-<img src="https://mlabonne.github.io/blog/images/gat/graph_attention.png" width="400">
+<img src="../images/gat/graph_attention.png" width="400">
 </center>
 <p>In the previous figure, self-attention calculates the importance of nodes 2, 3, and 4’s features to node 1. We denote <span class="math inline">\(\alpha_{ij}\)</span> the importance of node <span class="math inline">\(j\)</span>’s features to node <span class="math inline">\(i\)</span>.</p>
 <p>Each node <span class="math inline">\(i\)</span> has an attribute vector <span class="math inline">\(x_i\)</span>. The GAT layer calculates the embedding of node 1 as a sum of attention coefficients multiplied by a shared weight matrix <span class="math inline">\(\mathbf{W}\)</span> :</p>
@@ -363,7 +363,7 @@ Has isolated nodes: True</code></pre>
 <p>Then, we can apply a new <strong>linear transformation</strong> with a weight matrix <span class="math inline">\(W_{att}\)</span>:</p>
 <p><span class="math display">\[a_{ij} = W_{att}^t[\mathbf{W}x_i\mathbin\Vert \mathbf{W}x_j]\]</span></p>
 <center>
-<img src="https://mlabonne.github.io/blog/images/gat/attention_calculation1.png" height="400">
+<img src="../images/gat/attention_calculation1.png" height="400">
 </center>
 </section>
 <section id="activation-function" class="level3">
@@ -371,7 +371,7 @@ Has isolated nodes: True</code></pre>
 <p>We’re building a neural network, so the second step is to add nonlinearity with an activation function. In this case, the paper’s authors chose the <em>LeakyReLU</em> function.</p>
 <p><span class="math display">\[e_{ij} = LeakyReLU(a_{ij})\]</span></p>
 <center>
-<img src="https://mlabonne.github.io/blog/images/gat/attention_calculation2.png" height="400">
+<img src="../images/gat/attention_calculation2.png" height="400">
 </center>
 </section>
 <section id="softmax-normalization" class="level3">
@@ -380,7 +380,7 @@ Has isolated nodes: True</code></pre>
 <p>A common way to do it with neural networks is to use the softmax function. Here, we apply it to every neighboring node, including the target node itself:</p>
 <p><span class="math display">\[\alpha_{ij} = softmax_j(e_{ij}) = \frac{exp(e_{ij})}{\sum_{k \in \mathcal{N}_i}{exp(e_{ik})}}\]</span></p>
 <center>
-<img src="https://mlabonne.github.io/blog/images/gat/attention_calculation3.png" height="400">
+<img src="../images/gat/attention_calculation3.png" height="400">
 </center>
 <p>This equation produces the final attention coefficients <span class="math inline">\(\alpha_{ij}\)</span>. The only problem is… <strong>self-attention is not very stable</strong>. In order to improve performance, <a href="https://arxiv.org/abs/1706.03762">Vaswani et al.</a> introduced multi-head attention in the transformer architecture.</p>
 </section>
@@ -388,7 +388,7 @@ Has isolated nodes: True</code></pre>
 <h3 class="anchored" data-anchor-id="multi-head-attention">4. Multi-head attention</h3>
 <p>This should not be a big surprise if you’re familiar with the transformer architecture, but <a href="https://thegradient.pub/transformers-are-graph-neural-networks/">transformers are a special case of GNNs</a>. This is why GATs look so much like a simplified version of transformers. The good thing is that we can reuse some ideas from Natural Language Processing here, like multi-head attention.</p>
 <center>
-<img src="https://mlabonne.github.io/blog/images/gat/attention_calculation4.png" height="400">
+<img src="../images/gat/attention_calculation4.png" height="400">
 </center>
 <p>In GATs, multi-head attention consists of <strong>replicating the same three steps several times</strong> in order to average or concatenate the results. Instead of a single embedding <span class="math inline">\(h_1\)</span>, we get one embedding per attention head (denoted <span class="math inline">\(h_1^k\)</span> for the head <span class="math inline">\(k\)</span>). One of the two following schemes can then be applied:</p>
 <ul>

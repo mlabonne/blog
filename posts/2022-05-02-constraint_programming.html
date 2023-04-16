@@ -219,7 +219,7 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 
 
 <center>
-<img src="https://mlabonne.github.io/blog/images/cp/thumbnail.jpg">
+<img src="../images/cp/thumbnail.jpg">
 </center>
 <p>Constraint Programming is a technique to <strong>find every solution</strong> that respects a set of predefined constraints.</p>
 <p>It is an invaluable tool for data scientists to solve a huge variety of problems, such as scheduling, timetabling, sequencing, etc. In this article, we’ll see how to use CP in two different ways:</p>
@@ -235,7 +235,7 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 <section id="i.-satisfiability-with-the-3-scouts-problem" class="level2">
 <h2 class="anchored" data-anchor-id="i.-satisfiability-with-the-3-scouts-problem">🪖 I. Satisfiability with the 3 scouts problem</h2>
 <center>
-<img src="https://mlabonne.github.io/blog/images/cp/scouts.png" width="800" style="margin-bottom:0px; margin-top:0px;">
+<img src="../images/cp/scouts.png" width="800" style="margin-bottom:0px; margin-top:0px;">
 </center>
 <p>In the <a href="https://towardsdatascience.com/integer-programming-vs-linear-programming-in-python-f1be5bb4e60e">previous article</a>, we created an army to defeat our opponent. But there was one small problem: we had to guess how powerful his army was.</p>
 <p>This time, let’s send scouts to know the <strong>exact number</strong>. Our 3 scouts observed the enemy camp, and this is what they tell us:</p>
@@ -367,7 +367,7 @@ Check solution:
 <section id="ii.-optimization-and-beer" class="level2">
 <h2 class="anchored" data-anchor-id="ii.-optimization-and-beer">🍻 II. Optimization and beer</h2>
 <center>
-<img src="https://mlabonne.github.io/blog/images/cp/cart.png" width="500" style="margin-bottom:0px; margin-top:0px;">
+<img src="../images/cp/cart.png" width="500" style="margin-bottom:0px; margin-top:0px;">
 </center>
 <p>Let’s see another problem: our army will face the enemy in a few days. In the meantime, the quartermaster has to <strong>prepare the rations</strong> that will be used during the campaign.</p>
 <p>The space in the supply wagons is <strong>limited</strong> and some rations are more <strong>popular</strong> than others. There are three possible rations:</p>
@@ -377,7 +377,7 @@ Check solution:
 <li>🍺 <strong>Beer</strong>: it takes 7 spaces but soldiers love it with a popularity of 26.</li>
 </ul>
 <center>
-<img src="https://mlabonne.github.io/blog/images/cp/table.png" width="800">
+<img src="../images/cp/table.png" width="800">
 </center>
 <p>The supply wagons have a capacity of <strong>19 spaces</strong>. How to select the best rations to <strong>maximize</strong> the popularity?</p>
 <p>This is an <strong>optimization</strong> problem we’ve already seen: actually, it is a variant of the famous <a href="https://en.wikipedia.org/wiki/Knapsack_problem">knapsack problem</a>. We could reuse the code from the previous article and just change the input parameters.</p>
@@ -489,19 +489,19 @@ Food:
 <p>CP-SAT is quite particular since it combines CP and <a href="https://en.wikipedia.org/wiki/Boolean_satisfiability_problem"><strong>SAT</strong></a>: it is part of a broader trend of merging CP, LP, SAT, and metaheuristics.</p>
 <p>We said that the previous problem could be solved with Linear Programming, so let’s compare the code of both solutions:</p>
 <center>
-<img src="https://mlabonne.github.io/blog/images/cp/code.png">
+<img src="../images/cp/code.png">
 </center>
 <p>As you can see, the syntax is quite similar but it’s not the same: model/solver vs.&nbsp;solver, <code>NewIntVar</code> instead of <code>IntVar</code>, etc. There’s a bit of translation to do, but it’s easily manageable.</p>
 <p>These two techniques are <strong>incredibly close to each other</strong>: they both handle variables with constraints and perform optimization using math and heuristics. However, CP is limited to discrete parameters, while LP handles continuous ones. On the other hand, you can implement specialized constraints like <a href="https://www.ibm.com/docs/en/icos/12.9.0?topic=variables-all-different-constraint">“all different”</a> in CP, but not in LP. Here is a summary of the main differences between these two technologies:</p>
 <center>
-<img src="https://mlabonne.github.io/blog/images/cp/comparison.png" width="800">
+<img src="../images/cp/comparison.png" width="800">
 </center>
 <p>If you want to know more about this topic, I would recommend <a href="https://pubsonline.informs.org/doi/abs/10.1287/inte.31.6.29.9647">this article</a> by Irvin J. Lustig and Jean-François Puget. CPLEX’s documentation also details the differences <a href="http://ibmdecisionoptimization.github.io/docplex-doc/mp_vs_cp.html">at this address</a>, in terms of modeling and optimization.</p>
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
 <center>
-<img src="https://mlabonne.github.io/blog/images/cp/infographic.png" width="600">
+<img src="../images/cp/infographic.png" width="600">
 </center>
 <p>Constraint Programming is another incredible technique in the <strong>mathematical optimization</strong> toolbox. It is a radically different approach compared to traditional, declarative programming. In this article,</p>
 <ul>

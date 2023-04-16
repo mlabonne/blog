@@ -224,7 +224,7 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 
 <center>
 <div id="anim_container">
-<img alt="Illustration of the Frozen Lake Environment" src="https://mlabonne.github.io/blog/images/qlearning/frozenlake.png" loading="lazy" class="aura" id="anim_inner">
+<img alt="Illustration of the Frozen Lake Environment" src="../images/qlearning/frozenlake.png" loading="lazy" class="aura" id="anim_inner">
 </div>
 </center>
 <p>The goal of this article is to <strong>teach an AI how to solve the ❄️Frozen Lake environment using reinforcement learning</strong>. Instead of reading Wikipedia articles and explaining formulas, we’re going to <strong>start from scratch and try to recreate the 🤖Q-learning</strong> algorithm by ourselves. We’ll not just understand <strong>how it works</strong>, but more importantly <strong>why it works</strong>: why was it designed that way? What are the hidden assumptions, the details that are never explained in regular courses and tutorials?</p>
@@ -246,7 +246,7 @@ F F F H       (H: hole, stuck forever)
 H F F G       (G: goal, safe)</code></pre>
 <center class="dark-bg">
 <video autoplay="" loop="" muted="" width="483" height="483" class="drop-shadow">
-<source src="https://mlabonne.github.io/blog/images/qlearning/frozenlake_blink.mp4" type="video/mp4">
+<source src="../images/qlearning/frozenlake_blink.mp4" type="video/mp4">
 
 </video>
 </center>
@@ -254,7 +254,7 @@ H F F G       (G: goal, safe)</code></pre>
 <p>Actually, it’s really easy to find several correct solutions: <strong>RIGHT</strong> <span class="math inline">\(\to\)</span> <strong>RIGHT</strong> <span class="math inline">\(\to\)</span> <strong>DOWN</strong> <span class="math inline">\(\to\)</span> <strong>DOWN</strong> <span class="math inline">\(\to\)</span> <strong>DOWN</strong> <span class="math inline">\(\to\)</span> <strong>RIGHT</strong> is an obvious one. But we could make a sequence of actions that loops around a hole 10 times before reaching the goal. This sequence is valid, but it doesn’t meet our final requirement: <strong>the agent needs to meet the goal in a minimum number of actions</strong>. In this example, the minimum number of actions to complete the game is <strong>6</strong>. We need to remember this fact to check if our agent really masters ❄️<strong>Frozen Lake</strong> or not.</p>
 <center class="dark-bg">
 <video autoplay="" loop="" muted="" width="483" height="483" class="drop-shadow">
-<source src="https://mlabonne.github.io/blog/images/qlearning/frozenlake_move.mp4" type="video/mp4">
+<source src="../images/qlearning/frozenlake_move.mp4" type="video/mp4">
 
 </video>
 </center>
@@ -397,7 +397,7 @@ HFFG</code></pre>
 <center class="dark-bg">
 <video autoplay="" loop="" muted="" width="483" height="483" class="drop-shadow">
 
-<source src="https://mlabonne.github.io/blog/images/qlearning/frozenlake_qtable.mp4" type="video/mp4">
+<source src="../images/qlearning/frozenlake_qtable.mp4" type="video/mp4">
 
 </video>
 </center>
@@ -452,7 +452,7 @@ Reward = 0.0</code></pre>
 <p>Let’s go back to our problem. Okay, we need to be lucky enough to find the goal <strong>G</strong> by accident. But once it’s done, how to backpropagate the information to the initial state? The 🤖<strong>Q-learning algorithm offers a clever solution</strong> to this issue. We need to update the value of our state-action pairs (each cell in the Q-table) considering 1/ the <strong>reward</strong> for reaching the next state, and 2/ the <strong>highest possible value in the next state</strong>.</p>
 <center class="dark-bg">
 <video autoplay="" loop="" muted="" width="483" height="483" class="drop-shadow">
-<source src="https://mlabonne.github.io/blog/images/qlearning/frozenlake_spread.mp4" type="video/mp4">
+<source src="../images/qlearning/frozenlake_spread.mp4" type="video/mp4">
 
 </video>
 </center>
@@ -467,7 +467,7 @@ Reward = 0.0</code></pre>
 <p>Okay, let’s try this new formula before implementing it. Once again, we can pretend that our agent is <strong>next to the goal G for the first time</strong>. We can update the state-action pair to win the game using our formula: <span class="math inline">\(Q_{new}(G-1, a_t) = 0 + \alpha \cdot (1 + \gamma \cdot 0 - 0)\)</span>. We can assign arbitrary values to <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\gamma\)</span> to calculate the result. With <span class="math inline">\(\alpha = 0.5\)</span> and <span class="math inline">\(\gamma = 0.9\)</span>, we get <span class="math inline">\(Q_{new}(G-1, a_t) = 0 + 0.5 \cdot (1 + 0.9 \cdot 0 - 0) = 0.5\)</span>. The second time the agent is in this state, we would get: <span class="math inline">\(Q_{new}(G-1, a_t) = 0.5 + 0.5 \cdot (1 + 0.9 \cdot 0 - 0.5) = 0.75\)</span>, then <span class="math inline">\(0.875\)</span>, <span class="math inline">\(0.9375\)</span>, <span class="math inline">\(0.96875\)</span>, etc.</p>
 <center class="dark-bg">
 <video autoplay="" loop="" muted="" width="483" height="483" class="drop-shadow">
-<source src="https://mlabonne.github.io/blog/images/qlearning/frozenlake_update.mp4" type="video/mp4">
+<source src="../images/qlearning/frozenlake_update.mp4" type="video/mp4">
 
 </video>
 </center>
@@ -674,7 +674,7 @@ Sequence = [2, 2, 1, 1, 1, 2]</code></pre>
 <p>This technique is commonly called the <strong>epsilon-greedy algorithm</strong>, where epsilon is our parameter. It is a <strong>simple but extremely efficient</strong> method to find a good tradeoff. Every time the agent has to take an action, it has a <strong>probability <span class="math inline">\(ε\)</span> of choosing a random one</strong>, and a <strong>probability <span class="math inline">\(1-ε\)</span> of choosing the one with the highest value</strong>. We can decrease the value of epsilon <strong>at the end of each episode</strong> by a fixed amount (<strong>linear decay</strong>), or based on the current value of epsilon (<strong>exponential decay</strong>).</p>
 <center class="dark-bg">
 <video autoplay="" loop="" muted="" width="800" class="no-margin">
-<source src="https://mlabonne.github.io/blog/images/qlearning/frozenlake_epsilon.mp4" type="video/mp4">
+<source src="../images/qlearning/frozenlake_epsilon.mp4" type="video/mp4">
 
 </video>
 </center>

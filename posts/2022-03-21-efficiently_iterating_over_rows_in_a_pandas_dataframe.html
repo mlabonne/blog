@@ -221,7 +221,7 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 
 
 <center>
-<img src="https://mlabonne.github.io/blog/images/dataframe/thumbnail.jpg" width="100%">
+<img src="../images/dataframe/thumbnail.jpg" width="100%">
 </center>
 <p>When I started machine learning, I followed the guidelines and created my own features by combining multiple columns in my dataset. It’s all well and good, but the way I did it was <strong>horribly inefficient</strong>. I had to wait several minutes to do the most basic operations.</p>
 <p>My problem was simple: I didn’t know the fastest way to iterate over rows in Pandas.</p>
@@ -738,7 +738,7 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
 <center>
-<img src="https://mlabonne.github.io/blog/images/dataframe/perfplot.png" width="800">
+<img src="../images/dataframe/perfplot.png" width="800">
 </center>
 <p>Don’t be like me: if you need to iterate over rows in a DataFrame, <strong>vectorization</strong> is the way to go! You can find the code to reproduce the experiments <a href="https://colab.research.google.com/drive/1v9v4j1MnklaCd9eFcuGnB5x_5FoINmRe?usp=sharing">at this address</a>. Vectorization is not harder to read, it doesn’t take longer to write, and the performance gain is incredible.</p>
 <p>It’s not just about performance: understanding how each method works under the hood helped me to <strong>write better code</strong>. Performance gains are always based on the same techniques: transforming data into vectors and matrices to take advantage of parallel processing. Alas, this is often at the expense of readability. But it doesn’t have to be.</p>
