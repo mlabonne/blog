@@ -106,22 +106,36 @@ gtag('js', new Date());
 gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
 
 <link rel="stylesheet" href="../styles.css">
 <meta property="og:title" content="Maxime Labonne - Integer vs.&nbsp;Linear Programming in Python">
 <meta property="og:description" content="Mixed Integer Programming for optimization with Google OR-Tools">
-<meta property="og:image" content="https://mlabonne.github.io/images/integerprogramming/thumbnail.jpg">
+<meta property="og:image" content="https://mlabonne.github.io/blog/images/integerprogramming/thumbnail.jpg">
 <meta property="og:site-name" content="Maxime Labonne">
 <meta name="twitter:title" content="Maxime Labonne - Integer vs.&nbsp;Linear Programming in Python">
 <meta name="twitter:description" content="Mixed Integer Programming for optimization with Google OR-Tools">
-<meta name="twitter:image" content="https://mlabonne.github.io/images/integerprogramming/thumbnail.jpg">
+<meta name="twitter:image" content="https://mlabonne.github.io/blog/images/integerprogramming/thumbnail.jpg">
 <meta name="twitter:creator" content="@maximelabonne">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -137,18 +151,25 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../about.html" rel="" target="">
- <span class="menu-text">About</span></a>
+    <a class="nav-link" href="../book.html" rel="" target="">
+ <span class="menu-text">Book</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../publications.html" rel="" target="">
  <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../book.html" rel="" target="">
- <span class="menu-text">Book</span></a>
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/mlabonne" rel="" target=""><i class="bi bi-github" role="img">
@@ -156,7 +177,12 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
  <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://medium.com/@mlabonne" rel="" target=""><i class="bi bi-medium" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://linkedin.com/in/maxime-labonne/" rel="" target=""><i class="bi bi-linkedin" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -212,7 +238,20 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#i.-optimization-problem-types" id="toc-i.-optimization-problem-types" class="nav-link active" data-scroll-target="#i.-optimization-problem-types">📊 I. Optimization problem&nbsp;types</a></li>
+  <li><a href="#ii.-building-a-general-model" id="toc-ii.-building-a-general-model" class="nav-link" data-scroll-target="#ii.-building-a-general-model">🧱 II. Building a general model</a></li>
+  <li><a href="#iii.-combining-constraints" id="toc-iii.-combining-constraints" class="nav-link" data-scroll-target="#iii.-combining-constraints">⚔️ III. Combining constraints</a></li>
+  <li><a href="#iv.-linear-programming-vs-machine-learning" id="toc-iv.-linear-programming-vs-machine-learning" class="nav-link" data-scroll-target="#iv.-linear-programming-vs-machine-learning">🧠 IV. Linear Programming vs Machine&nbsp;Learning</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#linear-programming-course" id="toc-linear-programming-course" class="nav-link" data-scroll-target="#linear-programming-course">🥇 Linear Programming Course</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -456,8 +495,8 @@ Army:
 </tbody>
 </table>
 <p>Notice that we transformed the 💪<strong>power</strong> into two values: 💪<strong>attack</strong> and ❤️<strong>health</strong>, which is a little more detailed. Health values are higher than attack values, which is why we want to add a weighting factor to make them more comparable.</p>
-<p>Let’s take 10 as an example, so <span class="math inline">\(power = 10 \times attack + health\)</span>. Our objective function becomes:</p>
-<p><span class="math display">\[maximize \ \sum_{u \in units} (10\times attack + health) \cdot u\]</span></p>
+<p>Let’s take 10 as an example, so <span class="math inline">power = 10 \times attack + health</span>. Our objective function becomes:</p>
+<p><span class="math display">\text{maximize} \ \sum_{u \in units} (10\times attack + health) \cdot u</span></p>
 <p>Adapting our code to this new problem is actually quite simple: we just have to <strong>change the input parameters</strong> and update the <strong>objective function</strong>.</p>
 <div class="cell" data-outputid="e85623bc-00c0-4a62-e463-253fc6ce7a5c" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>UNITS <span class="op">=</span> [</span>
@@ -545,10 +584,10 @@ Army:
 <p>Now, let’s say we scouted our enemy and know that their army has a 💪power of <strong>1,000,000</strong>. We could build a much better army, but our resources are precious and it wouldn’t be very efficient: all we have to do is to build an army with a 💪<strong>power higher than 1,000,000</strong> (even 1,000,001 would be enough).</p>
 <p>In other words, the total power is now a <strong>constraint</strong> (💪 &gt; 1,000,000) instead of the objective to maximize. The new goal is to minimize the resources we need to produce this army. However, we can reuse our input parameters since they didn’t change.</p>
 <p>The new constraint can be translated as “the sum of the power of the selected units must be strictly greater than 1,000,000”.</p>
-<p><span class="math display">\[\sum_{u \in units} (10\times attack + health) \cdot u &gt; 1\,000\,000\]</span></p>
+<p><span class="math display">\sum_{u \in units} (10\times attack + health) \cdot u &gt; 1\,000\,000</span></p>
 <p>In code, we can loop through our units and resources to design this constraint.</p>
 <p>The objective function also has to change. Our goal is to <strong>minimize the sum of resources spent</strong> to build the army.</p>
-<p><span class="math display">\[minimize \ \sum_{u \in units} (food + wood + gold) \cdot u\]</span></p>
+<p><span class="math display">\text{minimize} \ \sum_{u \in units} (food + wood + gold) \cdot u</span></p>
 <p>Once again, we can loop through our resources to implement it in OR-Tools.</p>
 <div class="cell" data-outputid="c2bb06c0-4214-4fa8-c85a-a3191c17612a" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> solve_army(UNITS, DATA, RESOURCES):</span>
@@ -966,7 +1005,25 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       });
     }
   }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var filterRegex = new RegExp("https:\/\/mlabonne\.github\.io\/blog");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          // default icon
+          link.classList.add("external");
+      }
+    }
 });
+</script>
+<script src="https://utteranc.es/client.js" repo="https://github.com/mlabonne/blog" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
 </script>
 </div> <!-- /content -->
 

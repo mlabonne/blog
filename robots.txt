@@ -1,1 +1,1 @@
-Sitemap: https://mlabonne.github.io/sitemap.xml
+Sitemap: https://mlabonne.github.io/blog/sitemap.xml

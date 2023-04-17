@@ -106,22 +106,36 @@ gtag('js', new Date());
 gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
 
 <link rel="stylesheet" href="../styles.css">
 <meta property="og:title" content="Maxime Labonne - Introduction to Constraint Programming in Python">
 <meta property="og:description" content="The Programming Paradigm to Find One Solution Among 8,080,104 Candidates">
-<meta property="og:image" content="https://mlabonne.github.io/images/cp/thumbnail.jpg">
+<meta property="og:image" content="https://mlabonne.github.io/blog/images/cp/thumbnail.jpg">
 <meta property="og:site-name" content="Maxime Labonne">
 <meta name="twitter:title" content="Maxime Labonne - Introduction to Constraint Programming in Python">
 <meta name="twitter:description" content="The Programming Paradigm to Find One Solution Among 8,080,104 Candidates">
-<meta name="twitter:image" content="https://mlabonne.github.io/images/cp/thumbnail.jpg">
+<meta name="twitter:image" content="https://mlabonne.github.io/blog/images/cp/thumbnail.jpg">
 <meta name="twitter:creator" content="@maximelabonne">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -137,18 +151,25 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../about.html" rel="" target="">
- <span class="menu-text">About</span></a>
+    <a class="nav-link" href="../book.html" rel="" target="">
+ <span class="menu-text">Book</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../publications.html" rel="" target="">
  <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../book.html" rel="" target="">
- <span class="menu-text">Book</span></a>
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/mlabonne" rel="" target=""><i class="bi bi-github" role="img">
@@ -156,7 +177,12 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
  <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://medium.com/@mlabonne" rel="" target=""><i class="bi bi-medium" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://linkedin.com/in/maxime-labonne/" rel="" target=""><i class="bi bi-linkedin" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -211,7 +237,18 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#i.-satisfiability-with-the-3-scouts-problem" id="toc-i.-satisfiability-with-the-3-scouts-problem" class="nav-link active" data-scroll-target="#i.-satisfiability-with-the-3-scouts-problem">🪖 I. Satisfiability with the 3 scouts problem</a></li>
+  <li><a href="#ii.-optimization-and-beer" id="toc-ii.-optimization-and-beer" class="nav-link" data-scroll-target="#ii.-optimization-and-beer">🍻 II. Optimization and beer</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#linear-programming-course" id="toc-linear-programming-course" class="nav-link" data-scroll-target="#linear-programming-course">🥇 Linear Programming Course</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -246,18 +283,18 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 <li>They all agree that the number of soldiers <strong>doesn’t exceed 10,000</strong>.</li>
 </ul>
 <p>Our scouts have a personal way of counting soldiers, but we can <strong>combine</strong> these three observations to make a model.</p>
-<p>Let’s call the number of soldiers <span class="math inline">\(army\)</span>. We can translate our problem into the following congruence system:</p>
-<p><span class="math display">\[
-    army \equiv 0 \mod 13\\
-    army \equiv 0 \mod 19\\
+<p>Let’s call the number of soldiers <span class="math inline">army</span>. We can translate our problem into the following congruence system:</p>
+<p><span class="math display">
+    army \equiv 0 \mod 13 \\
+    army \equiv 0 \mod 19 \\
     army \equiv 0 \mod 37
-\]</span></p>
+</span></p>
 <p>If you’re not familiar with this notation, this is what it means in <strong>programming terms</strong>:</p>
-<p><span class="math display">\[
-    army\ \% \ 13 = 0\\
-    army\ \% \ 19 = 0\\
+<p><span class="math display">
+    army\ \% \ 13 = 0 \\
+    army\ \% \ 19 = 0 \\
     army\ \% \ 37 = 0
-\]</span></p>
+</span></p>
 <p>Let’s implement it with OR-Tools. The first thing we need to do is to import and create the <strong>CP-SAT model and solver</strong>.</p>
 <div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ortools.sat.python <span class="im">import</span> cp_model</span>
@@ -267,9 +304,9 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>solver <span class="op">=</span> cp_model.CpSolver()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The <strong>modeling process</strong> is very similar to what we did in Linear Programming.</p>
-<p>The first step to create our CP model is to declare the <strong>variables</strong>. In this example, we only have one: <span class="math inline">\(army\)</span>, the number of soldiers.</p>
+<p>The first step to create our CP model is to declare the <strong>variables</strong>. In this example, we only have one: <span class="math inline">army</span>, the number of soldiers.</p>
 <p>We have to give lower and upper bounds. The <strong>lower bound</strong> is 1 since we know there’s an army, and the <strong>upper bound</strong> is 10,000 according to the scouts:</p>
-<p><span class="math display">\[1 \leq army \leq 10\ 000\]</span></p>
+<p><span class="math display">1 \leq army \leq 10\ 000</span></p>
 <p>In OR-Tools, we use the <code>NewIntVar</code> method to create this variable.</p>
 <div class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Variable</span></span>
@@ -383,9 +420,9 @@ Check solution:
 <p>This is an <strong>optimization</strong> problem we’ve already seen: actually, it is a variant of the famous <a href="https://en.wikipedia.org/wiki/Knapsack_problem">knapsack problem</a>. We could reuse the code from the previous article and just change the input parameters.</p>
 <p>This time, we’ll solve it using Constraint Programming. This paradigm is not limited to finding feasible solutions. It can also perform optimization using <a href="https://en.wikipedia.org/wiki/Constrained_optimization">different algorithms</a> to handle this overhead.</p>
 <p>Let’s create a model of the problem. First of all, we have to declare three variables: 🥖<strong>bread</strong>, 🥩<strong>meat</strong>, and 🍺<strong>beer</strong>. It’s possible to have 0 of them, but their number cannot exceed the maximal capacity.</p>
-<p><span class="math display">\[0 \leq bread \leq capacity \\
+<p><span class="math display">0 \leq bread \leq capacity \\
 0 \leq meat \leq capacity \\
-0 \leq beer \leq capacity\]</span></p>
+0 \leq beer \leq capacity</span></p>
 <div class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Instantiate model and solver</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> cp_model.CpModel()</span>
@@ -398,7 +435,7 @@ Check solution:
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>beer  <span class="op">=</span> model.NewIntVar(<span class="dv">0</span>, capacity, <span class="st">'beer'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This time, we only have one constraint: the space occupied by the bread, the meat, and the beer <strong>cannot exceed the wagons’ capacity</strong> (19).</p>
-<p><span class="math display">\[1 \times bread + 3 \times meat + 7 \times beer \leq 19\]</span></p>
+<p><span class="math display">1 \times bread + 3 \times meat + 7 \times beer \leq 19</span></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Constraints</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>model.Add(<span class="dv">1</span> <span class="op">*</span> bread</span>
@@ -406,7 +443,7 @@ Check solution:
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> <span class="dv">7</span> <span class="op">*</span> beer <span class="op">&lt;=</span> capacity)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We want to <strong>maximize the total popularity</strong> of the rations that are selected:</p>
-<p><span class="math display">\[max\ 3 \times bread + 10 \times meat + 26 \times beer\]</span></p>
+<p><span class="math display">max\ 3 \times bread + 10 \times meat + 26 \times beer</span></p>
 <div class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Objective</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>model.Maximize(<span class="dv">3</span>  <span class="op">*</span> bread</span>
@@ -442,7 +479,7 @@ Food:
 </div>
 </div>
 <p>We obtained the <strong>highest popularity</strong> (68) possible with a capacity of 19.</p>
-<p>Is the constraint respected? Let’s quickly check it: 1×2🥖 + 3×1🥩 + 7×2🍺 = 19, which is indeed ≤ 19.</p>
+<p>Is the constraint respected? Let’s quickly check it: 1×2🥖+3×1🥩+7×2🍺 = 19, which is indeed ≤ 19.</p>
 <p>Okay, I’d like to ask another question: <strong>how many solutions</strong> to this problem are there? Once again, we can answer it with a specific callback to count them.</p>
 <div class="cell" data-outputid="5641b18a-1086-4e0f-ced3-3fca045a5737" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> CountSolutions(cp_model.CpSolverSolutionCallback):</span>
@@ -754,7 +791,25 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       });
     }
   }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var filterRegex = new RegExp("https:\/\/mlabonne\.github\.io\/blog");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          // default icon
+          link.classList.add("external");
+      }
+    }
 });
+</script>
+<script src="https://utteranc.es/client.js" repo="https://github.com/mlabonne/blog" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
 </script>
 </div> <!-- /content -->
 

@@ -106,22 +106,36 @@ gtag('js', new Date());
 gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
 
 <link rel="stylesheet" href="../styles.css">
 <meta property="og:title" content="Maxime Labonne - GraphSAGE: Scaling up Graph Neural Networks">
 <meta property="og:description" content="Graph Neural Network Course: Chapter 3">
-<meta property="og:image" content="https://mlabonne.github.io/images/graphsage/thumbnail.jpg">
+<meta property="og:image" content="https://mlabonne.github.io/blog/images/graphsage/thumbnail.jpg">
 <meta property="og:site-name" content="Maxime Labonne">
 <meta name="twitter:title" content="Maxime Labonne - GraphSAGE: Scaling up Graph Neural Networks">
 <meta name="twitter:description" content="Graph Neural Network Course: Chapter 3">
-<meta name="twitter:image" content="https://mlabonne.github.io/images/graphsage/thumbnail.jpg">
+<meta name="twitter:image" content="https://mlabonne.github.io/blog/images/graphsage/thumbnail.jpg">
 <meta name="twitter:creator" content="@maximelabonne">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -137,18 +151,25 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../about.html" rel="" target="">
- <span class="menu-text">About</span></a>
+    <a class="nav-link" href="../book.html" rel="" target="">
+ <span class="menu-text">Book</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../publications.html" rel="" target="">
  <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../book.html" rel="" target="">
- <span class="menu-text">Book</span></a>
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/mlabonne" rel="" target=""><i class="bi bi-github" role="img">
@@ -156,7 +177,12 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
  <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://medium.com/@mlabonne" rel="" target=""><i class="bi bi-medium" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://linkedin.com/in/maxime-labonne/" rel="" target=""><i class="bi bi-linkedin" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -212,7 +238,19 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#i.-pubmed-dataset" id="toc-i.-pubmed-dataset" class="nav-link active" data-scroll-target="#i.-pubmed-dataset">🌐 I. PubMed dataset</a></li>
+  <li><a href="#ii.-graphsage-in-theory" id="toc-ii.-graphsage-in-theory" class="nav-link" data-scroll-target="#ii.-graphsage-in-theory">🧙‍♂️ II. GraphSAGE in theory</a></li>
+  <li><a href="#iii.-graphsage-in-pytorch-geometric" id="toc-iii.-graphsage-in-pytorch-geometric" class="nav-link" data-scroll-target="#iii.-graphsage-in-pytorch-geometric">🧠 III. GraphSAGE in PyTorch Geometric</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#graph-neural-network-course" id="toc-graph-neural-network-course" class="nav-link" data-scroll-target="#graph-neural-network-course">🌐 Graph Neural Network Course</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -453,9 +491,9 @@ Subgraph 3: Data(x=[189, 500], edge_index=[2, 229], y=[189], train_mask=[189], v
 
 </video>
 </center>
-<p>The <strong>mean aggregator</strong> is the simplest one. The idea is close to a GCN approach: 1. The hidden features of the target node and its selected neighbors are averaged (nodes in <span class="math inline">\(\mathcal{\tilde{N}}_i\)</span>). 2. A linear transformation with a weight matrix <span class="math inline">\(\textbf{W}\)</span> is applied.</p>
+<p>The <strong>mean aggregator</strong> is the simplest one. The idea is close to a GCN approach: 1. The hidden features of the target node and its selected neighbors are averaged (nodes in <span class="math inline">\mathcal{\tilde{N}}_i</span>). 2. A linear transformation with a weight matrix <span class="math inline">\textbf{W}</span> is applied.</p>
 <p>In other words, we can write:</p>
-<p><span class="math display">\[\textbf{h}_i' = \textbf{W} \cdot mean_{j \in \mathcal{\tilde{N}}_i}(\textbf{h}_j)\]</span></p>
+<p><span class="math display">\textbf{h}_i' = \textbf{W} \cdot mean_{j \in \mathcal{\tilde{N}}_i}(\textbf{h}_j)</span></p>
 <p>The result can then be fed to a nonlinear activation function like ReLU.</p>
 <p>The <strong>LSTM aggregator</strong> may seem counter-intuitive because this architecture is sequential: it assigns an order to our unordered nodes. This is why the authors randomly shuffle them to force the LSTM only to consider the hidden features. Nevertheless, it is the best-performing technique in their benchmarks.</p>
 <p>The <strong>pooling aggregator</strong> feeds each neighbor’s hidden vector to a feedforward neural network. Then, an elementwise max operation is applied to the result to keep the highest value for each feature.</p>
@@ -464,8 +502,8 @@ Subgraph 3: Data(x=[189, 500], edge_index=[2, 229], y=[189], train_mask=[189], v
 <section id="iii.-graphsage-in-pytorch-geometric" class="level2">
 <h2 class="anchored" data-anchor-id="iii.-graphsage-in-pytorch-geometric">🧠 III. GraphSAGE in PyTorch Geometric</h2>
 <p>We can easily implement a GraphSAGE architecture in PyTorch Geometric with the <code>SAGEConv</code> layer. This implementation uses two weight matrices instead of one, like UberEats’ version of GraphSAGE:</p>
-<p><span class="math display">\[\textbf{h}_i' = \textbf{W}_1\textbf{h}_i + \textbf{W}_2 \cdot mean_{j \in \mathcal{N}_i}(\textbf{h}_j)\]</span></p>
-<p>Let’s create a network with two <code>SAGEConv</code> layers: * The first one uses <span class="math inline">\(ReLU\)</span> as the activation function and a <strong>dropout layer</strong>; * The second one directly outputs the <strong>node embeddings</strong>.</p>
+<p><span class="math display">\textbf{h}_i' = \textbf{W}_1\textbf{h}_i + \textbf{W}_2 \cdot mean_{j \in \mathcal{N}_i}(\textbf{h}_j)</span></p>
+<p>Let’s create a network with two <code>SAGEConv</code> layers: * The first one uses <span class="math inline">ReLU</span> as the activation function and a <strong>dropout layer</strong>; * The second one directly outputs the <strong>node embeddings</strong>.</p>
 <p>As we’re dealing with a multi-class classification task, we’ll use the cross-entropy loss as our loss function. I also added an L2 regularization of 0.0005 for good measure.</p>
 <p>To see the benefits of GraphSAGE, let’s compare it with a GCN and a GAT without any sampling.</p>
 <div class="cell">
@@ -1028,7 +1066,25 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       });
     }
   }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var filterRegex = new RegExp("https:\/\/mlabonne\.github\.io\/blog");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          // default icon
+          link.classList.add("external");
+      }
+    }
 });
+</script>
+<script src="https://utteranc.es/client.js" repo="https://github.com/mlabonne/blog" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
 </script>
 </div> <!-- /content -->
 

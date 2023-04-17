@@ -2,8 +2,8 @@
 
 center>img {
     max-width: 100%;
-    padding-top: 2rem;
-    padding-bottom: 2rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .content {
@@ -15,12 +15,16 @@ body {
 }
 
 h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2 {
-    color: #000;
+    color: #1e2124;
 }
 
 h1, .h1 {
     color: #fff;
     font-size: 300%;
+}
+
+h2, .h2 {
+    border-bottom: 1px solid rgba(0,0,0,.1);
 }
 
 .description {
@@ -38,19 +42,17 @@ p a:hover, p a:active, p a:visited {
 }
 
 div.sourceCode {
-    background-color: rgba(247,247,249,0.0);
-    border: rgba(247,247,249,0.0);
+    background-color: rgba(247,247,249,1);
+    border: 1px solid rgba(247,247,249,1);
+    border-radius: 10px;
 }
 
-pre>code {
-    background-color: rgba(247,247,249,0.8);
-    border: rgba(247,247,249,0.8);
-}
-
-.cell-output>pre>code {
+.cell-output {
     font-weight: 600;
-    background-color: rgba(247,247,249,0.4);
+    background-color: rgba(247,247,249,.4);
+    border: 1px solid rgba(247,247,249,.4);
     border: rgba(247,247,249,0.8);
+    /* padding: 2px; */
 }
 
 .quarto-title-banner, .navbar-light, .navbar-dark {
@@ -58,9 +60,25 @@ pre>code {
 }
 
 .quarto-post {
-    background-color: rgba(255,255,255,0.5);
-    border-radius: 20px;
-    padding: 15px;
+    background-color: rgba(255,255,255,0.8);
+    border-radius: 10px;
+}
+
+.thumbnail {
+    margin-top: 12px;
+    margin-left: 16px;
+}
+
+.body {
+    margin: 16px;
+    margin-left: 0px;
+}
+
+div.quarto-post .metadata {
+    /* flex-basis: 15%; */
+    /* font-size: 1em; */
+    margin: 16px;
+    /* display:none; */
 }
 
 .quarto-title .quarto-categories .quarto-category {

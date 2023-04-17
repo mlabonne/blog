@@ -106,22 +106,36 @@ gtag('js', new Date());
 gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
 
 <link rel="stylesheet" href="../styles.css">
 <meta property="og:title" content="Maxime Labonne - Introduction to Linear Programming in Python">
 <meta property="og:description" content="A guide to mathematical optimization with Google OR-Tools">
-<meta property="og:image" content="https://mlabonne.github.io/images/linearoptimization/thumbnail.jpg">
+<meta property="og:image" content="https://mlabonne.github.io/blog/images/linearoptimization/thumbnail.jpg">
 <meta property="og:site-name" content="Maxime Labonne">
 <meta name="twitter:title" content="Maxime Labonne - Introduction to Linear Programming in Python">
 <meta name="twitter:description" content="A guide to mathematical optimization with Google OR-Tools">
-<meta name="twitter:image" content="https://mlabonne.github.io/images/linearoptimization/thumbnail.jpg">
+<meta name="twitter:image" content="https://mlabonne.github.io/blog/images/linearoptimization/thumbnail.jpg">
 <meta name="twitter:creator" content="@maximelabonne">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -137,18 +151,25 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../about.html" rel="" target="">
- <span class="menu-text">About</span></a>
+    <a class="nav-link" href="../book.html" rel="" target="">
+ <span class="menu-text">Book</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../publications.html" rel="" target="">
  <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../book.html" rel="" target="">
- <span class="menu-text">Book</span></a>
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/mlabonne" rel="" target=""><i class="bi bi-github" role="img">
@@ -156,7 +177,12 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
  <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://medium.com/@mlabonne" rel="" target=""><i class="bi bi-medium" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://linkedin.com/in/maxime-labonne/" rel="" target=""><i class="bi bi-linkedin" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -212,7 +238,21 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#i.-solvers" id="toc-i.-solvers" class="nav-link active" data-scroll-target="#i.-solvers">🧠 I.&nbsp;Solvers</a></li>
+  <li><a href="#ii.-variables" id="toc-ii.-variables" class="nav-link" data-scroll-target="#ii.-variables">🧮 II. Variables</a></li>
+  <li><a href="#iii.-constraints" id="toc-iii.-constraints" class="nav-link" data-scroll-target="#iii.-constraints">⛓️ III. Constraints</a></li>
+  <li><a href="#iv.-objective" id="toc-iv.-objective" class="nav-link" data-scroll-target="#iv.-objective">🎯 IV. Objective</a></li>
+  <li><a href="#v.-optimize" id="toc-v.-optimize" class="nav-link" data-scroll-target="#v.-optimize">🥇 V. Optimize!</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#linear-programming-course" id="toc-linear-programming-course" class="nav-link" data-scroll-target="#linear-programming-course">🥇 Linear Programming Course</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -300,9 +340,9 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 <li><a href="https://google.github.io/or-tools/python/ortools/linear_solver/pywraplp.html#Solver.BoolVar"><code>BoolVar</code></a> for <strong>boolean</strong> variables.</li>
 </ul>
 <p>We’re looking for <strong>round numbers</strong> of units, so let’s choose <code>IntVar</code>. We then need to specify lower and upper bounds for these variables. We want at least 0 unit, but we don’t really have an upper bound. So we can say that our upper bound is infinity (or any big number we will never reach). It can be written as:</p>
-<p><span class="math display">\[0 \leq swordsmen &lt; \infty \\
+<p><span class="math display">0 \leq swordsmen &lt; \infty \\
 0 \leq bowmen &lt; \infty \\
-0 \leq horsemen &lt; \infty\]</span></p>
+0 \leq horsemen &lt; \infty</span></p>
 <p>Let’s translate it into code. Infinity is replaced by <code>solver.infinity()</code> in OR-Tools. Other than that, the syntax is <strong>quite straightforward</strong>:</p>
 <div class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the variables we want to optimize</span></span>
@@ -323,9 +363,9 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 <li>1 <strong>horseman</strong> = 🌾140 + 🪙100.</li>
 </ul>
 <p>We can write one constraint per resource as follows:</p>
-<p><span class="math display">\[60\times swordsmen + 80\times bowmen + 140\times horsemen \leq 1200 \\
+<p><span class="math display">60\times swordsmen + 80\times bowmen + 140\times horsemen \leq 1200 \\
 20\times swordsmen + 10\times bowmen \leq 800 \\
-40\times bowmen + 100\times horsemen \leq 600\]</span></p>
+40\times bowmen + 100\times horsemen \leq 600</span></p>
 <p>In OR-Tools, we simply add the constraints to our solver instance with <a href="https://google.github.io/or-tools/python/ortools/linear_solver/pywraplp.html#Solver.Add"><code>solver.Add()</code></a>.</p>
 <div class="cell" data-outputid="5ea3e83b-2079-4e03-d956-65375d393e5b">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add constraints for each resource</span></span>
@@ -337,14 +377,14 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 <section id="iv.-objective" class="level2">
 <h2 class="anchored" data-anchor-id="iv.-objective">🎯 IV. Objective</h2>
 <p>Now that we have our variables and constraints, we want to <strong>define our goal</strong> (or objective function).</p>
-<p>In linear programming, this function <strong>has to be linear</strong> (like the constraints), so of the form <span class="math inline">\(ax + by + cz + d\)</span>. In our example, the objective is quite clear: we want to recruit the army with the highest power. The table gives us the following power values:</p>
+<p>In linear programming, this function <strong>has to be linear</strong> (like the constraints), so of the form <span class="math inline">ax + by + cz + d</span>. In our example, the objective is quite clear: we want to recruit the army with the highest power. The table gives us the following power values:</p>
 <ul>
 <li>1 <strong>swordsman</strong> = 💪70;</li>
 <li>1 <strong>bowman</strong> = 💪95;</li>
 <li>1 <strong>horseman</strong> = 💪230.</li>
 </ul>
 <p>Maximizing the power of the army amounts to <strong>maximizing the sum of the power of each unit</strong>. Our objective function can be written as:</p>
-<p><span class="math display">\[max\ 70\times swordsmen + 95\times bowmen + 230\times horsemen\]</span></p>
+<p><span class="math display">\max\ 70\times swordsmen + 95\times bowmen + 230\times horsemen</span></p>
 <p>In general, there are two types of objective functions: <strong>maximizing</strong> and <strong>minimizing</strong>. In OR-Tools, we declare this goal with <a href="https://google.github.io/or-tools/python/ortools/linear_solver/pywraplp.html#Solver.Maximize"><code>solver.Maximize()</code></a> or <a href="https://google.github.io/or-tools/python/ortools/linear_solver/pywraplp.html#Solver.Minimize"><code>solver.Minimize()</code></a>.</p>
 <div class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Maximize the objective function</span></span>
@@ -393,7 +433,7 @@ Army:
 <p>Let’s unpack this result:</p>
 <ul>
 <li>The solver decided to take the <strong>maximum number of 🐎horsemen</strong> (6, since we only have 🪙600 and they each cost 🪙100);</li>
-<li>The remaining resources are spent in 🗡️<strong>swordsmen</strong>: we have <span class="math inline">\(1200 – 6*140 = 360\)</span>🌾food left, which is why the solver chose 6 🗡️swordsmen;</li>
+<li>The remaining resources are spent in 🗡️<strong>swordsmen</strong>: we have <span class="math inline">1200 – 6*140 = 360</span>🌾food left, which is why the solver chose 6 🗡️swordsmen;</li>
 <li>We can deduce that the horsemen are the best unit and the <strong>bowmen are the worst one</strong> because they haven’t been chosen at all.</li>
 </ul>
 <p>Okay, but there’s something quite weird: these numbers are not round, even though we specified that we wanted <strong>integers</strong> (<code>IntVar</code>). So what happened?</p>
@@ -663,7 +703,25 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       });
     }
   }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var filterRegex = new RegExp("https:\/\/mlabonne\.github\.io\/blog");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          // default icon
+          link.classList.add("external");
+      }
+    }
 });
+</script>
+<script src="https://utteranc.es/client.js" repo="https://github.com/mlabonne/blog" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
 </script>
 </div> <!-- /content -->
 

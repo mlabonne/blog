@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="description" content="Practical techniques and architectures for building powerful graph and deep learning apps with PyTorch">
 
-<title>Maxime Labonne - Book</title>
+<title>Maxime Labonne - Hands-On Graph Neural Networks Using Python</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -71,13 +72,13 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 
 
 <link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="Maxime Labonne - Book">
-<meta property="og:description" content="">
-<meta property="og:image" content="https://mlabonne.github.io/images/gnnbook/gnnbook.jpg">
+<meta property="og:title" content="Maxime Labonne - Hands-On Graph Neural Networks Using Python">
+<meta property="og:description" content="Practical techniques and architectures for building powerful graph and deep learning apps with PyTorch">
+<meta property="og:image" content="https://mlabonne.github.io/blog/images/gnnbook/gnnbook.jpg">
 <meta property="og:site-name" content="Maxime Labonne">
-<meta name="twitter:title" content="Maxime Labonne - Book">
-<meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://mlabonne.github.io/images/gnnbook/gnnbook.jpg">
+<meta name="twitter:title" content="Maxime Labonne - Hands-On Graph Neural Networks Using Python">
+<meta name="twitter:description" content="Practical techniques and architectures for building powerful graph and deep learning apps with PyTorch">
+<meta name="twitter:image" content="https://mlabonne.github.io/blog/images/gnnbook/gnnbook.jpg">
 <meta name="twitter:creator" content="@maximelabonne">
 <meta name="twitter:card" content="summary_large_image">
 </head>
@@ -98,18 +99,25 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html" rel="" target="">
- <span class="menu-text">About</span></a>
+    <a class="nav-link active" href="./book.html" rel="" target="" aria-current="page">
+ <span class="menu-text">Book</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./publications.html" rel="" target="">
  <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./book.html" rel="" target="" aria-current="page">
- <span class="menu-text">Book</span></a>
+    <a class="nav-link" href="./about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/mlabonne" rel="" target=""><i class="bi bi-github" role="img">
@@ -117,7 +125,12 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
  <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://medium.com/@mlabonne" rel="" target=""><i class="bi bi-medium" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://linkedin.com/in/maxime-labonne/" rel="" target=""><i class="bi bi-linkedin" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -129,31 +142,39 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Hands-On Graph Neural Networks Using Python</h1>
+                  <div>
+        <div class="description">
+          Practical techniques and architectures for building powerful graph and deep learning apps with PyTorch
+        </div>
+      </div>
+                </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Book</h1>
-</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<div class="quarto-title-meta">
 
-    
-  
-    
-  </div>
-  
-
-</header>
-
-<p>I am thrilled to introduce my book on graph neural networks, which is the result of almost a year’s worth of hard work, research, and collaboration with fellow experts in the field. As someone who’s passionate about GNNs, I wanted to create a <strong>comprehensive guide that could help both beginners and advanced practitioners</strong>. This book has been carefully crafted to provide a step-by-step guide for those new to the world of GNNs, while also offering advanced use cases and examples for experienced practitioners. What’s more, the entire code with examples and use cases is <a href="https://github.com/PacktPublishing/Hands-On-Graph-Neural-Networks-Using-Python">freely available on Github</a>, making it easy for you to get started with implementing GNNs in Python.</p>
+<p>I am thrilled to introduce my book on graph neural networks, which is the result of almost a year’s worth of hard work, research, and collaboration with fellow experts in the field.</p>
+<p>As someone who’s passionate about GNNs, I wanted to create a <strong>comprehensive guide that could help both beginners and advanced practitioners</strong>. This book has been carefully crafted to provide a step-by-step guide for those new to the world of GNNs, while also offering advanced use cases and examples for experienced practitioners. What’s more, the entire code with examples and use cases is <a href="https://github.com/PacktPublishing/Hands-On-Graph-Neural-Networks-Using-Python">freely available on Github</a>, making it easy for you to get started with implementing GNNs in Python.</p>
 <center>
 <img src="images/gnnbook/gnnbook.jpg" alt="Hands-On Graph Neural Networks Using Python">
 </center>
@@ -191,7 +212,9 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 </section>
 <section id="get-your-copy-now" class="level2">
 <h2 class="anchored" data-anchor-id="get-your-copy-now">🔗 Get your copy now!</h2>
-<p><a href="https://a.co/d/hIzOphi">Amazon US</a> | <a href="https://amzn.eu/d/5KEhpFu">Amazon EU</a> | <a href="https://www.packtpub.com/product/hands-on-graph-neural-networks-using-python/9781804617526">Packt</a></p>
+<center style="font-size: 125%">
+<a href="https://a.co/d/hIzOphi">Amazon US</a> | <a href="https://amzn.eu/d/5KEhpFu">Amazon EU</a> | <a href="https://www.packtpub.com/product/hands-on-graph-neural-networks-using-python/9781804617526">Packt</a>
+</center>
 
 
 </section>
@@ -428,7 +451,25 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       });
     }
   }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var filterRegex = new RegExp("https:\/\/mlabonne\.github\.io\/blog");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          // default icon
+          link.classList.add("external");
+      }
+    }
 });
+</script>
+<script src="https://utteranc.es/client.js" repo="https://github.com/mlabonne/blog" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
 </script>
 </div> <!-- /content -->
 

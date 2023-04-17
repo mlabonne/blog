@@ -106,26 +106,40 @@ gtag('js', new Date());
 gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
 
 <link rel="stylesheet" href="../styles.css">
 <meta property="og:title" content="Maxime Labonne - Q-learning for beginners">
 <meta property="og:description" content="Train an AI to solve the Frozen Lake environment">
-<meta property="og:image" content="https://mlabonne.github.io/images/qlearning/frozenlake_thumbnail.png">
+<meta property="og:image" content="https://mlabonne.github.io/blog/images/qlearning/frozenlake_thumbnail.png">
 <meta property="og:site-name" content="Maxime Labonne">
 <meta property="og:image:height" content="480">
 <meta property="og:image:width" content="853">
 <meta name="twitter:title" content="Maxime Labonne - Q-learning for beginners">
 <meta name="twitter:description" content="Train an AI to solve the Frozen Lake environment">
-<meta name="twitter:image" content="https://mlabonne.github.io/images/qlearning/frozenlake_thumbnail.png">
+<meta name="twitter:image" content="https://mlabonne.github.io/blog/images/qlearning/frozenlake_thumbnail.png">
 <meta name="twitter:creator" content="@maximelabonne">
 <meta name="twitter:image-height" content="480">
 <meta name="twitter:image-width" content="853">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -141,18 +155,25 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../about.html" rel="" target="">
- <span class="menu-text">About</span></a>
+    <a class="nav-link" href="../book.html" rel="" target="">
+ <span class="menu-text">Book</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../publications.html" rel="" target="">
  <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../book.html" rel="" target="">
- <span class="menu-text">Book</span></a>
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/mlabonne" rel="" target=""><i class="bi bi-github" role="img">
@@ -160,7 +181,12 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
  <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://medium.com/@mlabonne" rel="" target=""><i class="bi bi-medium" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://linkedin.com/in/maxime-labonne/" rel="" target=""><i class="bi bi-linkedin" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -215,7 +241,20 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#i.-frozen-lake" id="toc-i.-frozen-lake" class="nav-link active" data-scroll-target="#i.-frozen-lake">❄️ I. Frozen Lake</a></li>
+  <li><a href="#ii.-q-table" id="toc-ii.-q-table" class="nav-link" data-scroll-target="#ii.-q-table">🏁 II. Q-table</a></li>
+  <li><a href="#iii.-q-learning" id="toc-iii.-q-learning" class="nav-link" data-scroll-target="#iii.-q-learning">🤖 III. Q-learning</a></li>
+  <li><a href="#iv.-epsilon-greedy-algorithm" id="toc-iv.-epsilon-greedy-algorithm" class="nav-link" data-scroll-target="#iv.-epsilon-greedy-algorithm">📐 IV. Epsilon-Greedy algorithm</a></li>
+  <li><a href="#iv.-challenge-slippery-frozen-lake" id="toc-iv.-challenge-slippery-frozen-lake" class="nav-link" data-scroll-target="#iv.-challenge-slippery-frozen-lake">❄️ IV. Challenge: slippery Frozen Lake</a></li>
+  <li><a href="#v.-conclusion" id="toc-v.-conclusion" class="nav-link" data-scroll-target="#v.-conclusion">🔚 V. Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -250,8 +289,8 @@ H F F G       (G: goal, safe)</code></pre>
 
 </video>
 </center>
-<p>We can try to manually solve the example above to understand the game. Let’s see if the following sequence of actions is a correct solution: <strong>RIGHT</strong> <span class="math inline">\(\to\)</span> <strong>RIGHT</strong> <span class="math inline">\(\to\)</span> <strong>RIGHT</strong> <span class="math inline">\(\to\)</span> <strong>DOWN</strong> <span class="math inline">\(\to\)</span> <strong>DOWN</strong> <span class="math inline">\(\to\)</span> <strong>DOWN</strong>. Our agent starts on tile <strong>S</strong>, so we move right on a frozen surface ✅, then again ✅, then once more ✅, then we go down and find a hole ❌.</p>
-<p>Actually, it’s really easy to find several correct solutions: <strong>RIGHT</strong> <span class="math inline">\(\to\)</span> <strong>RIGHT</strong> <span class="math inline">\(\to\)</span> <strong>DOWN</strong> <span class="math inline">\(\to\)</span> <strong>DOWN</strong> <span class="math inline">\(\to\)</span> <strong>DOWN</strong> <span class="math inline">\(\to\)</span> <strong>RIGHT</strong> is an obvious one. But we could make a sequence of actions that loops around a hole 10 times before reaching the goal. This sequence is valid, but it doesn’t meet our final requirement: <strong>the agent needs to meet the goal in a minimum number of actions</strong>. In this example, the minimum number of actions to complete the game is <strong>6</strong>. We need to remember this fact to check if our agent really masters ❄️<strong>Frozen Lake</strong> or not.</p>
+<p>We can try to manually solve the example above to understand the game. Let’s see if the following sequence of actions is a correct solution: <strong>RIGHT</strong> <span class="math inline">\to</span> <strong>RIGHT</strong> <span class="math inline">\to</span> <strong>RIGHT</strong> <span class="math inline">\to</span> <strong>DOWN</strong> <span class="math inline">\to</span> <strong>DOWN</strong> <span class="math inline">\to</span> <strong>DOWN</strong>. Our agent starts on tile <strong>S</strong>, so we move right on a frozen surface ✅, then again ✅, then once more ✅, then we go down and find a hole ❌.</p>
+<p>Actually, it’s really easy to find several correct solutions: <strong>RIGHT</strong> <span class="math inline">\to</span> <strong>RIGHT</strong> <span class="math inline">\to</span> <strong>DOWN</strong> <span class="math inline">\to</span> <strong>DOWN</strong> <span class="math inline">\to</span> <strong>DOWN</strong> <span class="math inline">\to</span> <strong>RIGHT</strong> is an obvious one. But we could make a sequence of actions that loops around a hole 10 times before reaching the goal. This sequence is valid, but it doesn’t meet our final requirement: <strong>the agent needs to meet the goal in a minimum number of actions</strong>. In this example, the minimum number of actions to complete the game is <strong>6</strong>. We need to remember this fact to check if our agent really masters ❄️<strong>Frozen Lake</strong> or not.</p>
 <center class="dark-bg">
 <video autoplay="" loop="" muted="" width="483" height="483" class="drop-shadow">
 <source src="../images/qlearning/frozenlake_move.mp4" type="video/mp4">
@@ -276,8 +315,8 @@ HFFG</code></pre>
 </section>
 <section id="ii.-q-table" class="level2">
 <h2 class="anchored" data-anchor-id="ii.-q-table">🏁 II. Q-table</h2>
-<p>In ❄️<strong>Frozen Lake</strong>, there are 16 tiles, which means our agent can be found in 16 different positions, called <strong>states</strong>. For each state, there are 4 possible actions: go ◀️<strong>LEFT</strong>, 🔽<strong>DOWN</strong>, ▶️<strong>RIGHT</strong>, and 🔼<strong>UP</strong>. Learning how to play Frozen Lake is like <strong>learning which action you should choose in every state</strong>. To know which action is the best in a given state, we would like to assign a <strong>quality value</strong> to our actions. We have 16 states and 4 actions, so want to calculate <span class="math inline">\(16 \times 4 = 64\)</span> values.</p>
-<p>A nice way of representing it is using a table, known as a Q-table, where <strong>rows list every state <span class="math inline">\(s\)</span></strong> and <strong>columns list every action <span class="math inline">\(a\)</span></strong>. In this Q-table, each cell contains a value <span class="math inline">\(Q(s, a)\)</span>, which is the <strong>value (quality) of the action <span class="math inline">\(a\)</span> in the state <span class="math inline">\(s\)</span></strong> (1 if it’s the best action possible, 0 if it’s really bad). When our agent is in a particular state <span class="math inline">\(s\)</span>, it <strong>just has to check this table to see which action has the highest value</strong>. Taking the action with the highest value makes sense but <strong>we’ll see later that we can design something even better</strong>…</p>
+<p>In ❄️<strong>Frozen Lake</strong>, there are 16 tiles, which means our agent can be found in 16 different positions, called <strong>states</strong>. For each state, there are 4 possible actions: go ◀️<strong>LEFT</strong>, 🔽<strong>DOWN</strong>, ▶️<strong>RIGHT</strong>, and 🔼<strong>UP</strong>. Learning how to play Frozen Lake is like <strong>learning which action you should choose in every state</strong>. To know which action is the best in a given state, we would like to assign a <strong>quality value</strong> to our actions. We have 16 states and 4 actions, so want to calculate <span class="math inline">16 \times 4 = 64</span> values.</p>
+<p>A nice way of representing it is using a table, known as a Q-table, where <strong>rows list every state <span class="math inline">s</span></strong> and <strong>columns list every action <span class="math inline">a</span></strong>. In this Q-table, each cell contains a value <span class="math inline">Q(s, a)</span>, which is the <strong>value (quality) of the action <span class="math inline">a</span> in the state <span class="math inline">s</span></strong> (1 if it’s the best action possible, 0 if it’s really bad). When our agent is in a particular state <span class="math inline">s</span>, it <strong>just has to check this table to see which action has the highest value</strong>. Taking the action with the highest value makes sense but <strong>we’ll see later that we can design something even better</strong>…</p>
 <table class="table">
 <thead>
 <tr class="header">
@@ -334,7 +373,7 @@ HFFG</code></pre>
 </tbody>
 </table>
 <center>
-<i>Example of Q-table, where each cell contains the value <span class="math inline">\(Q(a, s)\)</span> of the action <span class="math inline">\(a\)</span> (column) in a given state <span class="math inline">\(s\)</span> (row)</i>
+<i>Example of Q-table, where each cell contains the value <span class="math inline">Q(a, s)</span> of the action <span class="math inline">a</span> (column) in a given state <span class="math inline">s</span> (row)</i>
 </center>
 <p>Let’s create our Q-table and fill it with zeros since <strong>we still have no idea of the value of each action in each state</strong>.</p>
 <div class="cell" data-outputid="8049c3c4-366c-43f5-a0b5-bcccf46a777a" data-execution_count="3">
@@ -457,14 +496,14 @@ Reward = 0.0</code></pre>
 </video>
 </center>
 <p>We know we get a reward of 1 when we move to <strong>G</strong>. As we just said, the value of <strong>the state next to G</strong> (let’s call it <strong>G-1</strong>) with <strong>the relevant action to reach G</strong> is increased thanks to the reward. Okay good, end of the episode: the agent won and we restart the game. Now, the next time the agent is in <strong>a state next to G-1</strong>, it will increase the value of this state (let’s call it <strong>G-2</strong>) with <strong>the relevant action to reach G-1</strong>. The next time the agent is in a state next to <strong>G-2</strong>, it will do the same. Rinse and repeat, until the update reaches the initial state <strong>S</strong>.</p>
-<p>Let’s try to find the <strong>update formula</strong> to backpropagate the values from <strong>G</strong> to <strong>S</strong>. Remember: values denote the <strong>quality</strong> of <strong>an action in a specific state</strong> (0 if it’s terrible, 1 if it’s the best action possible in this state). We try to <strong>update the value</strong> of the action <span class="math inline">\(a_t\)</span> (for example, <span class="math inline">\(a_t = 0\)</span> if the action is left) in the state <span class="math inline">\(s_t\)</span> (for example, <span class="math inline">\(s_t = 0\)</span> when the agent is in the initial state <strong>S</strong>). This <strong>value is just a cell in our Q-table</strong>, corresponding to the <strong>row number <span class="math inline">\(s_t\)</span> and the column number <span class="math inline">\(a_t\)</span></strong>: this value is formally called <span class="math inline">\(Q(s_t, a_t)\)</span>.</p>
-<p>As we said previously, we need to update it using 1/ <strong>the reward for the next state</strong> (formally noted <span class="math inline">\(r_t\)</span>), and 2/ <strong>the maximum possible value in the next state</strong> (<span class="math inline">\(max_aQ(s_{t+1},a)\)</span>). Therefore, the update formula must look like:</p>
-<p><span class="math display">\[Q_{new}(s_t, a_t) = Q(s_t, a_t) + r_t + max_aQ(s_{t+1}, a)\]</span></p>
-<p>The new value is the current one + the reward + the highest value in the next state. We can manually try our formula to check if it looks correct: let’s pretend our agent is <strong>in the state G-1 next to the goal G for the first time</strong>. We can update the value corresponding to the winning action in this state <strong>G-1</strong> with <span class="math inline">\(Q_{new}(G-1, a_t) = Q(G-1, a_t) + r_t + max_aQ(G, a)\)</span>, where <span class="math inline">\(Q(G-1, a_t) = 0\)</span> and <span class="math inline">\(max_aQ(G, a) = 0\)</span> because the Q-table is empty, and <span class="math inline">\(r_t = 1\)</span> because we get the only reward in this environment. We obtain <span class="math inline">\(Q_{new}(G-1, a_t) = 1\)</span>. The next time the agent is in a state next to this one (<strong>G-2</strong>), we update it too using the formula and get the same result: <span class="math inline">\(Q_{new}(G-2, a_t) = 1\)</span>. In the end, <strong>we backpropagate ones in the Q-table</strong> from <strong>G</strong> to <strong>S</strong>. Okay it works, but the result is <strong>binary</strong>: either it’s the <strong>wrong state-action pair or the best one</strong>. We would like more nuance…</p>
-<p>Actually, we almost <strong>found the true Q-learning update formula</strong> with common sense. The nuance we’re looking for adds two parameters: * <span class="math inline">\(\alpha\)</span> is the 💡<strong>learning rate</strong> (between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>), which is how much we should change the original <span class="math inline">\(Q(s_t, a_t)\)</span> value. If <span class="math inline">\(\alpha = 0\)</span>, the value <strong>never changes</strong>, but if <span class="math inline">\(\alpha = 1\)</span>, the value <strong>changes extremely fast</strong>. In our attempt, we didn’t limit the learning rate so <span class="math inline">\(\alpha = 1\)</span>. But this is too fast in reality: the reward and the maximum value in the next state quickly <strong>overpower the current value</strong>. We need to find a <strong>balance between the importance of past and new knowledge</strong>. * <span class="math inline">\(\gamma\)</span> is the 📉<strong>discount factor</strong> (between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>), which determines how much the agent cares about future rewards compared to immediate ones (as the saying goes, “a bird in the hand is worth two in the bush”). If <span class="math inline">\(\gamma = 0\)</span>, the agent only focuses on <strong>immediate rewards</strong> , but if <span class="math inline">\(\gamma = 1\)</span>, any <strong>potential future reward has the same value than current ones</strong>. In ❄️<strong>Frozen Lake</strong>, we want a high discount factor since there’s only one possible reward at the very end of the game.</p>
+<p>Let’s try to find the <strong>update formula</strong> to backpropagate the values from <strong>G</strong> to <strong>S</strong>. Remember: values denote the <strong>quality</strong> of <strong>an action in a specific state</strong> (0 if it’s terrible, 1 if it’s the best action possible in this state). We try to <strong>update the value</strong> of the action <span class="math inline">a_t</span> (for example, <span class="math inline">a_t = 0</span> if the action is left) in the state <span class="math inline">s_t</span> (for example, <span class="math inline">s_t = 0</span> when the agent is in the initial state <strong>S</strong>). This <strong>value is just a cell in our Q-table</strong>, corresponding to the <strong>row number <span class="math inline">s_t</span> and the column number <span class="math inline">a_t</span></strong>: this value is formally called <span class="math inline">Q(s_t, a_t)</span>.</p>
+<p>As we said previously, we need to update it using 1/ <strong>the reward for the next state</strong> (formally noted <span class="math inline">r_t</span>), and 2/ <strong>the maximum possible value in the next state</strong> (<span class="math inline">max_aQ(s_{t+1},a)</span>). Therefore, the update formula must look like:</p>
+<p><span class="math display">Q_{new}(s_t, a_t) = Q(s_t, a_t) + r_t + max_aQ(s_{t+1}, a)</span></p>
+<p>The new value is the current one + the reward + the highest value in the next state. We can manually try our formula to check if it looks correct: let’s pretend our agent is <strong>in the state G-1 next to the goal G for the first time</strong>. We can update the value corresponding to the winning action in this state <strong>G-1</strong> with <span class="math inline">Q_{new}(G-1, a_t) = Q(G-1, a_t) + r_t + max_aQ(G, a)</span>, where <span class="math inline">Q(G-1, a_t) = 0</span> and <span class="math inline">max_aQ(G, a) = 0</span> because the Q-table is empty, and <span class="math inline">r_t = 1</span> because we get the only reward in this environment. We obtain <span class="math inline">Q_{new}(G-1, a_t) = 1</span>. The next time the agent is in a state next to this one (<strong>G-2</strong>), we update it too using the formula and get the same result: <span class="math inline">Q_{new}(G-2, a_t) = 1</span>. In the end, <strong>we backpropagate ones in the Q-table</strong> from <strong>G</strong> to <strong>S</strong>. Okay it works, but the result is <strong>binary</strong>: either it’s the <strong>wrong state-action pair or the best one</strong>. We would like more nuance…</p>
+<p>Actually, we almost <strong>found the true Q-learning update formula</strong> with common sense. The nuance we’re looking for adds two parameters: * <span class="math inline">\alpha</span> is the 💡<strong>learning rate</strong> (between <span class="math inline">0</span> and <span class="math inline">1</span>), which is how much we should change the original <span class="math inline">Q(s_t, a_t)</span> value. If <span class="math inline">\alpha = 0</span>, the value <strong>never changes</strong>, but if <span class="math inline">\alpha = 1</span>, the value <strong>changes extremely fast</strong>. In our attempt, we didn’t limit the learning rate so <span class="math inline">\alpha = 1</span>. But this is too fast in reality: the reward and the maximum value in the next state quickly <strong>overpower the current value</strong>. We need to find a <strong>balance between the importance of past and new knowledge</strong>. * <span class="math inline">\gamma</span> is the 📉<strong>discount factor</strong> (between <span class="math inline">0</span> and <span class="math inline">1</span>), which determines how much the agent cares about future rewards compared to immediate ones (as the saying goes, “a bird in the hand is worth two in the bush”). If <span class="math inline">\gamma = 0</span>, the agent only focuses on <strong>immediate rewards</strong> , but if <span class="math inline">\gamma = 1</span>, any <strong>potential future reward has the same value than current ones</strong>. In ❄️<strong>Frozen Lake</strong>, we want a high discount factor since there’s only one possible reward at the very end of the game.</p>
 <p>With the real Q-learning algorithm, the new value is calculated as follows:</p>
-<p><span class="math display">\[Q_{new}(s_t, a_t) = Q(s_t, a_t) + \alpha \cdot (r_t + \gamma \cdot max_aQ(s_{t+1},a) - Q(s_t, a_t))\]</span></p>
-<p>Okay, let’s try this new formula before implementing it. Once again, we can pretend that our agent is <strong>next to the goal G for the first time</strong>. We can update the state-action pair to win the game using our formula: <span class="math inline">\(Q_{new}(G-1, a_t) = 0 + \alpha \cdot (1 + \gamma \cdot 0 - 0)\)</span>. We can assign arbitrary values to <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\gamma\)</span> to calculate the result. With <span class="math inline">\(\alpha = 0.5\)</span> and <span class="math inline">\(\gamma = 0.9\)</span>, we get <span class="math inline">\(Q_{new}(G-1, a_t) = 0 + 0.5 \cdot (1 + 0.9 \cdot 0 - 0) = 0.5\)</span>. The second time the agent is in this state, we would get: <span class="math inline">\(Q_{new}(G-1, a_t) = 0.5 + 0.5 \cdot (1 + 0.9 \cdot 0 - 0.5) = 0.75\)</span>, then <span class="math inline">\(0.875\)</span>, <span class="math inline">\(0.9375\)</span>, <span class="math inline">\(0.96875\)</span>, etc.</p>
+<p><span class="math display">Q_{new}(s_t, a_t) = Q(s_t, a_t) + \alpha \cdot (r_t + \gamma \cdot max_aQ(s_{t+1},a) - Q(s_t, a_t))</span></p>
+<p>Okay, let’s try this new formula before implementing it. Once again, we can pretend that our agent is <strong>next to the goal G for the first time</strong>. We can update the state-action pair to win the game using our formula: <span class="math inline">Q_{new}(G-1, a_t) = 0 + \alpha \cdot (1 + \gamma \cdot 0 - 0)</span>. We can assign arbitrary values to <span class="math inline">\alpha</span> and <span class="math inline">\gamma</span> to calculate the result. With <span class="math inline">\alpha = 0.5</span> and <span class="math inline">\gamma = 0.9</span>, we get <span class="math inline">Q_{new}(G-1, a_t) = 0 + 0.5 \cdot (1 + 0.9 \cdot 0 - 0) = 0.5</span>. The second time the agent is in this state, we would get: <span class="math inline">Q_{new}(G-1, a_t) = 0.5 + 0.5 \cdot (1 + 0.9 \cdot 0 - 0.5) = 0.75</span>, then <span class="math inline">0.875</span>, <span class="math inline">0.9375</span>, <span class="math inline">0.96875</span>, etc.</p>
 <center class="dark-bg">
 <video autoplay="" loop="" muted="" width="483" height="483" class="drop-shadow">
 <source src="../images/qlearning/frozenlake_update.mp4" type="video/mp4">
@@ -664,21 +703,21 @@ HFFG
 Sequence = [2, 2, 1, 1, 1, 2]</code></pre>
 </div>
 </div>
-<p>The agent can learn several correct sequence of actions: [2, 2, 1, 1, 1, 2], [1, 1, 2, 2, 1, 2], etc. The good thing is there’s <strong>only 6 actions in our sequence</strong>, which was the <strong>minimum possible number of actions we counted</strong>: it means that our agent learned to solve the game in an optimal way. In the case of [2, 2, 1, 1, 1, 2], which corresponds to RIGHT <span class="math inline">\(\to\)</span> RIGHT <span class="math inline">\(\to\)</span> DOWN <span class="math inline">\(\to\)</span> DOWN <span class="math inline">\(\to\)</span> DOWN <span class="math inline">\(\to\)</span> RIGHT, it’s exactly the sequence we predicted at the very beginning of the article. 📣</p>
+<p>The agent can learn several correct sequence of actions: [2, 2, 1, 1, 1, 2], [1, 1, 2, 2, 1, 2], etc. The good thing is there’s <strong>only 6 actions in our sequence</strong>, which was the <strong>minimum possible number of actions we counted</strong>: it means that our agent learned to solve the game in an optimal way. In the case of [2, 2, 1, 1, 1, 2], which corresponds to RIGHT <span class="math inline">\to</span> RIGHT <span class="math inline">\to</span> DOWN <span class="math inline">\to</span> DOWN <span class="math inline">\to</span> DOWN <span class="math inline">\to</span> RIGHT, it’s exactly the sequence we predicted at the very beginning of the article. 📣</p>
 </section>
 <section id="iv.-epsilon-greedy-algorithm" class="level2">
 <h2 class="anchored" data-anchor-id="iv.-epsilon-greedy-algorithm">📐 IV. Epsilon-Greedy algorithm</h2>
 <p>Despite this success, there’s something that bothers me with our previous approach: the agent always chooses the action with the <strong>highest</strong> value. So whenever a state-action pair <strong>starts having a non-zero value, the agent will always choose it</strong>. The other actions will never be taken, which means we’ll never update their value… But what if one of these actions was <strong>better than the one the agent always takes</strong>? Shouldn’t we encourage the agent to try news things from time to time and see if it can improve?</p>
 <p>In other words, we want to allow our agent to either: * <strong>Take the action with the highest value</strong> (exploitation); * <strong>Choose a random action to try to find even better ones</strong> (exploration).</p>
 <p>A tradeoff between these two behaviors is important: if the agent only focuses on <strong>exploitation</strong>, it cannot try new solutions and thus <strong>doesn’t learn anymore</strong>. On the other hand, if the agent only takes <strong>random actions</strong>, the <strong>training is pointless</strong> since it doesn’t use the Q-table. So we want to <strong>change this parameter over time</strong>: at the beginning of the training, we want to <strong>explore the environment as much as possible</strong>. But exploration becomes less and less interesting, as <strong>the agent already knows every possible state-action pairs</strong>. This parameter represents the <strong>amount of randomness in the action selection</strong>.</p>
-<p>This technique is commonly called the <strong>epsilon-greedy algorithm</strong>, where epsilon is our parameter. It is a <strong>simple but extremely efficient</strong> method to find a good tradeoff. Every time the agent has to take an action, it has a <strong>probability <span class="math inline">\(ε\)</span> of choosing a random one</strong>, and a <strong>probability <span class="math inline">\(1-ε\)</span> of choosing the one with the highest value</strong>. We can decrease the value of epsilon <strong>at the end of each episode</strong> by a fixed amount (<strong>linear decay</strong>), or based on the current value of epsilon (<strong>exponential decay</strong>).</p>
+<p>This technique is commonly called the <strong>epsilon-greedy algorithm</strong>, where epsilon is our parameter. It is a <strong>simple but extremely efficient</strong> method to find a good tradeoff. Every time the agent has to take an action, it has a <strong>probability <span class="math inline">ε</span> of choosing a random one</strong>, and a <strong>probability <span class="math inline">1-ε</span> of choosing the one with the highest value</strong>. We can decrease the value of epsilon <strong>at the end of each episode</strong> by a fixed amount (<strong>linear decay</strong>), or based on the current value of epsilon (<strong>exponential decay</strong>).</p>
 <center class="dark-bg">
 <video autoplay="" loop="" muted="" width="800" class="no-margin">
 <source src="../images/qlearning/frozenlake_epsilon.mp4" type="video/mp4">
 
 </video>
 </center>
-<p>Let’s implement a <strong>linear decay</strong>. Beforehand, I’d like to see how the curve looks like with arbitrary parameters. We’ll start with <span class="math inline">\(ε = 1\)</span> to be in full exploration mode, and decrease this value by <span class="math inline">\(0.001\)</span> after each episode.</p>
+<p>Let’s implement a <strong>linear decay</strong>. Beforehand, I’d like to see how the curve looks like with arbitrary parameters. We’ll start with <span class="math inline">ε = 1</span> to be in full exploration mode, and decrease this value by <span class="math inline">0.001</span> after each episode.</p>
 <center>
 <img alt="Illustration of linear decay" src="https://i.imgur.com/F7hXEyY.png" loading="lazy" class="figure">
 </center>
@@ -1210,7 +1249,25 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       });
     }
   }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var filterRegex = new RegExp("https:\/\/mlabonne\.github\.io\/blog");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          // default icon
+          link.classList.add("external");
+      }
+    }
 });
+</script>
+<script src="https://utteranc.es/client.js" repo="https://github.com/mlabonne/blog" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
 </script>
 </div> <!-- /content -->
 

@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="description" content="Latest articles about machine learning and convex optimization">
 
 <title>Maxime Labonne - Articles</title>
 <style>
@@ -71,9 +72,9 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-image','listing-date','listing-title','listing-description','listing-reading-time',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
       
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description"],
+      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -100,15 +101,31 @@ gtag('js', new Date());
 gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
 
 <link rel="stylesheet" href="styles.css">
 <link rel="alternate" type="application/rss+xml" title="Maxime Labonne" href="index.xml"><meta property="og:title" content="Maxime Labonne - Articles">
-<meta property="og:image" content="https://mlabonne.github.io/images/minerl/thumbnail.jpg">
+<meta property="og:description" content="Latest articles about machine learning and convex optimization">
+<meta property="og:image" content="https://mlabonne.github.io/blog/images/minerl/thumbnail.jpg">
 <meta property="og:site-name" content="Maxime Labonne">
 <meta name="twitter:title" content="Maxime Labonne - Articles">
-<meta name="twitter:image" content="https://mlabonne.github.io/images/minerl/thumbnail.jpg">
+<meta name="twitter:description" content="Latest articles about machine learning and convex optimization">
+<meta name="twitter:image" content="https://mlabonne.github.io/blog/images/minerl/thumbnail.jpg">
 <meta name="twitter:creator" content="@maximelabonne">
 <meta name="twitter:card" content="summary_large_image">
 </head>
@@ -129,18 +146,25 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html" rel="" target="">
- <span class="menu-text">About</span></a>
+    <a class="nav-link" href="./book.html" rel="" target="">
+ <span class="menu-text">Book</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./publications.html" rel="" target="">
  <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./book.html" rel="" target="">
- <span class="menu-text">Book</span></a>
+    <a class="nav-link" href="./about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/mlabonne" rel="" target=""><i class="bi bi-github" role="img">
@@ -148,7 +172,12 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
  <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://medium.com/@mlabonne" rel="" target=""><i class="bi bi-medium" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://linkedin.com/in/maxime-labonne/" rel="" target=""><i class="bi bi-linkedin" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -162,9 +191,14 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 <!-- content -->
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-page">
+    <div class="quarto-title column-page-left">
       <h1 class="title">Articles</h1>
-                      </div>
+                  <div>
+        <div class="description">
+          Latest articles about machine learning and convex optimization
+        </div>
+      </div>
+                </div>
   </div>
     
   
@@ -179,9 +213,11 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-cloud"><div class="category" data-category="GAT"><span class="quarto-category-count category-cloud-1">GAT</span></div><div class="category" data-category="GCN"><span class="quarto-category-count category-cloud-1">GCN</span></div><div class="category" data-category="GIN"><span class="quarto-category-count category-cloud-1">GIN</span></div><div class="category" data-category="GNN"><span class="quarto-category-count category-cloud-2">GNN</span></div><div class="category" data-category="GraphSAGE"><span class="quarto-category-count category-cloud-1">GraphSAGE</span></div><div class="category" data-category="OR-Tools"><span class="quarto-category-count category-cloud-3">OR-Tools</span></div><div class="category" data-category="behavior cloning"><span class="quarto-category-count category-cloud-1">behavior cloning</span></div><div class="category" data-category="constraint programming"><span class="quarto-category-count category-cloud-1">constraint programming</span></div><div class="category" data-category="data science"><span class="quarto-category-count category-cloud-2">data science</span></div><div class="category" data-category="dataframe"><span class="quarto-category-count category-cloud-1">dataframe</span></div><div class="category" data-category="deep learning"><span class="quarto-category-count category-cloud-1">deep learning</span></div><div class="category" data-category="frozen lake"><span class="quarto-category-count category-cloud-1">frozen lake</span></div><div class="category" data-category="graph attention networks"><span class="quarto-category-count category-cloud-1">graph attention networks</span></div><div class="category" data-category="graph classification"><span class="quarto-category-count category-cloud-1">graph classification</span></div><div class="category" data-category="graph convolutional network"><span class="quarto-category-count category-cloud-1">graph convolutional network</span></div><div class="category" data-category="graph neural networks"><span class="quarto-category-count category-cloud-4">graph neural networks</span></div><div class="category" data-category="gym"><span class="quarto-category-count category-cloud-1">gym</span></div><div class="category" data-category="integer optimization"><span class="quarto-category-count category-cloud-1">integer optimization</span></div><div class="category" data-category="integer programming"><span class="quarto-category-count category-cloud-1">integer programming</span></div><div class="category" data-category="iterrows"><span class="quarto-category-count category-cloud-1">iterrows</span></div><div class="category" data-category="itertuples"><span class="quarto-category-count category-cloud-1">itertuples</span></div><div class="category" data-category="linear optimization"><span class="quarto-category-count category-cloud-1">linear optimization</span></div><div class="category" data-category="linear programming"><span class="quarto-category-count category-cloud-2">linear programming</span></div><div class="category" data-category="minecraft"><span class="quarto-category-count category-cloud-1">minecraft</span></div><div class="category" data-category="minerl"><span class="quarto-category-count category-cloud-1">minerl</span></div><div class="category" data-category="neighbor sampling"><span class="quarto-category-count category-cloud-1">neighbor sampling</span></div><div class="category" data-category="numpy"><span class="quarto-category-count category-cloud-1">numpy</span></div><div class="category" data-category="ortools"><span class="quarto-category-count category-cloud-2">ortools</span></div><div class="category" data-category="pandas"><span class="quarto-category-count category-cloud-1">pandas</span></div><div class="category" data-category="python"><span class="quarto-category-count category-cloud-8">python</span></div><div class="category" data-category="pytorch"><span class="quarto-category-count category-cloud-3">pytorch</span></div><div class="category" data-category="q-learning"><span class="quarto-category-count category-cloud-1">q-learning</span></div><div class="category" data-category="reinforcement learning"><span class="quarto-category-count category-cloud-2">reinforcement learning</span></div><div class="category" data-category="scalability"><span class="quarto-category-count category-cloud-1">scalability</span></div><div class="category" data-category="self-attention"><span class="quarto-category-count category-cloud-1">self-attention</span></div><div class="category" data-category="tensor"><span class="quarto-category-count category-cloud-1">tensor</span></div><div class="category" data-category="tensorflow"><span class="quarto-category-count category-cloud-1">tensorflow</span></div><div class="category" data-category="tutorial"><span class="quarto-category-count category-cloud-8">tutorial</span></div></div></div>
 <!-- main -->
-<main class="content quarto-banner-title-block column-page" id="quarto-document-content">
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
 
 
 
@@ -192,7 +228,7 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 
 <div class="quarto-listing quarto-listing-container-default" id="listing-listing">
 <div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="reinforcement learning,minecraft,behavior cloning,minerl,python" data-listing-date-sort="1653433200000" data-listing-file-modified-sort="1681680808065" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8">
+<div class="quarto-post image-left" data-index="0" data-categories="reinforcement learning,minecraft,behavior cloning,minerl,python" data-listing-date-sort="1653433200000" data-listing-file-modified-sort="1681765842074" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8">
 <div class="thumbnail">
 <p><a href="./posts/2022-05-25-minecraft.html"> <img src="./images/minerl/thumbnail.jpg" class="thumbnail-image"> </a></p>
 </div>
@@ -214,13 +250,13 @@ Create a Bot to Find Diamonds in Minecraft
 <div class="listing-date">
 May 25, 2022
 </div>
-<div class="listing-author">
-Maxime Labonne
+<div class="listing-reading-time">
+8 min
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-categories="constraint programming,linear programming,OR-Tools,python,tutorial" data-listing-date-sort="1651446000000" data-listing-file-modified-sort="1681680808071" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8">
+<div class="quarto-post image-left" data-index="1" data-categories="constraint programming,linear programming,OR-Tools,python,tutorial" data-listing-date-sort="1651446000000" data-listing-file-modified-sort="1681767315434" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8">
 <div class="thumbnail">
 <p><a href="./posts/2022-05-02-constraint_programming.html"> <img src="./images/cp/thumbnail.jpg" class="thumbnail-image"> </a></p>
 </div>
@@ -242,13 +278,13 @@ Introduction to Constraint Programming in Python
 <div class="listing-date">
 May 2, 2022
 </div>
-<div class="listing-author">
-Maxime Labonne
+<div class="listing-reading-time">
+8 min
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="2" data-categories="graph neural networks,GIN,graph classification,tutorial,python" data-listing-date-sort="1650841200000" data-listing-file-modified-sort="1681680808602" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8">
+<div class="quarto-post image-left" data-index="2" data-categories="graph neural networks,GIN,graph classification,tutorial,python" data-listing-date-sort="1650841200000" data-listing-file-modified-sort="1681761137582" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8">
 <div class="thumbnail">
 <p><a href="./posts/2022-04-25-graph_isomorphism_network.html"> <img src="./images/gin/thumbnail.png" class="thumbnail-image"> </a></p>
 </div>
@@ -270,13 +306,13 @@ GIN: How to Design the Most Powerful Graph Neural Network
 <div class="listing-date">
 Apr 25, 2022
 </div>
-<div class="listing-author">
-Maxime Labonne
+<div class="listing-reading-time">
+8 min
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="3" data-categories="graph neural networks,GraphSAGE,scalability,neighbor sampling,tutorial,python" data-listing-date-sort="1649199600000" data-listing-file-modified-sort="1681680808088" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10">
+<div class="quarto-post image-left" data-index="3" data-categories="graph neural networks,GraphSAGE,scalability,neighbor sampling,tutorial,python" data-listing-date-sort="1649199600000" data-listing-file-modified-sort="1681761140436" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10">
 <div class="thumbnail">
 <p><a href="./posts/2022-04-06-graphsage.html"> <img src="./images/graphsage/thumbnail.jpg" class="thumbnail-image"> </a></p>
 </div>
@@ -298,13 +334,13 @@ GraphSAGE: Scaling up Graph Neural Networks
 <div class="listing-date">
 Apr 6, 2022
 </div>
-<div class="listing-author">
-Maxime Labonne
+<div class="listing-reading-time">
+10 min
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="4" data-categories="data science,tensor,numpy,pytorch,tensorflow,deep learning" data-listing-date-sort="1648422000000" data-listing-file-modified-sort="1681680808083" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5">
+<div class="quarto-post image-left" data-index="4" data-categories="data science,tensor,numpy,pytorch,tensorflow,deep learning" data-listing-date-sort="1648422000000" data-listing-file-modified-sort="1681761069065" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5">
 <div class="thumbnail">
 <p><a href="./posts/2022-03-28-what_is_a_tensor_in_deep_learning.html"> <img src="./images/tensor/thumbnail.png" class="thumbnail-image"> </a></p>
 </div>
@@ -326,13 +362,13 @@ What is a Tensor in Machine Learning?
 <div class="listing-date">
 Mar 28, 2022
 </div>
-<div class="listing-author">
-Maxime Labonne
+<div class="listing-reading-time">
+5 min
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="5" data-categories="data science,pandas,dataframe,itertuples,iterrows" data-listing-date-sort="1647820800000" data-listing-file-modified-sort="1681680808088" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6">
+<div class="quarto-post image-left" data-index="5" data-categories="data science,pandas,dataframe,itertuples,iterrows" data-listing-date-sort="1647820800000" data-listing-file-modified-sort="1681761066233" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6">
 <div class="thumbnail">
 <p><a href="./posts/2022-03-21-efficiently_iterating_over_rows_in_a_pandas_dataframe.html"> <img src="./images/dataframe/thumbnail.jpg" class="thumbnail-image"> </a></p>
 </div>
@@ -354,13 +390,13 @@ Efficiently iterating over rows in a Pandas DataFrame
 <div class="listing-date">
 Mar 21, 2022
 </div>
-<div class="listing-author">
-Maxime Labonne
+<div class="listing-reading-time">
+6 min
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="6" data-categories="graph neural networks,GNN,graph attention networks,GAT,self-attention,python,pytorch,tutorial" data-listing-date-sort="1646784000000" data-listing-file-modified-sort="1681680808126" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9">
+<div class="quarto-post image-left" data-index="6" data-categories="graph neural networks,GNN,graph attention networks,GAT,self-attention,python,pytorch,tutorial" data-listing-date-sort="1646784000000" data-listing-file-modified-sort="1681761046836" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9">
 <div class="thumbnail">
 <p><a href="./posts/2022-03-09-graph_attention_network.html"> <img src="./images/gat/thumbnail.jpg" class="thumbnail-image"> </a></p>
 </div>
@@ -382,13 +418,13 @@ Graph Attention Networks: Self-Attention for GNNs
 <div class="listing-date">
 Mar 9, 2022
 </div>
-<div class="listing-author">
-Maxime Labonne
+<div class="listing-reading-time">
+9 min
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="7" data-categories="integer optimization,integer programming,OR-Tools,ortools,python,tutorial" data-listing-date-sort="1646438400000" data-listing-file-modified-sort="1681680808088" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9">
+<div class="quarto-post image-left" data-index="7" data-categories="integer optimization,integer programming,OR-Tools,ortools,python,tutorial" data-listing-date-sort="1646438400000" data-listing-file-modified-sort="1681761034283" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9">
 <div class="thumbnail">
 <p><a href="./posts/2022-03-05-integer_programming.html"> <img src="./images/integerprogramming/thumbnail.jpg" class="thumbnail-image"> </a></p>
 </div>
@@ -410,13 +446,13 @@ Integer vs.&nbsp;Linear Programming in Python
 <div class="listing-date">
 Mar 5, 2022
 </div>
-<div class="listing-author">
-Maxime Labonne
+<div class="listing-reading-time">
+9 min
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="8" data-categories="linear optimization,linear programming,OR-Tools,ortools,python,tutorial" data-listing-date-sort="1646179200000" data-listing-file-modified-sort="1681680808088" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8">
+<div class="quarto-post image-left" data-index="8" data-categories="linear optimization,linear programming,OR-Tools,ortools,python,tutorial" data-listing-date-sort="1646179200000" data-listing-file-modified-sort="1681761025966" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8">
 <div class="thumbnail">
 <p><a href="./posts/2022-03-02-linear_programming.html"> <img src="./images/linearoptimization/thumbnail.jpg" class="thumbnail-image"> </a></p>
 </div>
@@ -438,13 +474,13 @@ Introduction to Linear Programming in Python
 <div class="listing-date">
 Mar 2, 2022
 </div>
-<div class="listing-author">
-Maxime Labonne
+<div class="listing-reading-time">
+8 min
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="9" data-categories="graph neural networks,GNN,graph convolutional network,GCN,python,pytorch,tutorial" data-listing-date-sort="1645315200000" data-listing-file-modified-sort="1681680808108" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11">
+<div class="quarto-post image-left" data-index="9" data-categories="graph neural networks,GNN,graph convolutional network,GCN,python,pytorch,tutorial" data-listing-date-sort="1645315200000" data-listing-file-modified-sort="1681761016259" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11">
 <div class="thumbnail">
 <p><a href="./posts/2022-02-20-graph_convolution_network.html"> <img src="./images/gnn/thumbnail.png" class="thumbnail-image"> </a></p>
 </div>
@@ -466,13 +502,13 @@ Graph Convolutional Networks: Introduction to GNNs
 <div class="listing-date">
 Feb 20, 2022
 </div>
-<div class="listing-author">
-Maxime Labonne
+<div class="listing-reading-time">
+11 min
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="10" data-categories="reinforcement learning,q-learning,frozen lake,gym,tutorial" data-listing-date-sort="1644710400000" data-listing-file-modified-sort="1681680808125" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="20">
+<div class="quarto-post image-left" data-index="10" data-categories="reinforcement learning,q-learning,frozen lake,gym,tutorial" data-listing-date-sort="1644710400000" data-listing-file-modified-sort="1681763568372" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="20">
 <div class="thumbnail">
 <p><a href="./posts/2022-02-13-q_learning.html"> <img src="./images/qlearning/frozenlake_thumbnail.png" class="thumbnail-image"> </a></p>
 </div>
@@ -494,8 +530,8 @@ Q-learning for beginners
 <div class="listing-date">
 Feb 13, 2022
 </div>
-<div class="listing-author">
-Maxime Labonne
+<div class="listing-reading-time">
+20 min
 </div>
 </a>
 </div>
@@ -736,7 +772,25 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       });
     }
   }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var filterRegex = new RegExp("https:\/\/mlabonne\.github\.io\/blog");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          // default icon
+          link.classList.add("external");
+      }
+    }
 });
+</script>
+<script src="https://utteranc.es/client.js" repo="https://github.com/mlabonne/blog" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
 </script>
 </div> <!-- /content -->
 

@@ -106,26 +106,40 @@ gtag('js', new Date());
 gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
 
 <link rel="stylesheet" href="../styles.css">
 <meta property="og:title" content="Maxime Labonne - GIN: How to Design the Most Powerful Graph Neural Network">
 <meta property="og:description" content="Graph Neural Network Course: Chapter 4">
-<meta property="og:image" content="https://mlabonne.github.io/images/gin/thumbnail.png">
+<meta property="og:image" content="https://mlabonne.github.io/blog/images/gin/thumbnail.png">
 <meta property="og:site-name" content="Maxime Labonne">
 <meta property="og:image:height" content="720">
 <meta property="og:image:width" content="1280">
 <meta name="twitter:title" content="Maxime Labonne - GIN: How to Design the Most Powerful Graph Neural Network">
 <meta name="twitter:description" content="Graph Neural Network Course: Chapter 4">
-<meta name="twitter:image" content="https://mlabonne.github.io/images/gin/thumbnail.png">
+<meta name="twitter:image" content="https://mlabonne.github.io/blog/images/gin/thumbnail.png">
 <meta name="twitter:creator" content="@maximelabonne">
 <meta name="twitter:image-height" content="720">
 <meta name="twitter:image-width" content="1280">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -141,18 +155,25 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../about.html" rel="" target="">
- <span class="menu-text">About</span></a>
+    <a class="nav-link" href="../book.html" rel="" target="">
+ <span class="menu-text">Book</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../publications.html" rel="" target="">
  <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../book.html" rel="" target="">
- <span class="menu-text">Book</span></a>
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/mlabonne" rel="" target=""><i class="bi bi-github" role="img">
@@ -160,7 +181,12 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
  <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://medium.com/@mlabonne" rel="" target=""><i class="bi bi-medium" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://linkedin.com/in/maxime-labonne/" rel="" target=""><i class="bi bi-linkedin" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -215,7 +241,19 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#i.-proteins-dataset" id="toc-i.-proteins-dataset" class="nav-link active" data-scroll-target="#i.-proteins-dataset">🌐 I. PROTEINS dataset</a></li>
+  <li><a href="#ii.-graph-isomorphism-network-gin" id="toc-ii.-graph-isomorphism-network-gin" class="nav-link" data-scroll-target="#ii.-graph-isomorphism-network-gin">🍾 II. Graph Isomorphism Network (GIN)</a></li>
+  <li><a href="#iii.-gin-in-pytorch-geometric" id="toc-iii.-gin-in-pytorch-geometric" class="nav-link" data-scroll-target="#iii.-gin-in-pytorch-geometric">🧠 III. GIN in PyTorch Geometric</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#graph-neural-network-course" id="toc-graph-neural-network-course" class="nav-link" data-scroll-target="#graph-neural-network-course">🌐 Graph Neural Network Course</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -398,21 +436,21 @@ Test loader:
 <li>With GATs, we used a neural network to learn the <strong>best weighting factors</strong> for a given task;</li>
 <li>With GINs, we now learn the <strong>approximation of two injective functions</strong> thanks to the <a href="https://en.wikipedia.org/wiki/Universal_approximation_theorem">Universal Approximation Theorem</a>.</li>
 </ul>
-<p>Here’s how to calculate the <strong>hidden vector</strong> of a particular node <span class="math inline">\(i\)</span> with GIN:</p>
-<p><span class="math display">\[h_i = MLP\bigg((1+ɛ) \cdot x_i + \sum_{j \in \mathcal{N}_i}x_j\bigg)\]</span></p>
-<p>In this formula, <span class="math inline">\(ɛ\)</span> determines the <strong>importance of the target node</strong> compared to its neighbors (it has the same importance if <span class="math inline">\(ɛ = 0\)</span>). It can be a learnable parameter or a fixed scalar.</p>
+<p>Here’s how to calculate the <strong>hidden vector</strong> of a particular node <span class="math inline">i</span> with GIN:</p>
+<p><span class="math display">h_i = MLP\bigg((1+ɛ) \cdot x_i + \sum_{j \in \mathcal{N}_i}x_j\bigg)</span></p>
+<p>In this formula, <span class="math inline">ɛ</span> determines the <strong>importance of the target node</strong> compared to its neighbors (it has the same importance if <span class="math inline">ɛ = 0</span>). It can be a learnable parameter or a fixed scalar.</p>
 <p>Note that we talk about MLPs to highlight the fact there is more than one layer. According to the authors, one layer is <strong>not sufficient</strong> for graph learning in general.</p>
 </section>
 <section id="c.-global-pooling" class="level3">
 <h3 class="anchored" data-anchor-id="c.-global-pooling">C. Global pooling</h3>
 <p>Global pooling or graph-level readout consists of producing a <strong>graph embedding</strong> using the node embeddings calculated by the GNN.</p>
-<p>A simple way to obtain a graph embedding <span class="math inline">\(h_G\)</span> is to use the <strong>mean</strong>, <strong>sum</strong>, or <strong>max</strong> of every node embedding <span class="math inline">\(h_i\)</span>:</p>
-<p><span class="math display">\[{Mean}: h_G = \frac{1}{N} \sum_{i=0}^N h_i \\
+<p>A simple way to obtain a graph embedding <span class="math inline">h_G</span> is to use the <strong>mean</strong>, <strong>sum</strong>, or <strong>max</strong> of every node embedding <span class="math inline">h_i</span>:</p>
+<p><span class="math display">{Mean}: h_G = \frac{1}{N} \sum_{i=0}^N h_i \\
 {Sum}: h_G = \sum_{i=0}^N h_i \\
-{Max}: h_G = {max}_{i=0}^N(h_i)\]</span></p>
+{Max}: h_G = {max}_{i=0}^N(h_i)</span></p>
 <p>The authors make two important points about graph-level readout: * To consider all structural information, it is necessary to <strong>keep embeddings from previous layers</strong>; * The sum operator is surprisingly <strong>more expressive</strong> than the mean and the max.</p>
 <p>These observations lead them to propose the following global pooling method:</p>
-<p><span class="math display">\[h_G = \sum_{i=0}^N{h_i^0}\ || \ \dots \ || \ \sum_{i=0}^N{h_i^k}\]</span></p>
+<p><span class="math display">h_G = \sum_{i=0}^N{h_i^0}\ || \ \dots \ || \ \sum_{i=0}^N{h_i^k}</span></p>
 <p>For each layer, embeddings nodes are <strong>summed</strong> and the result is <strong>concatenated</strong>. This solution combines the expressiveness of the sum operator with the memory of previous iterations from the concatenation.</p>
 </section>
 </section>
@@ -422,11 +460,11 @@ Test loader:
 <p>There is a <a href="https://pytorch-geometric.readthedocs.io/en/latest/modules/nn.html"><code>GINConv</code></a> layer in PyTorch Geometric with different parameters:</p>
 <ul>
 <li><code>nn</code>: the <strong>MLP</strong> that is used to approximate our two injective functions;</li>
-<li><code>eps</code>: the initial value of <span class="math inline">\(ɛ\)</span>, which is <strong>0 by default</strong>;</li>
-<li><code>train_eps</code>: a True/False statement to determine if <span class="math inline">\(ɛ\)</span> is trainable, which is <strong>False by default</strong>.</li>
+<li><code>eps</code>: the initial value of <span class="math inline">ɛ</span>, which is <strong>0 by default</strong>;</li>
+<li><code>train_eps</code>: a True/False statement to determine if <span class="math inline">ɛ</span> is trainable, which is <strong>False by default</strong>.</li>
 </ul>
-<p>You can see that <span class="math inline">\(ɛ\)</span> is entirely removed by default in this implementation: it’s a hyperparameter we can tune, but probably not an essential one.</p>
-<p>There is a <strong>second GIN layer</strong> in PyTorch Geometric, called <code>GINEConv</code>. It comes from <a href="https://arxiv.org/pdf/1905.12265.pdf">this paper’s implementation</a> of GIN, which applies a <span class="math inline">\(ReLU\)</span> function to the neighbors’ features. We won’t use it in this tutorial, since the benefits are not clear.</p>
+<p>You can see that <span class="math inline">ɛ</span> is entirely removed by default in this implementation: it’s a hyperparameter we can tune, but probably not an essential one.</p>
+<p>There is a <strong>second GIN layer</strong> in PyTorch Geometric, called <code>GINEConv</code>. It comes from <a href="https://arxiv.org/pdf/1905.12265.pdf">this paper’s implementation</a> of GIN, which applies a <span class="math inline">ReLU</span> function to the neighbors’ features. We won’t use it in this tutorial, since the benefits are not clear.</p>
 <p>We still need to design a MLP for the <code>GINConv</code> layer. Here’s the design we’ll implement, inspired by the original paper:</p>
 <center>
 <img src="../images/gin/mlp.png" width="800">
@@ -925,7 +963,25 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       });
     }
   }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var filterRegex = new RegExp("https:\/\/mlabonne\.github\.io\/blog");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          // default icon
+          link.classList.add("external");
+      }
+    }
 });
+</script>
+<script src="https://utteranc.es/client.js" repo="https://github.com/mlabonne/blog" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
 </script>
 </div> <!-- /content -->
 

@@ -6,30 +6,30 @@
       version="2.0">
 <channel>
 <title>Maxime Labonne</title>
-<link>https://mlabonne.github.io/index.html</link>
-<atom:link href="https://mlabonne.github.io/index.xml" rel="self" type="application/rss+xml"/>
-<description>Illustrated machine learning and deep learning tutorials with Python and PyTorch for programmers.</description>
+<link>https://mlabonne.github.io/blog/index.html</link>
+<atom:link href="https://mlabonne.github.io/blog/index.xml" rel="self" type="application/rss+xml"/>
+<description>Latest articles about machine learning and convex optimization</description>
 <generator>quarto-1.3.326</generator>
 <lastBuildDate>Tue, 24 May 2022 23:00:00 GMT</lastBuildDate>
 <item>
   <title>Create a Bot to Find Diamonds in Minecraft</title>
   <dc:creator>Maxime Labonne</dc:creator>
-  <link>https://mlabonne.github.io/posts/2022-05-25-minecraft.html</link>
+  <link>https://mlabonne.github.io/blog/posts/2022-05-25-minecraft.html</link>
   <description><![CDATA[ 
 
 
 
 
 <center>
-<img src="https://mlabonne.github.io/images/minerl/thumbnail.jpg">
+<img src="https://mlabonne.github.io/blog/images/minerl/thumbnail.jpg">
 </center>
-<p>Minecraft is the <strong>next frontier</strong> for Artificial Intelligence.</p>
-<p>It’s a huge game, with many mechanics and complex sequences of actions. It takes an <a href="https://minecraft.fandom.com/wiki/Minecraft_Wiki">entire wiki</a> with <strong>over 8000 pages</strong> just to teach humans how to play Minecraft. So how good can be artificial intelligence?</p>
+<p>Minecraft is an incredible challenge for Reinforcement Learning.</p>
+<p>It’s a huge game, with many mechanics and complex sequences of actions. It takes an <a href="https://minecraft.fandom.com/wiki/Minecraft_Wiki">entire wiki</a> with <strong>over 8000 pages</strong> just to teach humans how to play Minecraft. So how good can be machine learning?</p>
 <p>This is the question we’ll answer in this article. We’ll design a bot and try to achieve one of the most difficult challenges in Minecraft: <strong>finding diamonds from scratch</strong>. To make things even worse, we will take on this challenge in randomly generated worlds so we can’t learn a particular seed.</p>
 <center>
-<img src="https://mlabonne.github.io/images/minerl/sequence.png">Sequence of actions to find diamonds
+<img src="https://mlabonne.github.io/blog/images/minerl/sequence.png">Sequence of actions to find diamonds
 </center>
-<p>What we’re gonna talk about is not limited to Minecraft. It can be applied to similar <strong>complex environments</strong> . More specifically, we will implement two different techniques that will become the backbone of our intelligent agent.</p>
+<p>What we’re gonna talk about is not limited to Minecraft. It can be applied to similar <strong>complex environments</strong>. More specifically, we will implement two different techniques that will become the backbone of our intelligent agent.</p>
 <p>But before we can train an agent, we need to understand <strong>how to interact</strong> with the environment. Let’s start with a scripted bot to get familiar with the syntax. We’ll use <a href="https://minerl.io/">MineRL</a>, a fantastic library to build AI applications in Minecraft.</p>
 <p>The code used in this article is available on <a href="https://colab.research.google.com/drive/1hRxR_UM72JAe32YveLxqoC6eX6Lqd9c2?usp=sharing">Google Colab</a>. It is a simplified and finetuned version of the excellent notebooks made by the organizers of the <a href="https://github.com/KarolisRam/MineRL2021-Intro-baselines">MineRL 2021 competition</a> (MIT License).</p>
 <div class="cell">
@@ -207,17 +207,17 @@ font-style: inherit;">=</span> env.reset()</span>
 <span id="cb2-6">env.play()</span></code></pre></div>
 </div>
 <center>
-<img src="https://mlabonne.github.io/images/minerl/start.png">
+<img src="https://mlabonne.github.io/blog/images/minerl/start.png">
 </center>
 <p>We are in front of a tree. As you can see, the resolution is <strong>quite low</strong>. A low resolution means fewer pixels, which speeds things up. Fortunately for us, neural networks don’t need a 4K resolution to understand what’s happening on screen.</p>
 <p>Now, we would like to <strong>interact</strong> with the game. What can our agent do? Here’s the <a href="https://minerl.io/docs/environments/#id14">list of possible actions</a>:</p>
 <center>
-<img src="https://mlabonne.github.io/images/minerl/actions.png" width="800">
+<img src="https://mlabonne.github.io/blog/images/minerl/actions.png" width="800">
 </center>
 <p>The first step to find diamonds is to <strong>get wood</strong> to make a crafting table and a wooden pickaxe.</p>
 <p>Let’s try to get closer to the tree. It means that we need to hold the “forward” button for less than a second. With MineRL, there are <strong>20 actions processed per second</strong>: we don’t need a full second so let’s process it 5 times, and wait for 40 more ticks.</p>
 <center>
-<img src="https://mlabonne.github.io/images/minerl/sequence1.png">
+<img src="https://mlabonne.github.io/blog/images/minerl/sequence1.png">
 </center>
 <div class="cell" data-outputid="5550ae9b-f82a-4cb5-e083-baa1a6916169">
 <div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
@@ -294,7 +294,7 @@ font-style: inherit;">=</span> env.step(action_space)</span>
 <span id="cb3-20">env.play()</span></code></pre></div>
 </div>
 <center>
-<img src="https://mlabonne.github.io/images/minerl/start2.gif">
+<img src="https://mlabonne.github.io/blog/images/minerl/start2.gif">
 </center>
 <p>Great, let’s chop this tree now. We need four actions in total:</p>
 <ul>
@@ -304,7 +304,7 @@ font-style: inherit;">=</span> env.step(action_space)</span>
 <li><strong>Jump</strong> to get the final piece of wood.</li>
 </ul>
 <center>
-<img src="https://mlabonne.github.io/images/minerl/sequence2.png">
+<img src="https://mlabonne.github.io/blog/images/minerl/sequence2.png">
 </center>
 <p>Handling the camera can be a hassle. To simplify the syntax, we’re gonna use the <code>str_to_act</code> function from <a href="https://github.com/KarolisRam/MineRL2021-Intro-baselines">this GitHub repository</a> (MIT license). This is what the new script looks like:</p>
 <div class="cell">
@@ -522,7 +522,7 @@ font-style: inherit;">=</span> env.step(str_to_act(env, action))</span>
 <p>We don’t have that much time to spend, so we’re going for the Imitation Learning solution. This technique is also called <strong>Behavior Cloning</strong>, which is the simplest form of imitation.</p>
 <p>Note that Imitation Learning is not always more efficient than RL. If you want to know more about it, Kumar et al.&nbsp;wrote a great <a href="https://bair.berkeley.edu/blog/2022/04/25/rl-or-bc/">blog post</a> about this topic.</p>
 <center>
-<img src="https://mlabonne.github.io/images/minerl/cnn.png">
+<img src="https://mlabonne.github.io/blog/images/minerl/cnn.png">
 </center>
 <p>The problem is reduced to a multi-class classification task. Our dataset consists of mp4 videos, so we’ll use a <a href="https://en.wikipedia.org/wiki/Convolutional_neural_network">Convolutional Neural Network</a> (CNN) to translate these images into relevant actions. Our goal is also to <strong>limit the number of actions</strong> (classes) that can be taken so the CNN has fewer options, which means it’ll be trained more efficiently.</p>
 <div class="cell" data-execution_count="3">
@@ -1293,7 +1293,7 @@ font-style: inherit;">=</span> env.step(action)</span>
 <p>A simple yet powerful approach consists of <strong>combining</strong> scripted actions with artificial intelligence. Learn the boring stuff, script the knowledge.</p>
 <p>In this paradigm, we’ll use the CNN to get a healthy amount of wood (3000 steps). Then, we can <strong>script a sequence</strong> to craft planks, sticks, a crafting table, a wooden pickaxe, and start mining stone (it should be below our feet). This stone can then be used to craft a stone pickaxe, which can mine iron ore.</p>
 <center>
-<img src="https://mlabonne.github.io/images/minerl/sequence3.png">
+<img src="https://mlabonne.github.io/blog/images/minerl/sequence3.png">
 </center>
 <p>This is when things get complicated: iron ore is <strong>quite rare</strong>, so we would need to run the game for a while to find a deposit. Then, we would have to craft a furnace and melt it to get the iron pickaxe. Finally, we would have to go even deeper and be <strong>even luckier</strong> to obtain a diamond without falling into lava.</p>
 <p>As you can see, it’s doable but the outcome is fairly random. We could train another agent to <a href="https://minerl.readthedocs.io/en/latest/environments/index.html#minerlobtaindiamond-v0">find diamonds</a>, and even a third one to <a href="https://minerl.readthedocs.io/en/latest/environments/index.html#minerlobtainironpickaxe-v0">create the iron pickaxe</a>. If you’re interested in more complex approaches, you can read the results of the <a href="https://arxiv.org/abs/2202.10583">MineRL Diamond 2021 Competition</a> by Kanervisto et al.&nbsp;It describes several solutions using different clever techniques, including end-to-end deep learning architectures. Nonetheless, it is a complex problem and no team managed to consistently find diamonds, if at all.</p>
@@ -1686,21 +1686,21 @@ font-style: inherit;">"inventory"</span>])</span>
   <category>behavior cloning</category>
   <category>minerl</category>
   <category>python</category>
-  <guid>https://mlabonne.github.io/posts/2022-05-25-minecraft.html</guid>
+  <guid>https://mlabonne.github.io/blog/posts/2022-05-25-minecraft.html</guid>
   <pubDate>Tue, 24 May 2022 23:00:00 GMT</pubDate>
-  <media:content url="https://mlabonne.github.io/images/minerl/thumbnail.jpg" medium="image" type="image/jpeg"/>
+  <media:content url="https://mlabonne.github.io/blog/images/minerl/thumbnail.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
   <title>Introduction to Constraint Programming in Python</title>
   <dc:creator>Maxime Labonne</dc:creator>
-  <link>https://mlabonne.github.io/posts/2022-05-02-constraint_programming.html</link>
+  <link>https://mlabonne.github.io/blog/posts/2022-05-02-constraint_programming.html</link>
   <description><![CDATA[ 
 
 
 
 
 <center>
-<img src="https://mlabonne.github.io/images/cp/thumbnail.jpg">
+<img src="https://mlabonne.github.io/blog/images/cp/thumbnail.jpg">
 </center>
 <p>Constraint Programming is a technique to <strong>find every solution</strong> that respects a set of predefined constraints.</p>
 <p>It is an invaluable tool for data scientists to solve a huge variety of problems, such as scheduling, timetabling, sequencing, etc. In this article, we’ll see how to use CP in two different ways:</p>
@@ -1726,7 +1726,7 @@ font-style: inherit;">-</span>q ortools</span></code></pre></div>
 <section id="i.-satisfiability-with-the-3-scouts-problem" class="level2">
 <h2 class="anchored" data-anchor-id="i.-satisfiability-with-the-3-scouts-problem">🪖 I. Satisfiability with the 3 scouts problem</h2>
 <center>
-<img src="https://mlabonne.github.io/images/cp/scouts.png" width="800" style="margin-bottom:0px; margin-top:0px;">
+<img src="https://mlabonne.github.io/blog/images/cp/scouts.png" width="800" style="margin-bottom:0px; margin-top:0px;">
 </center>
 <p>In the <a href="https://towardsdatascience.com/integer-programming-vs-linear-programming-in-python-f1be5bb4e60e">previous article</a>, we created an army to defeat our opponent. But there was one small problem: we had to guess how powerful his army was.</p>
 <p>This time, let’s send scouts to know the <strong>exact number</strong>. Our 3 scouts observed the enemy camp, and this is what they tell us:</p>
@@ -1738,9 +1738,9 @@ font-style: inherit;">-</span>q ortools</span></code></pre></div>
 </ul>
 <p>Our scouts have a personal way of counting soldiers, but we can <strong>combine</strong> these three observations to make a model.</p>
 <p>Let’s call the number of soldiers <img src="https://latex.codecogs.com/png.latex?army">. We can translate our problem into the following congruence system:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%20%20%20%20army%20%5Cequiv%200%20%5Cmod%2013%5C%5C%0A%20%20%20%20army%20%5Cequiv%200%20%5Cmod%2019%5C%5C%0A%20%20%20%20army%20%5Cequiv%200%20%5Cmod%2037%0A"></p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%20%20%20%20army%20%5Cequiv%200%20%5Cmod%2013%20%5C%5C%0A%20%20%20%20army%20%5Cequiv%200%20%5Cmod%2019%20%5C%5C%0A%20%20%20%20army%20%5Cequiv%200%20%5Cmod%2037%0A"></p>
 <p>If you’re not familiar with this notation, this is what it means in <strong>programming terms</strong>:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%20%20%20%20army%5C%20%5C%25%20%5C%2013%20=%200%5C%5C%0A%20%20%20%20army%5C%20%5C%25%20%5C%2019%20=%200%5C%5C%0A%20%20%20%20army%5C%20%5C%25%20%5C%2037%20=%200%0A"></p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%20%20%20%20army%5C%20%5C%25%20%5C%2013%20=%200%20%5C%5C%0A%20%20%20%20army%5C%20%5C%25%20%5C%2019%20=%200%20%5C%5C%0A%20%20%20%20army%5C%20%5C%25%20%5C%2037%20=%200%0A"></p>
 <p>Let’s implement it with OR-Tools. The first thing we need to do is to import and create the <strong>CP-SAT model and solver</strong>.</p>
 <div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;
@@ -2080,7 +2080,7 @@ font-style: inherit;">=</span> solver.Solve(model, solution_printer)</span></cod
 <section id="ii.-optimization-and-beer" class="level2">
 <h2 class="anchored" data-anchor-id="ii.-optimization-and-beer">🍻 II. Optimization and beer</h2>
 <center>
-<img src="https://mlabonne.github.io/images/cp/cart.png" width="500" style="margin-bottom:0px; margin-top:0px;">
+<img src="https://mlabonne.github.io/blog/images/cp/cart.png" width="500" style="margin-bottom:0px; margin-top:0px;">
 </center>
 <p>Let’s see another problem: our army will face the enemy in a few days. In the meantime, the quartermaster has to <strong>prepare the rations</strong> that will be used during the campaign.</p>
 <p>The space in the supply wagons is <strong>limited</strong> and some rations are more <strong>popular</strong> than others. There are three possible rations:</p>
@@ -2090,7 +2090,7 @@ font-style: inherit;">=</span> solver.Solve(model, solution_printer)</span></cod
 <li>🍺 <strong>Beer</strong>: it takes 7 spaces but soldiers love it with a popularity of 26.</li>
 </ul>
 <center>
-<img src="https://mlabonne.github.io/images/cp/table.png" width="800">
+<img src="https://mlabonne.github.io/blog/images/cp/table.png" width="800">
 </center>
 <p>The supply wagons have a capacity of <strong>19 spaces</strong>. How to select the best rations to <strong>maximize</strong> the popularity?</p>
 <p>This is an <strong>optimization</strong> problem we’ve already seen: actually, it is a variant of the famous <a href="https://en.wikipedia.org/wiki/Knapsack_problem">knapsack problem</a>. We could reuse the code from the previous article and just change the input parameters.</p>
@@ -2327,7 +2327,7 @@ Food:
 </div>
 </div>
 <p>We obtained the <strong>highest popularity</strong> (68) possible with a capacity of 19.</p>
-<p>Is the constraint respected? Let’s quickly check it: 1×2🥖 + 3×1🥩 + 7×2🍺 = 19, which is indeed ≤ 19.</p>
+<p>Is the constraint respected? Let’s quickly check it: 1×2🥖+3×1🥩+7×2🍺 = 19, which is indeed ≤ 19.</p>
 <p>Okay, I’d like to ask another question: <strong>how many solutions</strong> to this problem are there? Once again, we can answer it with a specific callback to count them.</p>
 <div class="cell" data-outputid="5641b18a-1086-4e0f-ced3-3fca045a5737" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="kw" style="color: #003B4F;
@@ -2474,19 +2474,19 @@ font-style: inherit;">print</span>(solution_printer.solution_count())</span></co
 <p>CP-SAT is quite particular since it combines CP and <a href="https://en.wikipedia.org/wiki/Boolean_satisfiability_problem"><strong>SAT</strong></a>: it is part of a broader trend of merging CP, LP, SAT, and metaheuristics.</p>
 <p>We said that the previous problem could be solved with Linear Programming, so let’s compare the code of both solutions:</p>
 <center>
-<img src="https://mlabonne.github.io/images/cp/code.png">
+<img src="https://mlabonne.github.io/blog/images/cp/code.png">
 </center>
 <p>As you can see, the syntax is quite similar but it’s not the same: model/solver vs.&nbsp;solver, <code>NewIntVar</code> instead of <code>IntVar</code>, etc. There’s a bit of translation to do, but it’s easily manageable.</p>
 <p>These two techniques are <strong>incredibly close to each other</strong>: they both handle variables with constraints and perform optimization using math and heuristics. However, CP is limited to discrete parameters, while LP handles continuous ones. On the other hand, you can implement specialized constraints like <a href="https://www.ibm.com/docs/en/icos/12.9.0?topic=variables-all-different-constraint">“all different”</a> in CP, but not in LP. Here is a summary of the main differences between these two technologies:</p>
 <center>
-<img src="https://mlabonne.github.io/images/cp/comparison.png" width="800">
+<img src="https://mlabonne.github.io/blog/images/cp/comparison.png" width="800">
 </center>
 <p>If you want to know more about this topic, I would recommend <a href="https://pubsonline.informs.org/doi/abs/10.1287/inte.31.6.29.9647">this article</a> by Irvin J. Lustig and Jean-François Puget. CPLEX’s documentation also details the differences <a href="http://ibmdecisionoptimization.github.io/docplex-doc/mp_vs_cp.html">at this address</a>, in terms of modeling and optimization.</p>
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
 <center>
-<img src="https://mlabonne.github.io/images/cp/infographic.png" width="600">
+<img src="https://mlabonne.github.io/blog/images/cp/infographic.png" width="600">
 </center>
 <p>Constraint Programming is another incredible technique in the <strong>mathematical optimization</strong> toolbox. It is a radically different approach compared to traditional, declarative programming. In this article,</p>
 <ul>
@@ -2513,21 +2513,21 @@ font-style: inherit;">print</span>(solution_printer.solution_count())</span></co
   <category>OR-Tools</category>
   <category>python</category>
   <category>tutorial</category>
-  <guid>https://mlabonne.github.io/posts/2022-05-02-constraint_programming.html</guid>
+  <guid>https://mlabonne.github.io/blog/posts/2022-05-02-constraint_programming.html</guid>
   <pubDate>Sun, 01 May 2022 23:00:00 GMT</pubDate>
-  <media:content url="https://mlabonne.github.io/images/cp/thumbnail.jpg" medium="image" type="image/jpeg"/>
+  <media:content url="https://mlabonne.github.io/blog/images/cp/thumbnail.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
   <title>GIN: How to Design the Most Powerful Graph Neural Network</title>
   <dc:creator>Maxime Labonne</dc:creator>
-  <link>https://mlabonne.github.io/posts/2022-04-25-graph_isomorphism_network.html</link>
+  <link>https://mlabonne.github.io/blog/posts/2022-04-25-graph_isomorphism_network.html</link>
   <description><![CDATA[ 
 
 
 
 
 <center>
-<img src="https://mlabonne.github.io/images/gin/thumbnail.png">
+<img src="https://mlabonne.github.io/blog/images/gin/thumbnail.png">
 </center>
 <p>Graph Neural Networks are not limited to classifying nodes.</p>
 <p>One of the most popular applications is <strong>graph classification</strong>. This is a common task when dealing with molecules: they are represented as graphs and features about each atom (node) can be used to predict the behavior of the entire molecule.</p>
@@ -2624,7 +2624,7 @@ font-style: inherit;">24</span>})</span></code></pre></div>
 <section id="i.-proteins-dataset" class="level2">
 <h2 class="anchored" data-anchor-id="i.-proteins-dataset">🌐 I. PROTEINS dataset</h2>
 <center>
-<img src="https://mlabonne.github.io/images/gin/proteinimager.png"><i>3D plot of a protein by DeepMind.</i>
+<img src="https://mlabonne.github.io/blog/images/gin/proteinimager.png"><i>3D plot of a protein by DeepMind.</i>
 </center>
 <p><a href="https://chrsmrrs.github.io/datasets/docs/datasets/">PROTEINS</a> is a popular dataset in bioinformatics. It is a collection of <strong>1113 graphs</strong> representing proteins, where nodes are amino acids. Two nodes are connected by an edge when they are close enough (&lt; 0.6 nanometers). The goal is to classify each protein as an <strong>enzyme</strong> or <strong>not</strong>.</p>
 <p>Enzymes are a particular type of <strong>proteins</strong> that act as catalysts to speed up chemical reactions in the cell. They are essential for digestion (e.g., lipases), respiration (e.g., oxidases), and other crucial functions of the human body. They are also used in commercial applications, like the production of antibiotics.</p>
@@ -2865,7 +2865,7 @@ background-color: null;
 font-style: inherit;"># fig.tight_layout()</span></span>
 <span id="cb4-30">plt.show()</span></code></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mlabonne.github.io/posts/2022-04-25-Graph_Isomorphism_Network_files/figure-html/cell-4-output-1.png" class="img-fluid"></p>
+<p><img src="https://mlabonne.github.io/blog/posts/2022-04-25-Graph_Isomorphism_Network_files/figure-html/cell-4-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <p>The previous 3D structure is <strong>randomly generated</strong>: obtaining the correct 3D representation is a problem so difficult it’s the whole point of <a href="https://alphafold.ebi.ac.uk/">AlphaFold</a>.</p>
@@ -3141,7 +3141,7 @@ Test loader:
 <h3 class="anchored" data-anchor-id="a.-weisfeiler-lehman-test">A. Weisfeiler-Lehman test</h3>
 <p>A way to characterize the “power” of a GNN is to use the Weisfeiler-Lehman (WL) graph isomorphism test. <a href="https://en.wikipedia.org/wiki/Graph_isomorphism">Isomorphic graphs</a> mean that they have the <strong>same structure</strong>: identical connections but a permutation of nodes. The WL test is able to tell if two graphs are non-isomorphic, but it cannot guarantee that they are isomorphic.</p>
 <center>
-<img src="https://mlabonne.github.io/images/gin/isomorphic_graphs.png"><i>Two isomorphic graphs.</i>
+<img src="https://mlabonne.github.io/blog/images/gin/isomorphic_graphs.png"><i>Two isomorphic graphs.</i>
 </center>
 <p>This might not seem like much, but it can be <strong>extremely difficult</strong> to tell two large graphs apart. In fact, this problem is not known to be solvable in polynomial time, nor to be NP-complete. It might even be somewhere in between, in the computational complexity class <a href="https://en.wikipedia.org/wiki/Graph_isomorphism_problem">NP-intermediate</a> (if it only exists).</p>
 <p>Okay, but how is it <strong>related</strong> to GNNs? Some researchers in graph learning noticed that <strong>this test and the way GNNs learn are oddly similar</strong>. In the WL test, 1. Every node starts with the <strong>same label</strong>; 2. Labels from neighboring nodes are aggregated and <strong>hashed</strong> to produce a new label; 3. The previous step is repeated until the labels <strong>stop changing</strong>.</p>
@@ -3185,11 +3185,11 @@ Test loader:
 <p>There is a <strong>second GIN layer</strong> in PyTorch Geometric, called <code>GINEConv</code>. It comes from <a href="https://arxiv.org/pdf/1905.12265.pdf">this paper’s implementation</a> of GIN, which applies a <img src="https://latex.codecogs.com/png.latex?ReLU"> function to the neighbors’ features. We won’t use it in this tutorial, since the benefits are not clear.</p>
 <p>We still need to design a MLP for the <code>GINConv</code> layer. Here’s the design we’ll implement, inspired by the original paper:</p>
 <center>
-<img src="https://mlabonne.github.io/images/gin/mlp.png" width="800">
+<img src="https://mlabonne.github.io/blog/images/gin/mlp.png" width="800">
 </center>
 <p>The paper stacks <strong>5 layers</strong> but we’ll be more humble with <strong>3 layers</strong> instead. Here is what the entire architecture looks like:</p>
 <center>
-<img src="https://mlabonne.github.io/images/gin/architecture.png">
+<img src="https://mlabonne.github.io/blog/images/gin/architecture.png">
 </center>
 <p>I could not find any implementation of GIN with graph embedding <strong>concatenation</strong>, so here is my version (it improves the accuracy by 1% on average). Let’s compare it to a GCN with a simple mean pooling (and no concatenation).</p>
 <div class="cell" data-execution_count="14">
@@ -3881,7 +3881,7 @@ background-color: null;
 font-style: inherit;">=</span>ax[ix]</span>
 <span id="cb10-20">                    )</span></code></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mlabonne.github.io/posts/2022-04-25-Graph_Isomorphism_Network_files/figure-html/cell-8-output-1.png" class="img-fluid"></p>
+<p><img src="https://mlabonne.github.io/blog/posts/2022-04-25-Graph_Isomorphism_Network_files/figure-html/cell-8-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-outputid="adbcf18f-59a2-4ce0-a607-095dc7d7efb7" data-execution_count="17">
@@ -3986,7 +3986,7 @@ background-color: null;
 font-style: inherit;">=</span>ax[ix]</span>
 <span id="cb11-20">                    )</span></code></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mlabonne.github.io/posts/2022-04-25-Graph_Isomorphism_Network_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
+<p><img src="https://mlabonne.github.io/blog/posts/2022-04-25-Graph_Isomorphism_Network_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <p>Interestingly enough, the two models make <strong>different mistakes</strong>. This is a common result in machine learning when different algorithms are applied to the same problem.</p>
@@ -4161,21 +4161,21 @@ GCN+GIN accuracy: 67.45%</code></pre>
   <category>graph classification</category>
   <category>tutorial</category>
   <category>python</category>
-  <guid>https://mlabonne.github.io/posts/2022-04-25-graph_isomorphism_network.html</guid>
+  <guid>https://mlabonne.github.io/blog/posts/2022-04-25-graph_isomorphism_network.html</guid>
   <pubDate>Sun, 24 Apr 2022 23:00:00 GMT</pubDate>
-  <media:content url="https://mlabonne.github.io/images/gin/thumbnail.png" medium="image" type="image/png" height="81" width="144"/>
+  <media:content url="https://mlabonne.github.io/blog/images/gin/thumbnail.png" medium="image" type="image/png" height="81" width="144"/>
 </item>
 <item>
   <title>GraphSAGE: Scaling up Graph Neural Networks</title>
   <dc:creator>Maxime Labonne</dc:creator>
-  <link>https://mlabonne.github.io/posts/2022-04-06-graphsage.html</link>
+  <link>https://mlabonne.github.io/blog/posts/2022-04-06-graphsage.html</link>
   <description><![CDATA[ 
 
 
 
 
 <center>
-<img src="https://mlabonne.github.io/images/graphsage/thumbnail.jpg">
+<img src="https://mlabonne.github.io/blog/images/graphsage/thumbnail.jpg">
 </center>
 <p>What do UberEats and Pinterest have in common?</p>
 <p>They both use GraphSAGE to power their recommender systems on a massive scale: millions and billions of nodes and edges.</p>
@@ -4271,7 +4271,7 @@ font-style: inherit;">24</span>})</span></code></pre></div>
 <section id="i.-pubmed-dataset" class="level2">
 <h2 class="anchored" data-anchor-id="i.-pubmed-dataset">🌐 I. PubMed dataset</h2>
 <center>
-<img src="https://mlabonne.github.io/images/graphsage/pubmed.png">
+<img src="https://mlabonne.github.io/blog/images/graphsage/pubmed.png">
 </center>
 <p>As we saw in the <a href="https://mlabonne.github.io/blog/gat/">previous article</a>, PubMed is part of the Planetoid dataset (MIT license). Here’s a quick summary:</p>
 <ul>
@@ -4532,7 +4532,7 @@ Graph has loops: False</code></pre>
 <section id="ii.-graphsage-in-theory" class="level2">
 <h2 class="anchored" data-anchor-id="ii.-graphsage-in-theory">🧙‍♂️ II. GraphSAGE in theory</h2>
 <center>
-<img src="https://mlabonne.github.io/images/graphsage/architecture.png">
+<img src="https://mlabonne.github.io/blog/images/graphsage/architecture.png">
 </center>
 <p>The <strong>GraphSAGE</strong> algorithm can be divided into two steps:</p>
 <ol type="1">
@@ -4719,7 +4719,7 @@ Subgraph 2: Data(x=[283, 500], edge_index=[2, 330], y=[283], train_mask=[283], v
 Subgraph 3: Data(x=[189, 500], edge_index=[2, 229], y=[189], train_mask=[189], val_mask=[189], test_mask=[189], batch_size=12)</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mlabonne.github.io/posts/2022-04-06-GraphSAGE_files/figure-html/cell-4-output-2.png" class="img-fluid"></p>
+<p><img src="https://mlabonne.github.io/blog/posts/2022-04-06-GraphSAGE_files/figure-html/cell-4-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <p>We created four subgraphs of various sizes. It allows us to process them in parallel and they’re easier to fit on a GPU since they’re smaller.</p>
@@ -4791,10 +4791,10 @@ background-color: null;
 font-style: inherit;"># Plot node degrees from the last subgraph</span></span>
 <span id="cb6-23">plot_degree(subdata)</span></code></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mlabonne.github.io/posts/2022-04-06-GraphSAGE_files/figure-html/cell-5-output-1.png" class="img-fluid"></p>
+<p><img src="https://mlabonne.github.io/blog/posts/2022-04-06-GraphSAGE_files/figure-html/cell-5-output-1.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mlabonne.github.io/posts/2022-04-06-GraphSAGE_files/figure-html/cell-5-output-2.png" class="img-fluid"></p>
+<p><img src="https://mlabonne.github.io/blog/posts/2022-04-06-GraphSAGE_files/figure-html/cell-5-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <p>The first plot shows the original distribution of node degrees, and the second one shows the distribution we obtain after neighbor sampling. In this example, we chose to only consider five neighbors, which is much lower than the original maximal value. It’s important to remember this tradeoff when talking about GraphSAGE.</p>
@@ -5861,7 +5861,7 @@ Wall time: 18min 7s</code></pre>
 <p>The real difference is the training time: GraphSAGE is <strong>88 times faster</strong> than the GAT and four times faster than the GCN in this example!</p>
 <p>This is the true benefit of GraphSAGE. While it loses a lot of information by pruning the graph with neighbor sampling, it greatly improves scalability. In turn, it can lead to building larger graphs that can improve accuracy.</p>
 <center>
-<img src="https://mlabonne.github.io/images/graphsage/timechart.png" width="800">
+<img src="https://mlabonne.github.io/blog/images/graphsage/timechart.png" width="800">
 </center>
 <p>GraphSAGE is a popular framework with many flavors.</p>
 <p>In this example, we have used GraphSAGE in a <strong>transductive</strong> setting. We masked information about test nodes during training, but we didn’t hide their presence in the adjacency matrix. On the contrary, in an <strong>inductive</strong> setting, the test set is never encountered during training.</p>
@@ -5900,21 +5900,21 @@ Wall time: 18min 7s</code></pre>
   <category>neighbor sampling</category>
   <category>tutorial</category>
   <category>python</category>
-  <guid>https://mlabonne.github.io/posts/2022-04-06-graphsage.html</guid>
+  <guid>https://mlabonne.github.io/blog/posts/2022-04-06-graphsage.html</guid>
   <pubDate>Tue, 05 Apr 2022 23:00:00 GMT</pubDate>
-  <media:content url="https://mlabonne.github.io/images/graphsage/thumbnail.jpg" medium="image" type="image/jpeg"/>
+  <media:content url="https://mlabonne.github.io/blog/images/graphsage/thumbnail.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
   <title>What is a Tensor in Machine Learning?</title>
   <dc:creator>Maxime Labonne</dc:creator>
-  <link>https://mlabonne.github.io/posts/2022-03-28-what_is_a_tensor_in_deep_learning.html</link>
+  <link>https://mlabonne.github.io/blog/posts/2022-03-28-what_is_a_tensor_in_deep_learning.html</link>
   <description><![CDATA[ 
 
 
 
 
 <center>
-<img alt="Thumbnail" src="https://mlabonne.github.io/images/tensor/thumbnail.png">
+<img alt="Thumbnail" src="https://mlabonne.github.io/blog/images/tensor/thumbnail.png">
 </center>
 <p>What is a tensor, exactly?</p>
 <p>Most deep learning practitioners know about them but can’t pinpoint an <strong>exact definition</strong>.</p>
@@ -5926,7 +5926,7 @@ Wall time: 18min 7s</code></pre>
 <p>So why are there so many definitions?</p>
 <p>It’s quite simple: different fields have different definitions. Tensors in <strong>mathematics</strong> are not quite the same as tensors in <strong>physics</strong>, which are different from tensors in <strong>computer science</strong>.</p>
 <center>
-<img alt="Data structure vs. Objects" src="https://mlabonne.github.io/images/tensor/datastructure.png" width="800">
+<img alt="Data structure vs. Objects" src="https://mlabonne.github.io/blog/images/tensor/datastructure.png" width="800">
 </center>
 <p>These definitions can be divided into two categories: tensors as a data structure or as objects (in an <a href="https://en.wikipedia.org/wiki/Object-oriented_programming">object-oriented programming</a> sense).</p>
 <ul>
@@ -5941,7 +5941,7 @@ Wall time: 18min 7s</code></pre>
 <section id="tensors-in-deep-learning" class="level2">
 <h2 class="anchored" data-anchor-id="tensors-in-deep-learning">🧠 Tensors in deep learning</h2>
 <center>
-<img alt="Array vs. Tensor" src="https://mlabonne.github.io/images/tensor/arrayvstensor.png" width="800"> <i>Icons created by Freepik and smashingstocks - <a href="https://www.flaticon.com/">Flaticon</a></i>
+<img alt="Array vs. Tensor" src="https://mlabonne.github.io/blog/images/tensor/arrayvstensor.png" width="800"> <i>Icons created by Freepik and smashingstocks - <a href="https://www.flaticon.com/">Flaticon</a></i>
 </center>
 <p>So why are they called “tensors” instead of “multidimensional arrays”? Ok, it is shorter, but is it all there is to it? Actually, people make an <strong>implicit assumption</strong> when they talk about tensors.</p>
 <p>PyTorch’s <a href="https://pytorch.org/tutorials/beginner/examples_tensor/polynomial_tensor.html#:~:text=PyTorch%3A%20Tensors,-A%20third%20order&amp;text=A%20PyTorch%20Tensor%20is%20basically,used%20for%20arbitrary%20numeric%20computation.">official documentation</a> gives us a practical answer:</p>
@@ -5955,7 +5955,7 @@ Wall time: 18min 7s</code></pre>
 <h2 class="anchored" data-anchor-id="numpy-vs-pytorch">⚔️ NumPy vs PyTorch</h2>
 <p>Let’s see the difference between NumPy arrays and PyTorch tensors.</p>
 <center>
-<img alt="Sclar, vector, matrix" src="https://mlabonne.github.io/images/tensor/scalar.png" width="800">
+<img alt="Sclar, vector, matrix" src="https://mlabonne.github.io/blog/images/tensor/scalar.png" width="800">
 </center>
 <p>These two objects are very similar: we can initialize a <strong>1D array</strong> and a <strong>1D tensor</strong> with nearly the same syntax. They also share a lot of methods and can be easily converted into one another.</p>
 <p>You can find the code used in this article <a href="https://github.com/mlabonne/how-to-data-science/blob/main/What_is_a_Tensor_in_Deep_Learning.ipynb">at this address</a></p>
@@ -6202,21 +6202,21 @@ font-style: inherit;">%%</span>timeit</span>
   <category>pytorch</category>
   <category>tensorflow</category>
   <category>deep learning</category>
-  <guid>https://mlabonne.github.io/posts/2022-03-28-what_is_a_tensor_in_deep_learning.html</guid>
+  <guid>https://mlabonne.github.io/blog/posts/2022-03-28-what_is_a_tensor_in_deep_learning.html</guid>
   <pubDate>Sun, 27 Mar 2022 23:00:00 GMT</pubDate>
-  <media:content url="https://mlabonne.github.io/images/tensor/thumbnail.png" medium="image" type="image/png" height="81" width="144"/>
+  <media:content url="https://mlabonne.github.io/blog/images/tensor/thumbnail.png" medium="image" type="image/png" height="81" width="144"/>
 </item>
 <item>
   <title>Efficiently iterating over rows in a Pandas DataFrame</title>
   <dc:creator>Maxime Labonne</dc:creator>
-  <link>https://mlabonne.github.io/posts/2022-03-21-efficiently_iterating_over_rows_in_a_pandas_dataframe.html</link>
+  <link>https://mlabonne.github.io/blog/posts/2022-03-21-efficiently_iterating_over_rows_in_a_pandas_dataframe.html</link>
   <description><![CDATA[ 
 
 
 
 
 <center>
-<img src="https://mlabonne.github.io/images/dataframe/thumbnail.jpg" width="100%">
+<img src="https://mlabonne.github.io/blog/images/dataframe/thumbnail.jpg" width="100%">
 </center>
 <p>When I started machine learning, I followed the guidelines and created my own features by combining multiple columns in my dataset. It’s all well and good, but the way I did it was <strong>horribly inefficient</strong>. I had to wait several minutes to do the most basic operations.</p>
 <p>My problem was simple: I didn’t know the fastest way to iterate over rows in Pandas.</p>
@@ -6899,7 +6899,7 @@ font-style: inherit;">'dst_bytes'</span>].to_numpy()).tolist()</span></code></pr
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
 <center>
-<img src="https://mlabonne.github.io/images/dataframe/perfplot.png" width="800">
+<img src="https://mlabonne.github.io/blog/images/dataframe/perfplot.png" width="800">
 </center>
 <p>Don’t be like me: if you need to iterate over rows in a DataFrame, <strong>vectorization</strong> is the way to go! You can find the code to reproduce the experiments <a href="https://colab.research.google.com/drive/1v9v4j1MnklaCd9eFcuGnB5x_5FoINmRe?usp=sharing">at this address</a>. Vectorization is not harder to read, it doesn’t take longer to write, and the performance gain is incredible.</p>
 <p>It’s not just about performance: understanding how each method works under the hood helped me to <strong>write better code</strong>. Performance gains are always based on the same techniques: transforming data into vectors and matrices to take advantage of parallel processing. Alas, this is often at the expense of readability. But it doesn’t have to be.</p>
@@ -7172,7 +7172,7 @@ font-style: inherit;">12</span>))</span>
 <pre><code>(8.117999999999996e-06, 51.558470168)</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mlabonne.github.io/posts/2022-03-21-Efficiently_iterating_over_rows_in_a_Pandas_DataFrame_files/figure-html/cell-11-output-5.png" class="img-fluid"></p>
+<p><img src="https://mlabonne.github.io/blog/posts/2022-03-21-Efficiently_iterating_over_rows_in_a_Pandas_DataFrame_files/figure-html/cell-11-output-5.png" class="img-fluid"></p>
 </div>
 </div>
 
@@ -7185,26 +7185,26 @@ font-style: inherit;">12</span>))</span>
   <category>dataframe</category>
   <category>itertuples</category>
   <category>iterrows</category>
-  <guid>https://mlabonne.github.io/posts/2022-03-21-efficiently_iterating_over_rows_in_a_pandas_dataframe.html</guid>
+  <guid>https://mlabonne.github.io/blog/posts/2022-03-21-efficiently_iterating_over_rows_in_a_pandas_dataframe.html</guid>
   <pubDate>Mon, 21 Mar 2022 00:00:00 GMT</pubDate>
-  <media:content url="https://mlabonne.github.io/images/dataframe/thumbnail.jpg" medium="image" type="image/jpeg"/>
+  <media:content url="https://mlabonne.github.io/blog/images/dataframe/thumbnail.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
   <title>Graph Attention Networks: Self-Attention for GNNs</title>
   <dc:creator>Maxime Labonne</dc:creator>
-  <link>https://mlabonne.github.io/posts/2022-03-09-graph_attention_network.html</link>
+  <link>https://mlabonne.github.io/blog/posts/2022-03-09-graph_attention_network.html</link>
   <description><![CDATA[ 
 
 
 
 
 <center>
-<img src="https://mlabonne.github.io/images/gat/thumbnail.jpg">
+<img src="https://mlabonne.github.io/blog/images/gat/thumbnail.jpg">
 </center>
 <p>Graph Attention Networks (GATs) are one of the most popular types of Graph Neural Networks.</p>
 <p>Instead of calculating static weights based on node degrees like Graph Convolutional Networks (GCNs), they assign dynamic weights to node features through a process called <strong>self-attention</strong>. The main idea behind GATs is that some neighbors are more important than others, regardless of their node degrees.</p>
 <center>
-<img src="https://mlabonne.github.io/images/gat/graph_attention_empty.png" width="400">Node 4 is more important than node 3, which is more important than node 2
+<img src="https://mlabonne.github.io/blog/images/gat/graph_attention_empty.png" width="400">Node 4 is more important than node 3, which is more important than node 2
 </center>
 <p>In this article, we will see how to calculate these attention scores and implement an efficient GAT in PyTorch Geometric (PyG). You can run the code of this tutorial with the following <a href="https://colab.research.google.com/drive/1B0vLpH_gSfrOLgsc2UZVyXrcofzA-t0L?usp=sharing">Google Colab notebook</a>.</p>
 <div class="cell" data-execution_count="4">
@@ -7310,7 +7310,7 @@ font-style: inherit;">24</span>})</span></code></pre></div>
 <section id="i.-graph-data" class="level2">
 <h2 class="anchored" data-anchor-id="i.-graph-data">🌐 I. Graph data</h2>
 <center>
-<img alt="CiteSeer" src="https://mlabonne.github.io/images/gat/citeseer_yed.png" width="800">CiteSeer dataset
+<img alt="CiteSeer" src="https://mlabonne.github.io/blog/images/gat/citeseer_yed.png" width="800">CiteSeer dataset
 </center>
 <p>Let’s perform a node classification task with a GAT. We can use three classic graph datasets (MIT license) for this work. They represent networks of research papers, where each connection is a citation.</p>
 <ul>
@@ -7517,7 +7517,7 @@ font-style: inherit;">'#0A047A'</span>)</span></code></pre></div>
 <pre><code>&lt;BarContainer object of 32 artists&gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mlabonne.github.io/posts/2022-03-09-Graph_Attention_Network_files/figure-html/cell-4-output-2.png" class="img-fluid"></p>
+<p><img src="https://mlabonne.github.io/blog/posts/2022-03-09-Graph_Attention_Network_files/figure-html/cell-4-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <p>Most nodes only have <strong>1 or 2 neighbors</strong>. It could explain why CiteSeer obtains lower accuracy scores than the two other datasets…</p>
@@ -7526,7 +7526,7 @@ font-style: inherit;">'#0A047A'</span>)</span></code></pre></div>
 <h2 class="anchored" data-anchor-id="ii.-graph-attention-layer">⚠️ II. Graph Attention Layer</h2>
 <p>Introduced by <a href="https://arxiv.org/abs/1710.10903">Veličković et al.</a> in 2017, self-attention in GATs relies on a simple idea: <strong>some nodes are more important than others</strong>. In this context, we talk about <em>self</em>-attention (and not just attention) because inputs are compared to each other.</p>
 <center>
-<img src="https://mlabonne.github.io/images/gat/graph_attention.png" width="400">
+<img src="https://mlabonne.github.io/blog/images/gat/graph_attention.png" width="400">
 </center>
 <p>In the previous figure, self-attention calculates the importance of nodes 2, 3, and 4’s features to node 1. We denote <img src="https://latex.codecogs.com/png.latex?%5Calpha_%7Bij%7D"> the importance of node <img src="https://latex.codecogs.com/png.latex?j">’s features to node <img src="https://latex.codecogs.com/png.latex?i">.</p>
 <p>Each node <img src="https://latex.codecogs.com/png.latex?i"> has an attribute vector <img src="https://latex.codecogs.com/png.latex?x_i">. The GAT layer calculates the embedding of node 1 as a sum of attention coefficients multiplied by a shared weight matrix <img src="https://latex.codecogs.com/png.latex?%5Cmathbf%7BW%7D"> :</p>
@@ -7544,7 +7544,7 @@ font-style: inherit;">'#0A047A'</span>)</span></code></pre></div>
 <p>Then, we can apply a new <strong>linear transformation</strong> with a weight matrix <img src="https://latex.codecogs.com/png.latex?W_%7Batt%7D">:</p>
 <p><img src="https://latex.codecogs.com/png.latex?a_%7Bij%7D%20=%20W_%7Batt%7D%5Et%5B%5Cmathbf%7BW%7Dx_i%5Cmathbin%5CVert%20%5Cmathbf%7BW%7Dx_j%5D"></p>
 <center>
-<img src="https://mlabonne.github.io/images/gat/attention_calculation1.png" height="400">
+<img src="https://mlabonne.github.io/blog/images/gat/attention_calculation1.png" height="400">
 </center>
 </section>
 <section id="activation-function" class="level3">
@@ -7552,7 +7552,7 @@ font-style: inherit;">'#0A047A'</span>)</span></code></pre></div>
 <p>We’re building a neural network, so the second step is to add nonlinearity with an activation function. In this case, the paper’s authors chose the <em>LeakyReLU</em> function.</p>
 <p><img src="https://latex.codecogs.com/png.latex?e_%7Bij%7D%20=%20LeakyReLU(a_%7Bij%7D)"></p>
 <center>
-<img src="https://mlabonne.github.io/images/gat/attention_calculation2.png" height="400">
+<img src="https://mlabonne.github.io/blog/images/gat/attention_calculation2.png" height="400">
 </center>
 </section>
 <section id="softmax-normalization" class="level3">
@@ -7561,7 +7561,7 @@ font-style: inherit;">'#0A047A'</span>)</span></code></pre></div>
 <p>A common way to do it with neural networks is to use the softmax function. Here, we apply it to every neighboring node, including the target node itself:</p>
 <p><img src="https://latex.codecogs.com/png.latex?%5Calpha_%7Bij%7D%20=%20softmax_j(e_%7Bij%7D)%20=%20%5Cfrac%7Bexp(e_%7Bij%7D)%7D%7B%5Csum_%7Bk%20%5Cin%20%5Cmathcal%7BN%7D_i%7D%7Bexp(e_%7Bik%7D)%7D%7D"></p>
 <center>
-<img src="https://mlabonne.github.io/images/gat/attention_calculation3.png" height="400">
+<img src="https://mlabonne.github.io/blog/images/gat/attention_calculation3.png" height="400">
 </center>
 <p>This equation produces the final attention coefficients <img src="https://latex.codecogs.com/png.latex?%5Calpha_%7Bij%7D">. The only problem is… <strong>self-attention is not very stable</strong>. In order to improve performance, <a href="https://arxiv.org/abs/1706.03762">Vaswani et al.</a> introduced multi-head attention in the transformer architecture.</p>
 </section>
@@ -7569,7 +7569,7 @@ font-style: inherit;">'#0A047A'</span>)</span></code></pre></div>
 <h3 class="anchored" data-anchor-id="multi-head-attention">4. Multi-head attention</h3>
 <p>This should not be a big surprise if you’re familiar with the transformer architecture, but <a href="https://thegradient.pub/transformers-are-graph-neural-networks/">transformers are a special case of GNNs</a>. This is why GATs look so much like a simplified version of transformers. The good thing is that we can reuse some ideas from Natural Language Processing here, like multi-head attention.</p>
 <center>
-<img src="https://mlabonne.github.io/images/gat/attention_calculation4.png" height="400">
+<img src="https://mlabonne.github.io/blog/images/gat/attention_calculation4.png" height="400">
 </center>
 <p>In GATs, multi-head attention consists of <strong>replicating the same three steps several times</strong> in order to average or concatenate the results. Instead of a single embedding <img src="https://latex.codecogs.com/png.latex?h_1">, we get one embedding per attention head (denoted <img src="https://latex.codecogs.com/png.latex?h_1%5Ek"> for the head <img src="https://latex.codecogs.com/png.latex?k">). One of the two following schemes can then be applied:</p>
 <ul>
@@ -8220,7 +8220,7 @@ font-style: inherit;">=</span>data.y)</span>
   FutureWarning,</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mlabonne.github.io/posts/2022-03-09-Graph_Attention_Network_files/figure-html/cell-8-output-2.png" class="img-fluid"></p>
+<p><img src="https://mlabonne.github.io/blog/posts/2022-03-09-Graph_Attention_Network_files/figure-html/cell-8-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <p>Indeed, there’s no apparent structure. But do the embeddings produced by our trained model look better?</p>
@@ -8282,7 +8282,7 @@ font-style: inherit;">=</span>data.y)</span>
   FutureWarning,</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mlabonne.github.io/posts/2022-03-09-Graph_Attention_Network_files/figure-html/cell-9-output-2.png" class="img-fluid"></p>
+<p><img src="https://mlabonne.github.io/blog/posts/2022-03-09-Graph_Attention_Network_files/figure-html/cell-9-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <p>The difference is noticeable: <strong>nodes belonging to the same classes cluster together</strong>. We can see six clusters, corresponding to the six classes of papers. There are outliers, but this was to be expected: our accuracy score is far from perfect.</p>
@@ -8472,7 +8472,7 @@ font-style: inherit;">=</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'white'</span>)</span></code></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mlabonne.github.io/posts/2022-03-09-Graph_Attention_Network_files/figure-html/cell-10-output-1.png" class="img-fluid"></p>
+<p><img src="https://mlabonne.github.io/blog/posts/2022-03-09-Graph_Attention_Network_files/figure-html/cell-10-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <p>These results confirm our intuition: nodes with few neighbors are indeed <strong>harder to classify</strong>. This is due to the nature of GNNs: the more relevant connections you have, the more information you can aggregate.</p>
@@ -8509,21 +8509,21 @@ font-style: inherit;">'white'</span>)</span></code></pre></div>
   <category>python</category>
   <category>pytorch</category>
   <category>tutorial</category>
-  <guid>https://mlabonne.github.io/posts/2022-03-09-graph_attention_network.html</guid>
+  <guid>https://mlabonne.github.io/blog/posts/2022-03-09-graph_attention_network.html</guid>
   <pubDate>Wed, 09 Mar 2022 00:00:00 GMT</pubDate>
-  <media:content url="https://mlabonne.github.io/images/gat/thumbnail.jpg" medium="image" type="image/jpeg"/>
+  <media:content url="https://mlabonne.github.io/blog/images/gat/thumbnail.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
   <title>Integer vs. Linear Programming in Python</title>
   <dc:creator>Maxime Labonne</dc:creator>
-  <link>https://mlabonne.github.io/posts/2022-03-05-integer_programming.html</link>
+  <link>https://mlabonne.github.io/blog/posts/2022-03-05-integer_programming.html</link>
   <description><![CDATA[ 
 
 
 
 
 <center>
-<img src="https://mlabonne.github.io/images/integerprogramming/thumbnail.jpg">
+<img src="https://mlabonne.github.io/blog/images/integerprogramming/thumbnail.jpg">
 </center>
 <p>Why is <strong>linear programming</strong> called that way?</p>
 <p>Both terms are confusing:</p>
@@ -8535,7 +8535,7 @@ font-style: inherit;">'white'</span>)</span></code></pre></div>
 <p>In this article, we’re gonna talk about another type of optimization: <strong>integer programming</strong>. We’ll see why a good understanding of the problem we face is necessary to choose the right solver. Finally, we will write a model that can take on a bigger challenge and actually solve a whole class of optimization problems.</p>
 <p>You can run the code from this tutorial with the following <a href="https://colab.research.google.com/drive/1aIKnXPEiXFo1M3U0EM6arE2teD9KkJdF?usp=sharing"><strong>Google Colab notebook</strong></a>.</p>
 <center>
-<img src="https://mlabonne.github.io/images/integerprogramming/units.png">
+<img src="https://mlabonne.github.io/blog/images/integerprogramming/units.png">
 </center>
 <section id="i.-optimization-problem-types" class="level2">
 <h2 class="anchored" data-anchor-id="i.-optimization-problem-types">📊 I. Optimization problem&nbsp;types</h2>
@@ -8799,7 +8799,7 @@ Army:
 </ul>
 <p>There are other types such as <strong>quadratic</strong> (QP) or <strong>nonlinear</strong> (NLP or MINLP, with an exponential objective function or constraints for instance) problems. They’re applied in different contexts, but follow the same principles as LP or MIP solvers.</p>
 <center>
-<img src="https://mlabonne.github.io/images/integerprogramming/continuousvsdiscrete.png">
+<img src="https://mlabonne.github.io/blog/images/integerprogramming/continuousvsdiscrete.png">
 </center>
 </section>
 <section id="ii.-building-a-general-model" class="level2">
@@ -9134,7 +9134,7 @@ Army:
 </table>
 <p>Notice that we transformed the 💪<strong>power</strong> into two values: 💪<strong>attack</strong> and ❤️<strong>health</strong>, which is a little more detailed. Health values are higher than attack values, which is why we want to add a weighting factor to make them more comparable.</p>
 <p>Let’s take 10 as an example, so <img src="https://latex.codecogs.com/png.latex?power%20=%2010%20%5Ctimes%20attack%20+%20health">. Our objective function becomes:</p>
-<p><img src="https://latex.codecogs.com/png.latex?maximize%20%5C%20%5Csum_%7Bu%20%5Cin%20units%7D%20(10%5Ctimes%20attack%20+%20health)%20%5Ccdot%20u"></p>
+<p><img src="https://latex.codecogs.com/png.latex?%5Ctext%7Bmaximize%7D%20%5C%20%5Csum_%7Bu%20%5Cin%20units%7D%20(10%5Ctimes%20attack%20+%20health)%20%5Ccdot%20u"></p>
 <p>Adapting our code to this new problem is actually quite simple: we just have to <strong>change the input parameters</strong> and update the <strong>objective function</strong>.</p>
 <div class="cell" data-outputid="e85623bc-00c0-4a62-e463-253fc6ce7a5c" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">UNITS <span class="op" style="color: #5E5E5E;
@@ -9511,7 +9511,7 @@ Army:
 <p><img src="https://latex.codecogs.com/png.latex?%5Csum_%7Bu%20%5Cin%20units%7D%20(10%5Ctimes%20attack%20+%20health)%20%5Ccdot%20u%20%3E%201%5C,000%5C,000"></p>
 <p>In code, we can loop through our units and resources to design this constraint.</p>
 <p>The objective function also has to change. Our goal is to <strong>minimize the sum of resources spent</strong> to build the army.</p>
-<p><img src="https://latex.codecogs.com/png.latex?minimize%20%5C%20%5Csum_%7Bu%20%5Cin%20units%7D%20(food%20+%20wood%20+%20gold)%20%5Ccdot%20u"></p>
+<p><img src="https://latex.codecogs.com/png.latex?%5Ctext%7Bminimize%7D%20%5C%20%5Csum_%7Bu%20%5Cin%20units%7D%20(food%20+%20wood%20+%20gold)%20%5Ccdot%20u"></p>
 <p>Once again, we can loop through our resources to implement it in OR-Tools.</p>
 <div class="cell" data-outputid="c2bb06c0-4214-4fa8-c85a-a3191c17612a" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><span class="kw" style="color: #003B4F;
@@ -10237,7 +10237,7 @@ Resources:
 <li>As a rule of thumb, problems that <strong>do not have a particular time constraint</strong> and/or are not extremely complex can be advantageously solved with linear programming.</li>
 </ul>
 <center>
-<img src="https://mlabonne.github.io/images/integerprogramming/lpvsml.png">
+<img src="https://mlabonne.github.io/blog/images/integerprogramming/lpvsml.png">
 </center>
 </section>
 <section id="conclusion" class="level2">
@@ -10270,21 +10270,21 @@ Resources:
   <category>ortools</category>
   <category>python</category>
   <category>tutorial</category>
-  <guid>https://mlabonne.github.io/posts/2022-03-05-integer_programming.html</guid>
+  <guid>https://mlabonne.github.io/blog/posts/2022-03-05-integer_programming.html</guid>
   <pubDate>Sat, 05 Mar 2022 00:00:00 GMT</pubDate>
-  <media:content url="https://mlabonne.github.io/images/integerprogramming/thumbnail.jpg" medium="image" type="image/jpeg"/>
+  <media:content url="https://mlabonne.github.io/blog/images/integerprogramming/thumbnail.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
   <title>Introduction to Linear Programming in Python</title>
   <dc:creator>Maxime Labonne</dc:creator>
-  <link>https://mlabonne.github.io/posts/2022-03-02-linear_programming.html</link>
+  <link>https://mlabonne.github.io/blog/posts/2022-03-02-linear_programming.html</link>
   <description><![CDATA[ 
 
 
 
 
 <center>
-<img src="https://mlabonne.github.io/images/linearoptimization/thumbnail.jpg">
+<img src="https://mlabonne.github.io/blog/images/linearoptimization/thumbnail.jpg">
 </center>
 <p>Linear programming is a technique to <strong>optimize any problem</strong> with multiple variables and constraints. It’s a simple but powerful tool every data scientist should master.</p>
 <p>Imagine you are a strategist recruiting an army. You have: * <strong>Three resources</strong>: 🌾food, 🪵wood, and 🪙gold * <strong>Three units</strong>: 🗡️swordsmen, 🏹bowmen, and 🐎horsemen.</p>
@@ -10502,7 +10502,7 @@ font-style: inherit;"># Gold</span></span></code></pre></div>
 <li>1 <strong>horseman</strong> = 💪230.</li>
 </ul>
 <p>Maximizing the power of the army amounts to <strong>maximizing the sum of the power of each unit</strong>. Our objective function can be written as:</p>
-<p><img src="https://latex.codecogs.com/png.latex?max%5C%2070%5Ctimes%20swordsmen%20+%2095%5Ctimes%20bowmen%20+%20230%5Ctimes%20horsemen"></p>
+<p><img src="https://latex.codecogs.com/png.latex?%5Cmax%5C%2070%5Ctimes%20swordsmen%20+%2095%5Ctimes%20bowmen%20+%20230%5Ctimes%20horsemen"></p>
 <p>In general, there are two types of objective functions: <strong>maximizing</strong> and <strong>minimizing</strong>. In OR-Tools, we declare this goal with <a href="https://google.github.io/or-tools/python/ortools/linear_solver/pywraplp.html#Solver.Maximize"><code>solver.Maximize()</code></a> or <a href="https://google.github.io/or-tools/python/ortools/linear_solver/pywraplp.html#Solver.Minimize"><code>solver.Minimize()</code></a>.</p>
 <div class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="co" style="color: #5E5E5E;
@@ -10683,7 +10683,7 @@ Army:
 <li><strong>Optimizing</strong>: GLOP found an optimal solution to this problem in less than a second.</li>
 </ol>
 <center>
-<img src="https://mlabonne.github.io/images/linearoptimization/infographic.png" width="600">
+<img src="https://mlabonne.github.io/blog/images/linearoptimization/infographic.png" width="600">
 </center>
 <p>This is the main benefit of linear programming: the algorithm gives us a <strong>guarantee that the solution that was found is optimal</strong> (with a certain error). This guarantee is powerful, but comes at a cost: the model can be so complex that the solver takes years (or more) to find an optimal solution. In this scenario, we have two options:</p>
 <ul>
@@ -10710,21 +10710,21 @@ Army:
   <category>ortools</category>
   <category>python</category>
   <category>tutorial</category>
-  <guid>https://mlabonne.github.io/posts/2022-03-02-linear_programming.html</guid>
+  <guid>https://mlabonne.github.io/blog/posts/2022-03-02-linear_programming.html</guid>
   <pubDate>Wed, 02 Mar 2022 00:00:00 GMT</pubDate>
-  <media:content url="https://mlabonne.github.io/images/linearoptimization/thumbnail.jpg" medium="image" type="image/jpeg"/>
+  <media:content url="https://mlabonne.github.io/blog/images/linearoptimization/thumbnail.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
   <title>Graph Convolutional Networks: Introduction to GNNs</title>
   <dc:creator>Maxime Labonne</dc:creator>
-  <link>https://mlabonne.github.io/posts/2022-02-20-graph_convolution_network.html</link>
+  <link>https://mlabonne.github.io/blog/posts/2022-02-20-graph_convolution_network.html</link>
   <description><![CDATA[ 
 
 
 
 
 <center>
-<img src="https://mlabonne.github.io/images/gnn/gnn.png">
+<img src="https://mlabonne.github.io/blog/images/gnn/gnn.png">
 </center>
 <p><strong>Graph Neural Networks</strong> (GNNs) are one of the most interesting and fast-growing architectures in deep learning.</p>
 <p>In this series of tutorials, I would like to give a practical overview of this field and present new applications for machine learning practictioners.</p>
@@ -10815,7 +10815,7 @@ font-style: inherit;">as</span> nx</span></code></pre></div>
 <h2 class="anchored" data-anchor-id="i.-graph-data">🌐 I. Graph data</h2>
 <p><a href="https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)">Graphs</a> are a nonlinear type of data you can find everywhere: social networks, computer networks, molecules, text, images, and so on. In this article, we will study the infamous and much-used <a href="https://en.wikipedia.org/wiki/Zachary%27s_karate_club">Zachary’s karate club</a> dataset.</p>
 <center>
-<img src="https://mlabonne.github.io/images/gnn/zachary.png" width="600">
+<img src="https://mlabonne.github.io/blog/images/gnn/zachary.png" width="600">
 </center>
 <p>Zachary’s karate club represents the relationships within a karate club studied by Wayne W. Zachary in the 1970s. It is a kind of social network, where every node is a member, and members who interacted outside the club are connected to each other.</p>
 <p>In this example, the club is divided into four groups: we would like to <strong>assign the right group to every member</strong> (node classification) just by looking at their connections.</p>
@@ -10999,7 +10999,7 @@ tensor([[ 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  1,
 <p>The <code>edge_index</code> has a quite counter-intuitive way of storing the graph connectivity. Here, we have two lists of 156 directed edges (78 bidirectional edges) because the first list contains the sources and the second one the destinations. It is called a <strong>coordinate list</strong> (COO) and is just <a href="https://en.wikipedia.org/wiki/Sparse_matrix#Storing_a_sparse_matrix">one way of efficiently storing a sparse matrix</a>.</p>
 <p>A more intuitive way to represent the graph connectivity would be a simple <strong>adjacency matrix</strong> <img src="https://latex.codecogs.com/png.latex?A">, where a non-zero element <img src="https://latex.codecogs.com/png.latex?A_%7Bij%7D"> indicates a connection from <img src="https://latex.codecogs.com/png.latex?i"> to <img src="https://latex.codecogs.com/png.latex?j">.</p>
 <center>
-<img src="https://mlabonne.github.io/images/gnn/adjacency.png">
+<img src="https://mlabonne.github.io/blog/images/gnn/adjacency.png">
 </center>
 <p>The adjacency matrix can be inferred from the <code>edge_index</code> with a utility function.</p>
 <div class="cell" data-outputid="da8a67a1-f899-4b52-d92a-f3cf17daac53" data-execution_count="6">
@@ -11233,7 +11233,7 @@ font-style: inherit;">14</span></span>
 <span id="cb18-17">                )</span>
 <span id="cb18-18">plt.show()</span></code></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mlabonne.github.io/posts/2022-02-20-Graph_Convolution_Network_files/figure-html/cell-11-output-1.png" class="img-fluid"></p>
+<p><img src="https://mlabonne.github.io/blog/posts/2022-02-20-Graph_Convolution_Network_files/figure-html/cell-11-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <p>This plot of Zachary’s karate club displays our 34 nodes, 78 (bidirectional) edges, and 4 labels with 4 different colors. Now that we’ve seen the essentials of loading and handling a dataset with PyTorch Geometric, we can introduce the <strong>Graph Convolutional Network</strong>.</p>
@@ -11252,7 +11252,7 @@ font-style: inherit;">14</span></span>
 <p><img src="https://latex.codecogs.com/png.latex?h_i%20=%20%5Cdfrac%7B1%7D%7B%5Cdeg(i)%7D%20%5Csum_%7Bj%20%5Cin%20%5Ctilde%7B%5Cmathcal%7BN%7D%7D_i%7D%20%5Cmathbf%7BW%7D%20x_j"></p>
 <p>We’re almost there! Introduced by Kipf et al.&nbsp;in 2016, the <a href="https://arxiv.org/abs/1609.02907">graph convolutional layer</a> has one final improvement.</p>
 <p>Indeed, the authors noticed that features from nodes with a lot of neighbors will spread much more easily than those from more isolated nodes. To counterbalance this effect, they proposed to give <strong>bigger weights</strong> to features from nodes with few neighbors. This operation can be written as follows:</p>
-<p><img src="https://latex.codecogs.com/png.latex?h_i%20=%20%5Csum_%7Bj%20%5Cin%20%5Ctilde%7B%5Cmathcal%7BN%7D%7D_i%7D%7D%20%5Cdfrac%7B1%7D%7B%5Csqrt%7B%5Cdeg(i)%7D%5Csqrt%7B%5Cdeg(j)%7D%7D%20%5Cmathbf%7BW%7D%20x_j"></p>
+<p><img src="https://latex.codecogs.com/png.latex?h_i%20=%20%5Csum_%7Bj%20%5Cin%20%5Ctilde%7B%5Cmathcal%7BN%7D%7D_i%7D%20%5Cdfrac%7B1%7D%7B%5Csqrt%7B%5Cdeg(i)%7D%5Csqrt%7B%5Cdeg(j)%7D%7D%20%5Cmathbf%7BW%7D%20x_j"></p>
 <p>Notice that when <img src="https://latex.codecogs.com/png.latex?i"> and <img src="https://latex.codecogs.com/png.latex?j"> have the same number of neighbors, it is equivalent to our own layer. Now, let’s see how to implement it in Python.</p>
 </section>
 <section id="iii.-implementing-a-gcn" class="level2">
@@ -20269,7 +20269,7 @@ font-style: inherit;">3</span>)</span>
 <span id="cb27-13"></span>
 <span id="cb27-14">plt.show()</span></code></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mlabonne.github.io/posts/2022-02-20-Graph_Convolution_Network_files/figure-html/cell-17-output-1.png" class="img-fluid"></p>
+<p><img src="https://mlabonne.github.io/blog/posts/2022-02-20-Graph_Convolution_Network_files/figure-html/cell-17-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <p>We see every node from Zachary’s karate club with their true labels (and not the model’s predictions). For now, they’re all over the place since the GNN is not trained yet. But if we plot these embeddings at each step of the training loop, we’d be able to visualize what the GNN truly learns.</p>
@@ -30462,14 +30462,14 @@ AAAAAExhdmY1Ny44My4xMDA=
   <category>python</category>
   <category>pytorch</category>
   <category>tutorial</category>
-  <guid>https://mlabonne.github.io/posts/2022-02-20-graph_convolution_network.html</guid>
+  <guid>https://mlabonne.github.io/blog/posts/2022-02-20-graph_convolution_network.html</guid>
   <pubDate>Sun, 20 Feb 2022 00:00:00 GMT</pubDate>
-  <media:content url="https://mlabonne.github.io/images/gnn/thumbnail.png" medium="image" type="image/png" height="81" width="144"/>
+  <media:content url="https://mlabonne.github.io/blog/images/gnn/thumbnail.png" medium="image" type="image/png" height="81" width="144"/>
 </item>
 <item>
   <title>Q-learning for beginners</title>
   <dc:creator>Maxime Labonne</dc:creator>
-  <link>https://mlabonne.github.io/posts/2022-02-13-q_learning.html</link>
+  <link>https://mlabonne.github.io/blog/posts/2022-02-13-q_learning.html</link>
   <description><![CDATA[ 
 
 
@@ -30477,7 +30477,7 @@ AAAAAExhdmY1Ny44My4xMDA=
 
 <center>
 <div id="anim_container">
-<img alt="Illustration of the Frozen Lake Environment" src="https://mlabonne.github.io/images/qlearning/frozenlake.png" loading="lazy" class="aura" id="anim_inner">
+<img alt="Illustration of the Frozen Lake Environment" src="https://mlabonne.github.io/blog/images/qlearning/frozenlake.png" loading="lazy" class="aura" id="anim_inner">
 </div>
 </center>
 <p>The goal of this article is to <strong>teach an AI how to solve the ❄️Frozen Lake environment using reinforcement learning</strong>. Instead of reading Wikipedia articles and explaining formulas, we’re going to <strong>start from scratch and try to recreate the 🤖Q-learning</strong> algorithm by ourselves. We’ll not just understand <strong>how it works</strong>, but more importantly <strong>why it works</strong>: why was it designed that way? What are the hidden assumptions, the details that are never explained in regular courses and tutorials?</p>
@@ -31097,7 +31097,7 @@ Q-table after training:
  [0.         0.         0.         0.        ]]</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mlabonne.github.io/posts/2022-02-13-Q_learning_files/figure-html/cell-9-output-2.png" class="img-fluid"></p>
+<p><img src="https://mlabonne.github.io/blog/posts/2022-02-13-Q_learning_files/figure-html/cell-9-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <p>The agent is trained! Each blue bar on the figure corresponds to a win, so we can see that the agent had a <strong>hard time finding the goal at the beginning</strong> of the training. But once it found it several times in a row, it began to <strong>consistently win</strong>. 🥳 The trained Q-table is also very interesting: these values indicate the <strong>unique sequence of actions the agent learned to reach the goal</strong>.</p>
@@ -31337,7 +31337,7 @@ Sequence = [2, 2, 1, 1, 1, 2]</code></pre>
 </center>
 <p>Let’s implement a <strong>linear decay</strong>. Beforehand, I’d like to see how the curve looks like with arbitrary parameters. We’ll start with <img src="https://latex.codecogs.com/png.latex?%CE%B5%20=%201"> to be in full exploration mode, and decrease this value by <img src="https://latex.codecogs.com/png.latex?0.001"> after each episode.</p>
 <center>
-<img alt="Illustration of linear decay" src="https://mlabonne.github.io/posts/https:/i.imgur.com/F7hXEyY.png" loading="lazy" class="figure">
+<img alt="Illustration of linear decay" src="https://mlabonne.github.io/blog/posts/https:/i.imgur.com/F7hXEyY.png" loading="lazy" class="figure">
 </center>
 <p>Okay now that we have a sound understanding of it, we can implement it for real and see <strong>how it changes the agent’s behavior</strong>.</p>
 <div class="cell" data-outputid="d3c66f2e-2eb1-479d-8925-08a15fca2af2" data-execution_count="11">
@@ -31622,7 +31622,7 @@ Q-table after training:
  [0.         0.         0.         0.        ]]</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mlabonne.github.io/posts/2022-02-13-Q_learning_files/figure-html/cell-12-output-2.png" class="img-fluid"></p>
+<p><img src="https://mlabonne.github.io/blog/posts/2022-02-13-Q_learning_files/figure-html/cell-12-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <p>Hey, <strong>the agent takes more time to consistently win the game</strong> now! And the Q-table has <strong>a lot more non-zero values</strong> than the previous one, which means the agent has learned <strong>several sequences of actions</strong> to reach the goal. It is understandable, since this new agent is <strong>forced to explore state-action pairs instead of always exploiting ones with non-zero values</strong>.</p>
@@ -32111,7 +32111,7 @@ Q-table after training:
 Success rate = 17.0%</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="https://mlabonne.github.io/posts/2022-02-13-Q_learning_files/figure-html/cell-14-output-2.png" class="img-fluid"></p>
+<p><img src="https://mlabonne.github.io/blog/posts/2022-02-13-Q_learning_files/figure-html/cell-14-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <p>Oof it’s not so good. But can you improve the performance by tweaking the different parameters we talked about? I encourage you to take this <strong>little challenge</strong> and do it on your own to <strong>have fun with reinforcement learning</strong> and check if you understood <strong>everything we said about Q-learning</strong>. And why not implementing <strong>exponential decay</strong> for the epsilon-greedy algorithm too? During this quick exercise, you might realise that <strong>slightly modifying the hyperparameters can completely destroy the results</strong>. This is another quirk of reinforcement learning: hyperparameters are quite moody, and it is important to understand their meaning if you want to tweak them. It’s always good to test and try new combinations to <strong>build your intuition and become more efficient</strong>. Good luck and have fun!</p>
@@ -32131,9 +32131,9 @@ Success rate = 17.0%</code></pre>
   <category>frozen lake</category>
   <category>gym</category>
   <category>tutorial</category>
-  <guid>https://mlabonne.github.io/posts/2022-02-13-q_learning.html</guid>
+  <guid>https://mlabonne.github.io/blog/posts/2022-02-13-q_learning.html</guid>
   <pubDate>Sun, 13 Feb 2022 00:00:00 GMT</pubDate>
-  <media:content url="https://mlabonne.github.io/images/qlearning/frozenlake_thumbnail.png" medium="image" type="image/png" height="81" width="144"/>
+  <media:content url="https://mlabonne.github.io/blog/images/qlearning/frozenlake_thumbnail.png" medium="image" type="image/png" height="81" width="144"/>
 </item>
 </channel>
 </rss>

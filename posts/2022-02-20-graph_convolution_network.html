@@ -109,26 +109,40 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
 
 <link rel="stylesheet" href="../styles.css">
 <meta property="og:title" content="Maxime Labonne - Graph Convolutional Networks: Introduction to GNNs">
 <meta property="og:description" content="Graph Neural Network Course: Chapter 1">
-<meta property="og:image" content="https://mlabonne.github.io/images/gnn/thumbnail.png">
+<meta property="og:image" content="https://mlabonne.github.io/blog/images/gnn/thumbnail.png">
 <meta property="og:site-name" content="Maxime Labonne">
 <meta property="og:image:height" content="480">
 <meta property="og:image:width" content="853">
 <meta name="twitter:title" content="Maxime Labonne - Graph Convolutional Networks: Introduction to GNNs">
 <meta name="twitter:description" content="Graph Neural Network Course: Chapter 1">
-<meta name="twitter:image" content="https://mlabonne.github.io/images/gnn/thumbnail.png">
+<meta name="twitter:image" content="https://mlabonne.github.io/blog/images/gnn/thumbnail.png">
 <meta name="twitter:creator" content="@maximelabonne">
 <meta name="twitter:image-height" content="480">
 <meta name="twitter:image-width" content="853">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -144,18 +158,25 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../about.html" rel="" target="">
- <span class="menu-text">About</span></a>
+    <a class="nav-link" href="../book.html" rel="" target="">
+ <span class="menu-text">Book</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../publications.html" rel="" target="">
  <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../book.html" rel="" target="">
- <span class="menu-text">Book</span></a>
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/mlabonne" rel="" target=""><i class="bi bi-github" role="img">
@@ -163,7 +184,12 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
  <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://medium.com/@mlabonne" rel="" target=""><i class="bi bi-medium" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://linkedin.com/in/maxime-labonne/" rel="" target=""><i class="bi bi-linkedin" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -220,7 +246,19 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#i.-graph-data" id="toc-i.-graph-data" class="nav-link active" data-scroll-target="#i.-graph-data">🌐 I. Graph data</a></li>
+  <li><a href="#ii.-graph-convolutional-network" id="toc-ii.-graph-convolutional-network" class="nav-link" data-scroll-target="#ii.-graph-convolutional-network">✉️ II. Graph Convolutional Network</a></li>
+  <li><a href="#iii.-implementing-a-gcn" id="toc-iii.-implementing-a-gcn" class="nav-link" data-scroll-target="#iii.-implementing-a-gcn">🧠 III. Implementing a GCN</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#graph-neural-network-course" id="toc-graph-neural-network-course" class="nav-link" data-scroll-target="#graph-neural-network-course">🌐 Graph Neural Network Course</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -333,7 +371,7 @@ tensor([[ 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  1,
 </div>
 </div>
 <p>The <code>edge_index</code> has a quite counter-intuitive way of storing the graph connectivity. Here, we have two lists of 156 directed edges (78 bidirectional edges) because the first list contains the sources and the second one the destinations. It is called a <strong>coordinate list</strong> (COO) and is just <a href="https://en.wikipedia.org/wiki/Sparse_matrix#Storing_a_sparse_matrix">one way of efficiently storing a sparse matrix</a>.</p>
-<p>A more intuitive way to represent the graph connectivity would be a simple <strong>adjacency matrix</strong> <span class="math inline">\(A\)</span>, where a non-zero element <span class="math inline">\(A_{ij}\)</span> indicates a connection from <span class="math inline">\(i\)</span> to <span class="math inline">\(j\)</span>.</p>
+<p>A more intuitive way to represent the graph connectivity would be a simple <strong>adjacency matrix</strong> <span class="math inline">A</span>, where a non-zero element <span class="math inline">A_{ij}</span> indicates a connection from <span class="math inline">i</span> to <span class="math inline">j</span>.</p>
 <center>
 <img src="../images/gnn/adjacency.png">
 </center>
@@ -355,7 +393,7 @@ tensor([[ 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  1,
  [0 0 0 ... 1 1 0]]</code></pre>
 </div>
 </div>
-<p>With graph data, nodes are rarely highly interconnected. For example, our adjacency matrix <span class="math inline">\(A\)</span> is <strong>very sparse</strong> (filled with zeros). Storing so many zeros is not efficient at all, which is why the COO format is adopted by PyG.</p>
+<p>With graph data, nodes are rarely highly interconnected. For example, our adjacency matrix <span class="math inline">A</span> is <strong>very sparse</strong> (filled with zeros). Storing so many zeros is not efficient at all, which is why the COO format is adopted by PyG.</p>
 <p>On the contrary, ground-truth labels are easy to understand.</p>
 <div class="cell" data-outputid="ed1c69bf-57e9-422b-a584-0e761e932057" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'y = </span><span class="sc">{</span>data<span class="sc">.</span>y<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">'</span>)</span>
@@ -427,19 +465,19 @@ Graph has loops: False</code></pre>
 <section id="ii.-graph-convolutional-network" class="level2">
 <h2 class="anchored" data-anchor-id="ii.-graph-convolutional-network">✉️ II. Graph Convolutional Network</h2>
 <p>In this section, let’s try to redesign the graph convolutional layer from scratch.</p>
-<p>In neural networks, linear layers apply a <strong>linear transformation</strong> to the incoming data. They transform input features <span class="math inline">\(x\)</span> into hidden vectors <span class="math inline">\(h\)</span> using a weight matrix <span class="math inline">\(W\)</span>. If we ignore biases, we can write:</p>
-<p><span class="math display">\[h = \mathbf{W} x\]</span></p>
+<p>In neural networks, linear layers apply a <strong>linear transformation</strong> to the incoming data. They transform input features <span class="math inline">x</span> into hidden vectors <span class="math inline">h</span> using a weight matrix <span class="math inline">W</span>. If we ignore biases, we can write:</p>
+<p><span class="math display">h = \mathbf{W} x</span></p>
 <p>With graph data, we have access to connections between nodes. Why is that relevant? In most networks, we make the hypothesis that similar nodes are more likely to be connected to each other than dissimilar ones (it’s called <a href="https://en.wikipedia.org/wiki/Network_homophily">network homophily</a>).</p>
-<p>We can enrich our <strong>node representation</strong> by aggregating its features with those of its neighbors. This operation is called convolution, or neighborhood aggregation. Let’s denote <span class="math inline">\(\tilde{\mathcal{N}}_i\)</span> the neighborhood of node <span class="math inline">\(i\)</span> including itself.</p>
-<p><span class="math display">\[h_i = \sum_{j \in \tilde{\mathcal{N}}_i} \mathbf{W} x_j\]</span></p>
-<p>Unlike filters in Convolutional Neural Networks (CNNs), our weight matrix <span class="math inline">\(W\)</span> is unique and shared among every node. But there is another issue: nodes do not have a <strong>fixed number of neighbors</strong> like pixels do.</p>
-<p>What if one node only has 1 neighbor, and another one has 500 of them? We would add 500 values instead of just one: the resulting embedding <span class="math inline">\(h\)</span> would be much larger for the node with 500 neighbors.</p>
+<p>We can enrich our <strong>node representation</strong> by aggregating its features with those of its neighbors. This operation is called convolution, or neighborhood aggregation. Let’s denote <span class="math inline">\tilde{\mathcal{N}}_i</span> the neighborhood of node <span class="math inline">i</span> including itself.</p>
+<p><span class="math display">h_i = \sum_{j \in \tilde{\mathcal{N}}_i} \mathbf{W} x_j</span></p>
+<p>Unlike filters in Convolutional Neural Networks (CNNs), our weight matrix <span class="math inline">W</span> is unique and shared among every node. But there is another issue: nodes do not have a <strong>fixed number of neighbors</strong> like pixels do.</p>
+<p>What if one node only has 1 neighbor, and another one has 500 of them? We would add 500 values instead of just one: the resulting embedding <span class="math inline">h</span> would be much larger for the node with 500 neighbors.</p>
 <p>However, this doesn’t make sense: nodes should always be comparable, so they need to have a <strong>similar range</strong> of values. To address this issue, we can normalize the result based on the number of connections. In graph theory, this number is called a degree.</p>
-<p><span class="math display">\[h_i = \dfrac{1}{\deg(i)} \sum_{j \in \tilde{\mathcal{N}}_i} \mathbf{W} x_j\]</span></p>
+<p><span class="math display">h_i = \dfrac{1}{\deg(i)} \sum_{j \in \tilde{\mathcal{N}}_i} \mathbf{W} x_j</span></p>
 <p>We’re almost there! Introduced by Kipf et al.&nbsp;in 2016, the <a href="https://arxiv.org/abs/1609.02907">graph convolutional layer</a> has one final improvement.</p>
 <p>Indeed, the authors noticed that features from nodes with a lot of neighbors will spread much more easily than those from more isolated nodes. To counterbalance this effect, they proposed to give <strong>bigger weights</strong> to features from nodes with few neighbors. This operation can be written as follows:</p>
-<p><span class="math display">\[h_i = \sum_{j \in \tilde{\mathcal{N}}_i}} \dfrac{1}{\sqrt{\deg(i)}\sqrt{\deg(j)}} \mathbf{W} x_j\]</span></p>
-<p>Notice that when <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> have the same number of neighbors, it is equivalent to our own layer. Now, let’s see how to implement it in Python.</p>
+<p><span class="math display">h_i = \sum_{j \in \tilde{\mathcal{N}}_i} \dfrac{1}{\sqrt{\deg(i)}\sqrt{\deg(j)}} \mathbf{W} x_j</span></p>
+<p>Notice that when <span class="math inline">i</span> and <span class="math inline">j</span> have the same number of neighbors, it is equivalent to our own layer. Now, let’s see how to implement it in Python.</p>
 </section>
 <section id="iii.-implementing-a-gcn" class="level2">
 <h2 class="anchored" data-anchor-id="iii.-implementing-a-gcn">🧠 III. Implementing a GCN</h2>
@@ -19396,7 +19434,25 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       });
     }
   }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var filterRegex = new RegExp("https:\/\/mlabonne\.github\.io\/blog");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          // default icon
+          link.classList.add("external");
+      }
+    }
 });
+</script>
+<script src="https://utteranc.es/client.js" repo="https://github.com/mlabonne/blog" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
 </script>
 </div> <!-- /content -->
 

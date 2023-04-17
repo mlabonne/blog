@@ -106,22 +106,36 @@ gtag('js', new Date());
 gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
 
 <link rel="stylesheet" href="../styles.css">
 <meta property="og:title" content="Maxime Labonne - Graph Attention Networks: Self-Attention for GNNs">
 <meta property="og:description" content="Graph Neural Network Course: Chapter 2">
-<meta property="og:image" content="https://mlabonne.github.io/images/gat/thumbnail.jpg">
+<meta property="og:image" content="https://mlabonne.github.io/blog/images/gat/thumbnail.jpg">
 <meta property="og:site-name" content="Maxime Labonne">
 <meta name="twitter:title" content="Maxime Labonne - Graph Attention Networks: Self-Attention for GNNs">
 <meta name="twitter:description" content="Graph Neural Network Course: Chapter 2">
-<meta name="twitter:image" content="https://mlabonne.github.io/images/gat/thumbnail.jpg">
+<meta name="twitter:image" content="https://mlabonne.github.io/blog/images/gat/thumbnail.jpg">
 <meta name="twitter:creator" content="@maximelabonne">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -137,18 +151,25 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../about.html" rel="" target="">
- <span class="menu-text">About</span></a>
+    <a class="nav-link" href="../book.html" rel="" target="">
+ <span class="menu-text">Book</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../publications.html" rel="" target="">
  <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../book.html" rel="" target="">
- <span class="menu-text">Book</span></a>
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/mlabonne" rel="" target=""><i class="bi bi-github" role="img">
@@ -156,7 +177,12 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
  <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://medium.com/@mlabonne" rel="" target=""><i class="bi bi-medium" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://linkedin.com/in/maxime-labonne/" rel="" target=""><i class="bi bi-linkedin" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -214,7 +240,19 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#i.-graph-data" id="toc-i.-graph-data" class="nav-link active" data-scroll-target="#i.-graph-data">🌐 I. Graph data</a></li>
+  <li><a href="#ii.-graph-attention-layer" id="toc-ii.-graph-attention-layer" class="nav-link" data-scroll-target="#ii.-graph-attention-layer">⚠️ II. Graph Attention Layer</a></li>
+  <li><a href="#iii.-implementing-a-graph-attention-network" id="toc-iii.-implementing-a-graph-attention-network" class="nav-link" data-scroll-target="#iii.-implementing-a-graph-attention-network">🧠 III. Implementing a Graph Attention Network</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#graph-neural-network-course" id="toc-graph-neural-network-course" class="nav-link" data-scroll-target="#graph-neural-network-course">🌐 Graph Neural Network Course</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -347,9 +385,9 @@ Has isolated nodes: True</code></pre>
 <center>
 <img src="../images/gat/graph_attention.png" width="400">
 </center>
-<p>In the previous figure, self-attention calculates the importance of nodes 2, 3, and 4’s features to node 1. We denote <span class="math inline">\(\alpha_{ij}\)</span> the importance of node <span class="math inline">\(j\)</span>’s features to node <span class="math inline">\(i\)</span>.</p>
-<p>Each node <span class="math inline">\(i\)</span> has an attribute vector <span class="math inline">\(x_i\)</span>. The GAT layer calculates the embedding of node 1 as a sum of attention coefficients multiplied by a shared weight matrix <span class="math inline">\(\mathbf{W}\)</span> :</p>
-<p><span class="math display">\[h_i = \alpha_{11}\mathbf{W}x_1 + \alpha_{12}\mathbf{W}x_2 + \alpha_{13}\mathbf{W}x_3 + \alpha_{14}\mathbf{W}x_4\]</span></p>
+<p>In the previous figure, self-attention calculates the importance of nodes 2, 3, and 4’s features to node 1. We denote <span class="math inline">\alpha_{ij}</span> the importance of node <span class="math inline">j</span>’s features to node <span class="math inline">i</span>.</p>
+<p>Each node <span class="math inline">i</span> has an attribute vector <span class="math inline">x_i</span>. The GAT layer calculates the embedding of node 1 as a sum of attention coefficients multiplied by a shared weight matrix <span class="math inline">\mathbf{W}</span> :</p>
+<p><span class="math display">h_i = \alpha_{11}\mathbf{W}x_1 + \alpha_{12}\mathbf{W}x_2 + \alpha_{13}\mathbf{W}x_3 + \alpha_{14}\mathbf{W}x_4</span></p>
 <p>But how do we calculate these attention coefficients? We could write a static formula, but there’s a smarter solution: we can learn their values with a neural network. There are four steps in this process:</p>
 <ol type="1">
 <li>Linear transformation</li>
@@ -360,8 +398,8 @@ Has isolated nodes: True</code></pre>
 <section id="linear-transformation" class="level3">
 <h3 class="anchored" data-anchor-id="linear-transformation">1. Linear transformation</h3>
 <p>To calculate the attention coefficient, we need to consider pairs of nodes. An easy way to create these pairs is to concatenate attribute vectors from both nodes.</p>
-<p>Then, we can apply a new <strong>linear transformation</strong> with a weight matrix <span class="math inline">\(W_{att}\)</span>:</p>
-<p><span class="math display">\[a_{ij} = W_{att}^t[\mathbf{W}x_i\mathbin\Vert \mathbf{W}x_j]\]</span></p>
+<p>Then, we can apply a new <strong>linear transformation</strong> with a weight matrix <span class="math inline">W_{att}</span>:</p>
+<p><span class="math display">a_{ij} = W_{att}^t[\mathbf{W}x_i\mathbin\Vert \mathbf{W}x_j]</span></p>
 <center>
 <img src="../images/gat/attention_calculation1.png" height="400">
 </center>
@@ -369,20 +407,20 @@ Has isolated nodes: True</code></pre>
 <section id="activation-function" class="level3">
 <h3 class="anchored" data-anchor-id="activation-function">2. Activation function</h3>
 <p>We’re building a neural network, so the second step is to add nonlinearity with an activation function. In this case, the paper’s authors chose the <em>LeakyReLU</em> function.</p>
-<p><span class="math display">\[e_{ij} = LeakyReLU(a_{ij})\]</span></p>
+<p><span class="math display">e_{ij} = LeakyReLU(a_{ij})</span></p>
 <center>
 <img src="../images/gat/attention_calculation2.png" height="400">
 </center>
 </section>
 <section id="softmax-normalization" class="level3">
 <h3 class="anchored" data-anchor-id="softmax-normalization">3. Softmax normalization</h3>
-<p>The output of our neural network is <strong>not normalized</strong>, which is a problem since we want to compare these coefficients. For example, to be able to say if node 2 is more important to node 1 than node 3 (<span class="math inline">\(\alpha_{12} &gt; \alpha_{13}\)</span>), we need to use the same scale.</p>
+<p>The output of our neural network is <strong>not normalized</strong>, which is a problem since we want to compare these coefficients. For example, to be able to say if node 2 is more important to node 1 than node 3 (<span class="math inline">\alpha_{12} &gt; \alpha_{13}</span>), we need to use the same scale.</p>
 <p>A common way to do it with neural networks is to use the softmax function. Here, we apply it to every neighboring node, including the target node itself:</p>
-<p><span class="math display">\[\alpha_{ij} = softmax_j(e_{ij}) = \frac{exp(e_{ij})}{\sum_{k \in \mathcal{N}_i}{exp(e_{ik})}}\]</span></p>
+<p><span class="math display">\alpha_{ij} = softmax_j(e_{ij}) = \frac{exp(e_{ij})}{\sum_{k \in \mathcal{N}_i}{exp(e_{ik})}}</span></p>
 <center>
 <img src="../images/gat/attention_calculation3.png" height="400">
 </center>
-<p>This equation produces the final attention coefficients <span class="math inline">\(\alpha_{ij}\)</span>. The only problem is… <strong>self-attention is not very stable</strong>. In order to improve performance, <a href="https://arxiv.org/abs/1706.03762">Vaswani et al.</a> introduced multi-head attention in the transformer architecture.</p>
+<p>This equation produces the final attention coefficients <span class="math inline">\alpha_{ij}</span>. The only problem is… <strong>self-attention is not very stable</strong>. In order to improve performance, <a href="https://arxiv.org/abs/1706.03762">Vaswani et al.</a> introduced multi-head attention in the transformer architecture.</p>
 </section>
 <section id="multi-head-attention" class="level3">
 <h3 class="anchored" data-anchor-id="multi-head-attention">4. Multi-head attention</h3>
@@ -390,25 +428,25 @@ Has isolated nodes: True</code></pre>
 <center>
 <img src="../images/gat/attention_calculation4.png" height="400">
 </center>
-<p>In GATs, multi-head attention consists of <strong>replicating the same three steps several times</strong> in order to average or concatenate the results. Instead of a single embedding <span class="math inline">\(h_1\)</span>, we get one embedding per attention head (denoted <span class="math inline">\(h_1^k\)</span> for the head <span class="math inline">\(k\)</span>). One of the two following schemes can then be applied:</p>
+<p>In GATs, multi-head attention consists of <strong>replicating the same three steps several times</strong> in order to average or concatenate the results. Instead of a single embedding <span class="math inline">h_1</span>, we get one embedding per attention head (denoted <span class="math inline">h_1^k</span> for the head <span class="math inline">k</span>). One of the two following schemes can then be applied:</p>
 <ul>
-<li><strong>Average</strong>: we sum the different <span class="math inline">\(h_i^k\)</span> and normalize the result by the number of attention heads <span class="math inline">\(n\)</span>;</li>
+<li><strong>Average</strong>: we sum the different <span class="math inline">h_i^k</span> and normalize the result by the number of attention heads <span class="math inline">n</span>;</li>
 </ul>
-<p><span class="math display">\[h_i = \frac{1}{n}\sum_{k=1}^n{h_i^k}\]</span></p>
+<p><span class="math display">h_i = \frac{1}{n}\sum_{k=1}^n{h_i^k}</span></p>
 <ul>
-<li><strong>Concatenation</strong>: we concatenate the different <span class="math inline">\(h_i^k\)</span>.</li>
+<li><strong>Concatenation</strong>: we concatenate the different <span class="math inline">h_i^k</span>.</li>
 </ul>
-<p><span class="math display">\[h_i = \mathbin\Vert_{k=1}^n{h_i^k}\]</span></p>
+<p><span class="math display">h_i = \mathbin\Vert_{k=1}^n{h_i^k}</span></p>
 <p>In practice, we use the <strong>concatenation scheme</strong> when it’s a hidden layer and the <strong>average scheme</strong> when it’s the last (output) layer. Most of the time, we will stack several GAT layers to aggregate a larger neighborhood and thus combine these two schemes in the same GAT model.</p>
 </section>
 </section>
 <section id="iii.-implementing-a-graph-attention-network" class="level2">
 <h2 class="anchored" data-anchor-id="iii.-implementing-a-graph-attention-network">🧠 III. Implementing a Graph Attention Network</h2>
 <p>Let’s now implement a GAT in PyTorch Geometric. This library has two different graph attention layers: <code>GATConv</code> and <code>GATv2Conv</code>.</p>
-<p>The layer we talked about in the previous section is the <code>GatConv</code> layer, but in 2021 <a href="https://arxiv.org/abs/2105.14491">Brody et al.</a> introduced an improved layer by modifying the order of operations. In <code>Gatv2Conv</code>, the weight matrix <span class="math inline">\(\mathbf{W}\)</span> is applied after the concatenation and the attention weight matrix <span class="math inline">\(W_{att}\)</span> after the <span class="math inline">\(LeakyReLU\)</span> function. In summary:</p>
+<p>The layer we talked about in the previous section is the <code>GatConv</code> layer, but in 2021 <a href="https://arxiv.org/abs/2105.14491">Brody et al.</a> introduced an improved layer by modifying the order of operations. In <code>Gatv2Conv</code>, the weight matrix <span class="math inline">\mathbf{W}</span> is applied after the concatenation and the attention weight matrix <span class="math inline">W_{att}</span> after the <span class="math inline">LeakyReLU</span> function. In summary:</p>
 <ul>
-<li><code>GatConv</code>: <span class="math inline">\(e_{ij} = LeakyReLU(W_{att}^t[\mathbf{W}x_i\mathbin\Vert \mathbf{W}x_j])\)</span></li>
-<li><code>Gatv2Conv</code>: <span class="math inline">\(e_{ij} = W_{att}^tLeakyReLU(\mathbf{W}[x_i\mathbin\Vert x_j])\)</span></li>
+<li><code>GatConv</code>: <span class="math inline">e_{ij} = LeakyReLU(W_{att}^t[\mathbf{W}x_i\mathbin\Vert \mathbf{W}x_j])</span></li>
+<li><code>Gatv2Conv</code>: <span class="math inline">e_{ij} = W_{att}^tLeakyReLU(\mathbf{W}[x_i\mathbin\Vert x_j])</span></li>
 </ul>
 <p>Which one should you use? According to the authors, <code>Gatv2Conv</code> consistently outperforms <code>GatConv</code> and thus should be preferred. We’ll follow their advice and implement this improved layer in our example.</p>
 <p>Okay, let’s classify the papers from CiteSeer! I tried to (roughly) reproduce the experiments of the original authors without adding too much complexity. You can find the official implementation of GAT <a href="https://github.com/PetarV-/GAT">on GitHub</a>.</p>
@@ -586,7 +624,7 @@ CPU times: user 53.4 s, sys: 2.68 s, total: 56.1 s
 Wall time: 55.9 s</code></pre>
 </div>
 </div>
-<p>This experiment is not super rigorous: we’d need to repeat it <span class="math inline">\(n\)</span> times and report the average accuracy with a standard deviation as the final result.</p>
+<p>This experiment is not super rigorous: we’d need to repeat it <span class="math inline">n</span> times and report the average accuracy with a standard deviation as the final result.</p>
 <p>In this example, we can see that the <strong>GAT outperforms the GCN</strong> in terms of accuracy (70.00% vs.&nbsp;67.70%), but takes longer to train (55.9s vs.&nbsp;32.4s). It’s a tradeoff that can cause scalability issues when working with large graphs.</p>
 <p>The authors obtained 72.5% for the GAT and 70.3% for the GCN, which is significantly better than what we got. The difference can be explained by additional preprocessing steps, some tweaks in the models, and a different training setting (e.g., a patience of 100 instead of a fixed number of epochs). We kept the code as simple as possible here, but feel free to modify it to improve the results.</p>
 <p>Beyond the accuracy score, it is interesting to see what the GAT actually learned. We can visualize it with <a href="https://en.wikipedia.org/wiki/T-distributed_stochastic_neighbor_embedding">t-SNE</a> plot, a powerful method to plot high-dimensional data in 2D or 3D. First, let’s see what the embeddings looked like before any training: it should be random since they’re produced by randomly initialized weight matrices.</p>
@@ -937,7 +975,25 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       });
     }
   }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var filterRegex = new RegExp("https:\/\/mlabonne\.github\.io\/blog");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          // default icon
+          link.classList.add("external");
+      }
+    }
 });
+</script>
+<script src="https://utteranc.es/client.js" repo="https://github.com/mlabonne/blog" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
 </script>
 </div> <!-- /content -->
 

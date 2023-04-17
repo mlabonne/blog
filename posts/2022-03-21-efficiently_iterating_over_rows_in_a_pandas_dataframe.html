@@ -114,16 +114,16 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 <link rel="stylesheet" href="../styles.css">
 <meta property="og:title" content="Maxime Labonne - Efficiently iterating over rows in a Pandas DataFrame">
 <meta property="og:description" content="Never use iterrows and itertuples again!">
-<meta property="og:image" content="https://mlabonne.github.io/images/dataframe/thumbnail.jpg">
+<meta property="og:image" content="https://mlabonne.github.io/blog/images/dataframe/thumbnail.jpg">
 <meta property="og:site-name" content="Maxime Labonne">
 <meta name="twitter:title" content="Maxime Labonne - Efficiently iterating over rows in a Pandas DataFrame">
 <meta name="twitter:description" content="Never use iterrows and itertuples again!">
-<meta name="twitter:image" content="https://mlabonne.github.io/images/dataframe/thumbnail.jpg">
+<meta name="twitter:image" content="https://mlabonne.github.io/blog/images/dataframe/thumbnail.jpg">
 <meta name="twitter:creator" content="@maximelabonne">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -139,18 +139,25 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../about.html" rel="" target="">
- <span class="menu-text">About</span></a>
+    <a class="nav-link" href="../book.html" rel="" target="">
+ <span class="menu-text">Book</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../publications.html" rel="" target="">
  <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../book.html" rel="" target="">
- <span class="menu-text">Book</span></a>
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/mlabonne" rel="" target=""><i class="bi bi-github" role="img">
@@ -158,7 +165,12 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
  <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://medium.com/@mlabonne" rel="" target=""><i class="bi bi-medium" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://linkedin.com/in/maxime-labonne/" rel="" target=""><i class="bi bi-linkedin" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -213,7 +225,23 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#iterrows" id="toc-iterrows" class="nav-link active" data-scroll-target="#iterrows">❌❌ 1. Iterrows</a></li>
+  <li><a href="#for-loop-with-.loc-or-.iloc-3-faster" id="toc-for-loop-with-.loc-or-.iloc-3-faster" class="nav-link" data-scroll-target="#for-loop-with-.loc-or-.iloc-3-faster">❌ 2. For loop with .loc or .iloc (3× faster)</a></li>
+  <li><a href="#apply-4-faster" id="toc-apply-4-faster" class="nav-link" data-scroll-target="#apply-4-faster">❌ 3. Apply (4× faster)</a></li>
+  <li><a href="#itertuples-10-faster" id="toc-itertuples-10-faster" class="nav-link" data-scroll-target="#itertuples-10-faster">❌ 4. Itertuples (10× faster)</a></li>
+  <li><a href="#list-comprehensions-200-faster" id="toc-list-comprehensions-200-faster" class="nav-link" data-scroll-target="#list-comprehensions-200-faster">❌ 5. List comprehensions (200× faster)</a></li>
+  <li><a href="#pandas-vectorization-1500-faster" id="toc-pandas-vectorization-1500-faster" class="nav-link" data-scroll-target="#pandas-vectorization-1500-faster">✅ 6. Pandas vectorization (1500× faster)</a></li>
+  <li><a href="#numpy-vectorization-1900-faster" id="toc-numpy-vectorization-1900-faster" class="nav-link" data-scroll-target="#numpy-vectorization-1900-faster">✅✅ 7. NumPy vectorization (1900× faster)</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#bonus" id="toc-bonus" class="nav-link" data-scroll-target="#bonus">📈 Bonus</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -1061,7 +1089,25 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       });
     }
   }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var filterRegex = new RegExp("https:\/\/mlabonne\.github\.io\/blog");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          // default icon
+          link.classList.add("external");
+      }
+    }
 });
+</script>
+<script src="https://utteranc.es/client.js" repo="https://github.com/mlabonne/blog" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
 </script>
 </div> <!-- /content -->
 
