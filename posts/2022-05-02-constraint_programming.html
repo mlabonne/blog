@@ -166,10 +166,10 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item compact">
+  <li class="nav-item">
     <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
 </i> 
- <span class="menu-text"></span></a>
+ <span class="menu-text"><span class="citation" data-cites="maximelabonne">@maximelabonne</span></span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/mlabonne" rel="" target=""><i class="bi bi-github" role="img">
@@ -354,7 +354,7 @@ Check solution:
  - Constraint 3: 9139 % 37 = 0</code></pre>
 </div>
 </div>
-<p>We obtained our solution in less than a millisecond: there are <strong>9,139 soldiers</strong> in the enemy army. Huzzah, we can now fire the scouts!</p>
+<p>We obtained our solution in less than a millisecond: there are <strong>9,139 soldiers</strong> in the enemy army.</p>
 <p>We limited the search space with an upper bound of 10,000, which gave us a <strong>unique solution</strong>. But is it still the case if we push this limit?</p>
 <p>Another perk of CP is the ability to <strong>find every possible solution</strong> to a problem. This might take a long time when the search space is large because the solver has to brute force the entire space (instead of reducing it with heuristics). Let’s explore this feature by printing every possible solution with a new upper bound of <strong>100,000</strong>.</p>
 <p>With OR-Tools, we ask the solver to look for every possible solution thanks to the <code>enumerate_all_solutions</code> parameter. We then assign it a <strong>callback</strong> class that prints every solution the solver finds.</p>
@@ -404,7 +404,7 @@ Check solution:
 <section id="ii.-optimization-and-beer" class="level2">
 <h2 class="anchored" data-anchor-id="ii.-optimization-and-beer">🍻 II. Optimization and beer</h2>
 <center>
-<img src="../images/cp/cart.png" width="500" style="margin-bottom:0px; margin-top:0px;">
+<img src="../images/cp/cart.png" width="400">
 </center>
 <p>Let’s see another problem: our army will face the enemy in a few days. In the meantime, the quartermaster has to <strong>prepare the rations</strong> that will be used during the campaign.</p>
 <p>The space in the supply wagons is <strong>limited</strong> and some rations are more <strong>popular</strong> than others. There are three possible rations:</p>

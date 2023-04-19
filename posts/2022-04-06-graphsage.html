@@ -166,10 +166,10 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item compact">
+  <li class="nav-item">
     <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
 </i> 
- <span class="menu-text"></span></a>
+ <span class="menu-text"><span class="citation" data-cites="maximelabonne">@maximelabonne</span></span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/mlabonne" rel="" target=""><i class="bi bi-github" role="img">
@@ -491,7 +491,11 @@ Subgraph 3: Data(x=[189, 500], edge_index=[2, 229], y=[189], train_mask=[189], v
 
 </video>
 </center>
-<p>The <strong>mean aggregator</strong> is the simplest one. The idea is close to a GCN approach: 1. The hidden features of the target node and its selected neighbors are averaged (nodes in <span class="math inline">\mathcal{\tilde{N}}_i</span>). 2. A linear transformation with a weight matrix <span class="math inline">\textbf{W}</span> is applied.</p>
+<p>The <strong>mean aggregator</strong> is the simplest one. The idea is close to a GCN approach:</p>
+<ol type="1">
+<li>The hidden features of the target node and its selected neighbors are averaged (nodes in <span class="math inline">\mathcal{\tilde{N}}_i</span>).</li>
+<li>A linear transformation with a weight matrix <span class="math inline">\textbf{W}</span> is applied.</li>
+</ol>
 <p>In other words, we can write:</p>
 <p><span class="math display">\textbf{h}_i' = \textbf{W} \cdot mean_{j \in \mathcal{\tilde{N}}_i}(\textbf{h}_j)</span></p>
 <p>The result can then be fed to a nonlinear activation function like ReLU.</p>
@@ -503,7 +507,11 @@ Subgraph 3: Data(x=[189, 500], edge_index=[2, 229], y=[189], train_mask=[189], v
 <h2 class="anchored" data-anchor-id="iii.-graphsage-in-pytorch-geometric">🧠 III. GraphSAGE in PyTorch Geometric</h2>
 <p>We can easily implement a GraphSAGE architecture in PyTorch Geometric with the <code>SAGEConv</code> layer. This implementation uses two weight matrices instead of one, like UberEats’ version of GraphSAGE:</p>
 <p><span class="math display">\textbf{h}_i' = \textbf{W}_1\textbf{h}_i + \textbf{W}_2 \cdot mean_{j \in \mathcal{N}_i}(\textbf{h}_j)</span></p>
-<p>Let’s create a network with two <code>SAGEConv</code> layers: * The first one uses <span class="math inline">ReLU</span> as the activation function and a <strong>dropout layer</strong>; * The second one directly outputs the <strong>node embeddings</strong>.</p>
+<p>Let’s create a network with two <code>SAGEConv</code> layers:</p>
+<ul>
+<li>The first one uses <span class="math inline">ReLU</span> as the activation function and a <strong>dropout layer</strong>;</li>
+<li>The second one directly outputs the <strong>node embeddings</strong>.</li>
+</ul>
 <p>As we’re dealing with a multi-class classification task, we’ll use the cross-entropy loss as our loss function. I also added an L2 regularization of 0.0005 for good measure.</p>
 <p>To see the benefits of GraphSAGE, let’s compare it with a GCN and a GAT without any sampling.</p>
 <div class="cell">

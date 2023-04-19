@@ -173,10 +173,10 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item compact">
+  <li class="nav-item">
     <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
 </i> 
- <span class="menu-text"></span></a>
+ <span class="menu-text"><span class="citation" data-cites="maximelabonne">@maximelabonne</span></span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/mlabonne" rel="" target=""><i class="bi bi-github" role="img">
@@ -325,7 +325,13 @@ Number of classes: 4</code></pre>
 <pre><code>Graph: Data(x=[34, 34], edge_index=[2, 156], y=[34], train_mask=[34])</code></pre>
 </div>
 </div>
-<p>The <a href="https://pytorch-geometric.readthedocs.io/en/latest/modules/data.html"><code>Data</code></a> object is particularly interesting. Printing it offers a good summary of the graph we’re studying: * <code>x=[34, 34]</code> is the <strong>node feature matrix</strong> with shape (number of nodes, number of features). In our case, it means that we have 34 nodes (our 34 members), each node being associated to a 34-dim feature vector. * <code>edge_index=[2, 156]</code> represents the <strong>graph connectivity</strong> (how the nodes are connected) with shape (2, number of directed edges). * <code>y=[34]</code> is the <strong>node ground-truth labels</strong>. In this problem, every node is assigned to one class (group), so we have one value for each node. * <code>train_mask=[34]</code> is an optional attribute that tells which nodes should be used for training with a list of <code>True</code> or <code>False</code> statements.</p>
+<p>The <a href="https://pytorch-geometric.readthedocs.io/en/latest/modules/data.html"><code>Data</code></a> object is particularly interesting. Printing it offers a good summary of the graph we’re studying:</p>
+<ul>
+<li><code>x=[34, 34]</code> is the <strong>node feature matrix</strong> with shape (number of nodes, number of features). In our case, it means that we have 34 nodes (our 34 members), each node being associated to a 34-dim feature vector.</li>
+<li><code>edge_index=[2, 156]</code> represents the <strong>graph connectivity</strong> (how the nodes are connected) with shape (2, number of directed edges).</li>
+<li><code>y=[34]</code> is the <strong>node ground-truth labels</strong>. In this problem, every node is assigned to one class (group), so we have one value for each node.</li>
+<li><code>train_mask=[34]</code> is an optional attribute that tells which nodes should be used for training with a list of <code>True</code> or <code>False</code> statements.</li>
+</ul>
 <p>Let’s print each of these tensors to understand what they store. Let’s start with the node features.</p>
 <div class="cell" data-outputid="6db0ccbe-a166-41e7-bdc5-91e566db7833" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> dataset[<span class="dv">0</span>]</span>

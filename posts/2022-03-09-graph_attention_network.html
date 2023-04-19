@@ -166,10 +166,10 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item compact">
+  <li class="nav-item">
     <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
 </i> 
- <span class="menu-text"></span></a>
+ <span class="menu-text"><span class="citation" data-cites="maximelabonne">@maximelabonne</span></span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/mlabonne" rel="" target=""><i class="bi bi-github" role="img">
@@ -265,8 +265,10 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 <p>Graph Attention Networks (GATs) are one of the most popular types of Graph Neural Networks.</p>
 <p>Instead of calculating static weights based on node degrees like Graph Convolutional Networks (GCNs), they assign dynamic weights to node features through a process called <strong>self-attention</strong>. The main idea behind GATs is that some neighbors are more important than others, regardless of their node degrees.</p>
 <center>
-<img src="../images/gat/graph_attention_empty.png" width="400">Node 4 is more important than node 3, which is more important than node 2
+<p><img src="../images/gat/graph_attention_empty.png" width="400"></p>
+<i>Node 4 is more important than node 3, which is more important than node 2</i>
 </center>
+<p><br></p>
 <p>In this article, we will see how to calculate these attention scores and implement an efficient GAT in PyTorch Geometric (PyG). You can run the code of this tutorial with the following <a href="https://colab.research.google.com/drive/1B0vLpH_gSfrOLgsc2UZVyXrcofzA-t0L?usp=sharing">Google Colab notebook</a>.</p>
 <div class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install PyTorch Geometric</span></span>
@@ -289,8 +291,10 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 <section id="i.-graph-data" class="level2">
 <h2 class="anchored" data-anchor-id="i.-graph-data">🌐 I. Graph data</h2>
 <center>
-<img alt="CiteSeer" src="../images/gat/citeseer_yed.png" width="800">CiteSeer dataset
+<p><img alt="CiteSeer" src="../images/gat/citeseer_yed.png" width="800"></p>
+<i>CiteSeer dataset</i>
 </center>
+<p><br></p>
 <p>Let’s perform a node classification task with a GAT. We can use three classic graph datasets (MIT license) for this work. They represent networks of research papers, where each connection is a citation.</p>
 <ul>
 <li><a href="http://www.kamalnigam.com/papers/cora-jnl.pdf"><strong>Cora</strong></a>: it consists of 2,708 machine learning papers that belong to one of seven categories. ➡️ Node features represent the presence (1) or absence (0) of 1,433 words in a paper (binary <a href="https://en.wikipedia.org/wiki/Bag-of-words_model">bag of words</a>).</li>
@@ -406,8 +410,8 @@ Has isolated nodes: True</code></pre>
 </section>
 <section id="activation-function" class="level3">
 <h3 class="anchored" data-anchor-id="activation-function">2. Activation function</h3>
-<p>We’re building a neural network, so the second step is to add nonlinearity with an activation function. In this case, the paper’s authors chose the <em>LeakyReLU</em> function.</p>
-<p><span class="math display">e_{ij} = LeakyReLU(a_{ij})</span></p>
+<p>We’re building a neural network, so the second step is to add nonlinearity with an activation function. In this case, the paper’s authors chose the <span class="math inline">\text{LeakyReLU}</span> function.</p>
+<p><span class="math display">e_{ij} = \text{LeakyReLU}(a_{ij})</span></p>
 <center>
 <img src="../images/gat/attention_calculation2.png" height="400">
 </center>
@@ -416,7 +420,7 @@ Has isolated nodes: True</code></pre>
 <h3 class="anchored" data-anchor-id="softmax-normalization">3. Softmax normalization</h3>
 <p>The output of our neural network is <strong>not normalized</strong>, which is a problem since we want to compare these coefficients. For example, to be able to say if node 2 is more important to node 1 than node 3 (<span class="math inline">\alpha_{12} &gt; \alpha_{13}</span>), we need to use the same scale.</p>
 <p>A common way to do it with neural networks is to use the softmax function. Here, we apply it to every neighboring node, including the target node itself:</p>
-<p><span class="math display">\alpha_{ij} = softmax_j(e_{ij}) = \frac{exp(e_{ij})}{\sum_{k \in \mathcal{N}_i}{exp(e_{ik})}}</span></p>
+<p><span class="math display">\alpha_{ij} = \text{softmax}_j(e_{ij}) = \frac{exp(e_{ij})}{\sum_{k \in \mathcal{N}_i}{exp(e_{ik})}}</span></p>
 <center>
 <img src="../images/gat/attention_calculation3.png" height="400">
 </center>
@@ -443,10 +447,10 @@ Has isolated nodes: True</code></pre>
 <section id="iii.-implementing-a-graph-attention-network" class="level2">
 <h2 class="anchored" data-anchor-id="iii.-implementing-a-graph-attention-network">🧠 III. Implementing a Graph Attention Network</h2>
 <p>Let’s now implement a GAT in PyTorch Geometric. This library has two different graph attention layers: <code>GATConv</code> and <code>GATv2Conv</code>.</p>
-<p>The layer we talked about in the previous section is the <code>GatConv</code> layer, but in 2021 <a href="https://arxiv.org/abs/2105.14491">Brody et al.</a> introduced an improved layer by modifying the order of operations. In <code>Gatv2Conv</code>, the weight matrix <span class="math inline">\mathbf{W}</span> is applied after the concatenation and the attention weight matrix <span class="math inline">W_{att}</span> after the <span class="math inline">LeakyReLU</span> function. In summary:</p>
+<p>The layer we talked about in the previous section is the <code>GatConv</code> layer, but in 2021 <a href="https://arxiv.org/abs/2105.14491">Brody et al.</a> introduced an improved layer by modifying the order of operations. In <code>Gatv2Conv</code>, the weight matrix <span class="math inline">\mathbf{W}</span> is applied after the concatenation and the attention weight matrix <span class="math inline">W_{att}</span> after the <span class="math inline">\text{LeakyReLU}</span> function. In summary:</p>
 <ul>
-<li><code>GatConv</code>: <span class="math inline">e_{ij} = LeakyReLU(W_{att}^t[\mathbf{W}x_i\mathbin\Vert \mathbf{W}x_j])</span></li>
-<li><code>Gatv2Conv</code>: <span class="math inline">e_{ij} = W_{att}^tLeakyReLU(\mathbf{W}[x_i\mathbin\Vert x_j])</span></li>
+<li><code>GatConv</code>: <span class="math inline">e_{ij} = \text{LeakyReLU}(W_{att}^t[\mathbf{W}x_i\mathbin\Vert \mathbf{W}x_j])</span></li>
+<li><code>Gatv2Conv</code>: <span class="math inline">e_{ij} = W_{att}^t \text{LeakyReLU}(\mathbf{W}[x_i\mathbin\Vert x_j])</span></li>
 </ul>
 <p>Which one should you use? According to the authors, <code>Gatv2Conv</code> consistently outperforms <code>GatConv</code> and thus should be preferred. We’ll follow their advice and implement this improved layer in our example.</p>
 <p>Okay, let’s classify the papers from CiteSeer! I tried to (roughly) reproduce the experiments of the original authors without adding too much complexity. You can find the official implementation of GAT <a href="https://github.com/PetarV-/GAT">on GitHub</a>.</p>

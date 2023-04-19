@@ -126,13 +126,13 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 <link rel="stylesheet" href="../styles.css">
 <meta property="og:title" content="Maxime Labonne - Q-learning for beginners">
 <meta property="og:description" content="Train an AI to solve the Frozen Lake environment">
-<meta property="og:image" content="https://mlabonne.github.io/blog/images/qlearning/frozenlake_thumbnail.png">
+<meta property="og:image" content="https://mlabonne.github.io/blog/images/qlearning/thumbnail.png">
 <meta property="og:site-name" content="Maxime Labonne">
 <meta property="og:image:height" content="480">
 <meta property="og:image:width" content="853">
 <meta name="twitter:title" content="Maxime Labonne - Q-learning for beginners">
 <meta name="twitter:description" content="Train an AI to solve the Frozen Lake environment">
-<meta name="twitter:image" content="https://mlabonne.github.io/blog/images/qlearning/frozenlake_thumbnail.png">
+<meta name="twitter:image" content="https://mlabonne.github.io/blog/images/qlearning/thumbnail.png">
 <meta name="twitter:creator" content="@maximelabonne">
 <meta name="twitter:image-height" content="480">
 <meta name="twitter:image-width" content="853">
@@ -170,10 +170,10 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item compact">
+  <li class="nav-item">
     <a class="nav-link" href="https://twitter.com/maximelabonne" rel="" target=""><i class="bi bi-twitter" role="img">
 </i> 
- <span class="menu-text"></span></a>
+ <span class="menu-text"><span class="citation" data-cites="maximelabonne">@maximelabonne</span></span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/mlabonne" rel="" target=""><i class="bi bi-github" role="img">
@@ -262,43 +262,43 @@ gtag('config', 'G-4DWYJM47PC', { 'anonymize_ip': true});
 
 
 <center>
-<div id="anim_container">
-<img alt="Illustration of the Frozen Lake Environment" src="../images/qlearning/frozenlake.png" loading="lazy" class="aura" id="anim_inner">
-</div>
+<img src="../images/qlearning/thumbnail.png">
 </center>
-<p>The goal of this article is to <strong>teach an AI how to solve the ❄️Frozen Lake environment using reinforcement learning</strong>. Instead of reading Wikipedia articles and explaining formulas, we’re going to <strong>start from scratch and try to recreate the 🤖Q-learning</strong> algorithm by ourselves. We’ll not just understand <strong>how it works</strong>, but more importantly <strong>why it works</strong>: why was it designed that way? What are the hidden assumptions, the details that are never explained in regular courses and tutorials?</p>
-<p>At the end of this article, you’ll <strong>master the Q-learning algorithm</strong> and be able to <strong>apply it to other environments and real-world problems</strong>. It’s a cool mini-project that gives a <strong>better insight into how reinforcement learning works</strong> and <strong>can hopefully inspire ideas for original and creative applications</strong>.</p>
-<p>Let’s start by installing the ❄️<strong>Frozen Lake</strong> environment and importing the necessary libraries: <code>gym</code> for the game, <code>random</code> to generate random numbers, and <code>numpy</code> to do some math.</p>
-<div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">-</span>q gym</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">-</span>q matplotlib</span>
+<p>The goal of this article is to <strong>teach an AI how to solve the ❄️Frozen Lake environment using reinforcement learning</strong>. Instead of reading Wikipedia articles and explaining formulas, we’re going to start from scratch and try to recreate the 🤖Q-learning algorithm by ourselves. We’ll not just understand how it works, but more importantly <strong>why it works</strong>: why was it designed that way? What are the hidden assumptions, the details that are never explained in regular courses and tutorials?</p>
+<p>At the end of this article, you’ll master the Q-learning algorithm and be able to apply it to other environments and real-world problems. It’s a cool mini-project that gives a better insight into how reinforcement learning works and can hopefully inspire ideas for original and creative applications.</p>
+<p>Let’s start by installing the Frozen Lake environment and importing the necessary libraries: <code>gym</code> for the game, <code>random</code> to generate random numbers, and <code>numpy</code> to do some math.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install <span class="op">-</span>q gym matplotlib</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gym</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="i.-frozen-lake" class="level2">
 <h2 class="anchored" data-anchor-id="i.-frozen-lake">❄️ I. Frozen Lake</h2>
-<p>Now, let’s talk about the game we’re going to be solving in this tutorial. ❄️<strong>Frozen Lake</strong> is a simple environment composed of tiles, where the AI has to <strong>move from an initial tile</strong> to a <strong>goal</strong>. Tiles can be a safe <strong>frozen lake</strong> ✅, or a <strong>hole</strong> ❌ that gets you stuck forever. The AI, or agent, has 4 possible actions: go ◀️<strong>LEFT</strong>, 🔽<strong>DOWN</strong>, ▶️<strong>RIGHT</strong>, or 🔼<strong>UP</strong>. The agent must learn to avoid holes in order to <strong>reach the goal</strong> in a <strong>minimal number of actions</strong>. By default, the environment is <strong>always in the same configuration</strong>. In the environment’s code, <strong>each tile is represented by a letter</strong> as follows:</p>
+<p>Now, let’s talk about the game we’re going to be solving in this tutorial. Frozen Lake is a simple environment composed of tiles, where the AI has to move from an initial tile to a goal. Tiles can be a safe <strong>frozen lake</strong> ✅, or a <strong>hole</strong> ❌ that gets you stuck forever. The AI, or agent, has 4 possible actions: go ◀️LEFT, 🔽DOWN, ▶️RIGHT, or 🔼UP. The agent must learn to avoid holes in order to reach the goal in a minimal number of actions. By default, the environment is always in the same configuration. In the environment’s code, <strong>each tile is represented by a letter</strong> as follows:</p>
 <pre><code>S F F F       (S: starting point, safe)
 F H F H       (F: frozen surface, safe)
 F F F H       (H: hole, stuck forever)
 H F F G       (G: goal, safe)</code></pre>
-<center class="dark-bg">
-<video autoplay="" loop="" muted="" width="483" height="483" class="drop-shadow">
+<video>
 <source src="../images/qlearning/frozenlake_blink.mp4" type="video/mp4">
-
 </video>
-</center>
+<!-- <center class="dark-bg">
+    <video autoplay loop muted width="483" height="483" class="drop-shadow">
+        <source src="../images/qlearning/frozenlake_blink.mp4" type="video/mp4"></source>
+    </video>
+</center> -->
 <p>We can try to manually solve the example above to understand the game. Let’s see if the following sequence of actions is a correct solution: <strong>RIGHT</strong> <span class="math inline">\to</span> <strong>RIGHT</strong> <span class="math inline">\to</span> <strong>RIGHT</strong> <span class="math inline">\to</span> <strong>DOWN</strong> <span class="math inline">\to</span> <strong>DOWN</strong> <span class="math inline">\to</span> <strong>DOWN</strong>. Our agent starts on tile <strong>S</strong>, so we move right on a frozen surface ✅, then again ✅, then once more ✅, then we go down and find a hole ❌.</p>
-<p>Actually, it’s really easy to find several correct solutions: <strong>RIGHT</strong> <span class="math inline">\to</span> <strong>RIGHT</strong> <span class="math inline">\to</span> <strong>DOWN</strong> <span class="math inline">\to</span> <strong>DOWN</strong> <span class="math inline">\to</span> <strong>DOWN</strong> <span class="math inline">\to</span> <strong>RIGHT</strong> is an obvious one. But we could make a sequence of actions that loops around a hole 10 times before reaching the goal. This sequence is valid, but it doesn’t meet our final requirement: <strong>the agent needs to meet the goal in a minimum number of actions</strong>. In this example, the minimum number of actions to complete the game is <strong>6</strong>. We need to remember this fact to check if our agent really masters ❄️<strong>Frozen Lake</strong> or not.</p>
+<p>Actually, it’s really easy to find several correct solutions: <strong>RIGHT</strong> <span class="math inline">\to</span> <strong>RIGHT</strong> <span class="math inline">\to</span> <strong>DOWN</strong> <span class="math inline">\to</span> <strong>DOWN</strong> <span class="math inline">\to</span> <strong>DOWN</strong> <span class="math inline">\to</span> <strong>RIGHT</strong> is an obvious one. But we could make a sequence of actions that loops around a hole 10 times before reaching the goal. This sequence is valid, but it doesn’t meet our final requirement: the agent needs to meet the goal in a minimum number of actions. In this example, the minimum number of actions to complete the game is 6. We need to remember this fact to check if our agent really masters ❄️Frozen Lake or not.</p>
 <center class="dark-bg">
 <video autoplay="" loop="" muted="" width="483" height="483" class="drop-shadow">
 <source src="../images/qlearning/frozenlake_move.mp4" type="video/mp4">
 
 </video>
 </center>
-<p>Let’s initialize the environment thanks to the <code>gym</code> library. There are two versions of the game: one with <strong>slippery ice</strong>, where selected actions have a <strong>random chance of being disregarded by the agent</strong>; and a <strong>non-slippery one</strong>, where <strong>actions cannot be ignored</strong>. We’ll use the <strong>non-slippery</strong> one to begin with because it’s easier to understand.</p>
-<div class="cell" data-outputid="b1846507-7802-4911-992a-6f749fe16518" data-execution_count="2">
+<p>Let’s initialize the environment thanks to the <code>gym</code> library. There are two versions of the game: one with slippery ice, where selected actions have a random chance of being disregarded by the agent; and a non-slippery one, where actions cannot be ignored. We’ll use the non-slippery one to begin with because it’s easier to understand.</p>
+<div class="cell" data-outputid="b1846507-7802-4911-992a-6f749fe16518" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize the non-slippery Frozen Lake environment</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>environment <span class="op">=</span> gym.make(<span class="st">"FrozenLake-v1"</span>, is_slippery<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>environment.reset()</span>
@@ -311,12 +311,12 @@ FFFH
 HFFG</code></pre>
 </div>
 </div>
-<p>We can see that the game that was created has <strong>the exact same configuration as in our example</strong>: it is the same puzzle. The position of our agent is indicated by a <strong>red rectangle</strong>. Solving this puzzle can be done with a simple script and if…else conditions, which would actually be <strong>useful to compare our AI to a simpler approach</strong>. However, we want to try a more exciting solution: <strong>reinforcement learning</strong>.</p>
+<p>We can see that the game that was created has the exact same configuration as in our example: it is the same puzzle. The position of our agent is indicated by a red rectangle. Solving this puzzle can be done with a simple script and if…else conditions, which would actually be useful to compare our AI to a simpler approach. However, we want to try a more exciting solution: <strong>reinforcement learning</strong>.</p>
 </section>
 <section id="ii.-q-table" class="level2">
 <h2 class="anchored" data-anchor-id="ii.-q-table">🏁 II. Q-table</h2>
-<p>In ❄️<strong>Frozen Lake</strong>, there are 16 tiles, which means our agent can be found in 16 different positions, called <strong>states</strong>. For each state, there are 4 possible actions: go ◀️<strong>LEFT</strong>, 🔽<strong>DOWN</strong>, ▶️<strong>RIGHT</strong>, and 🔼<strong>UP</strong>. Learning how to play Frozen Lake is like <strong>learning which action you should choose in every state</strong>. To know which action is the best in a given state, we would like to assign a <strong>quality value</strong> to our actions. We have 16 states and 4 actions, so want to calculate <span class="math inline">16 \times 4 = 64</span> values.</p>
-<p>A nice way of representing it is using a table, known as a Q-table, where <strong>rows list every state <span class="math inline">s</span></strong> and <strong>columns list every action <span class="math inline">a</span></strong>. In this Q-table, each cell contains a value <span class="math inline">Q(s, a)</span>, which is the <strong>value (quality) of the action <span class="math inline">a</span> in the state <span class="math inline">s</span></strong> (1 if it’s the best action possible, 0 if it’s really bad). When our agent is in a particular state <span class="math inline">s</span>, it <strong>just has to check this table to see which action has the highest value</strong>. Taking the action with the highest value makes sense but <strong>we’ll see later that we can design something even better</strong>…</p>
+<p>In ❄️<strong>Frozen Lake</strong>, there are 16 tiles, which means our agent can be found in 16 different positions, called <strong>states</strong>. For each state, there are 4 possible actions: go ◀️<strong>LEFT</strong>, 🔽<strong>DOWN</strong>, ▶️<strong>RIGHT</strong>, and 🔼<strong>UP</strong>. Learning how to play Frozen Lake is like learning which action you should choose in every state. To know which action is the best in a given state, we would like to assign a quality value to our actions. We have 16 states and 4 actions, so want to calculate <span class="math inline">16 \times 4 = 64</span> values.</p>
+<p>A nice way of representing it is using a table, known as a Q-table, where rows list every state <span class="math inline">s</span> and columns list every action <span class="math inline">a</span>. In this Q-table, each cell contains a value <span class="math inline">Q(s, a)</span>, which is the value (quality) of the action <span class="math inline">a</span> in the state <span class="math inline">s</span> (1 if it’s the best action possible, 0 if it’s really bad). When our agent is in a particular state <span class="math inline">s</span>, it just has to check this table to see which action has the highest value. Taking the action with the highest value makes sense but we’ll see later that we can design something even better…</p>
 <table class="table">
 <thead>
 <tr class="header">
@@ -376,7 +376,7 @@ HFFG</code></pre>
 <i>Example of Q-table, where each cell contains the value <span class="math inline">Q(a, s)</span> of the action <span class="math inline">a</span> (column) in a given state <span class="math inline">s</span> (row)</i>
 </center>
 <p>Let’s create our Q-table and fill it with zeros since <strong>we still have no idea of the value of each action in each state</strong>.</p>
-<div class="cell" data-outputid="8049c3c4-366c-43f5-a0b5-bcccf46a777a" data-execution_count="3">
+<div class="cell" data-outputid="8049c3c4-366c-43f5-a0b5-bcccf46a777a" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize Q-table with zeros </span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Our table has the following dimensions:</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># (rows x columns) = (states x actions) = (16 x 4)</span></span>
@@ -412,23 +412,23 @@ HFFG</code></pre>
  [0. 0. 0. 0.]]</code></pre>
 </div>
 </div>
-<p>Great! We have our Q-table with <strong>16 rows</strong> (our 16 states) and <strong>4 columns</strong> (our 4 actions) as expected. Let’s try to see what we can do next: every value is set to zero, so we have no information at all. Let’s say that the agent takes a <strong>random action</strong>: ◀️<strong>LEFT</strong>, 🔽<strong>DOWN</strong>, ▶️<strong>RIGHT</strong>, or 🔼<strong>UP</strong>.</p>
+<p>Great! We have our Q-table with 16 rows (our 16 states) and 4 columns (our 4 actions) as expected. Let’s try to see what we can do next: every value is set to zero, so we have no information at all. Let’s say that the agent takes a random action: ◀️<strong>LEFT</strong>, 🔽<strong>DOWN</strong>, ▶️<strong>RIGHT</strong>, or 🔼<strong>UP</strong>.</p>
 <p>We can use the <code>random</code> library with the <code>choice</code> method to randomly choose an action.</p>
-<div class="cell" data-outputid="504ea659-e82c-49f9-d020-af0196174fbe" data-execution_count="4">
+<div class="cell" data-outputid="504ea659-e82c-49f9-d020-af0196174fbe" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>random.choice([<span class="st">"LEFT"</span>, <span class="st">"DOWN"</span>, <span class="st">"RIGHT"</span>, <span class="st">"UP"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>'LEFT'</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>'RIGHT'</code></pre>
 </div>
 </div>
-<p>Wait, actually the agent is currently on the initial state <strong>S</strong>, which means only two actions are possible: ▶️<strong>RIGHT</strong> and 🔽<strong>DOWN</strong>. The agent can also take the actions 🔼<strong>UP</strong> and ◀️<strong>LEFT</strong>, but it won’t move: its state doesn’t change. Therefore, we <strong>do not put any constraint on what actions are possible</strong>: the agent will <strong>naturally understand that some of them don’t do anything</strong>.</p>
-<p>We can keep using <code>random.choice()</code>, but the <code>gym</code> library <strong>already implements a method to randomly choose an action</strong>. It might save us some hassle later, so let’s try it.</p>
-<div class="cell" data-outputid="1649e75b-299b-42bf-8455-f99490f14a2d" data-execution_count="5">
+<p>Wait, actually the agent is currently on the initial state <strong>S</strong>, which means only two actions are possible: ▶️<strong>RIGHT</strong> and 🔽<strong>DOWN</strong>. The agent can also take the actions 🔼<strong>UP</strong> and ◀️<strong>LEFT</strong>, but it won’t move: its state doesn’t change. Therefore, we do not put any constraint on what actions are possible: the agent will naturally understand that some of them don’t do anything.</p>
+<p>We can keep using <code>random.choice()</code>, but the <code>gym</code> library already implements a method to randomly choose an action. It might save us some hassle later, so let’s try it.</p>
+<div class="cell" data-outputid="1649e75b-299b-42bf-8455-f99490f14a2d" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>environment.action_space.sample()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="5">
-<pre><code>0</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<pre><code>2</code></pre>
 </div>
 </div>
-<p>Oops… this time it’s a <strong>number</strong>. We could read <a href="https://gym.openai.com/docs/"><code>gym</code>’s documentation</a> but it is quite scarce unfortunately. No worries though, <a href="https://github.com/openai/gym/blob/master/gym/envs/toy_text/frozen_lake.py#L10"><strong>we can check the source code on GitHub</strong></a> to understand <strong>what these numbers mean</strong>. It’s actually super straightforward:</p>
+<p>Oops… this time it’s a <strong>number</strong>. We could read <a href="https://gym.openai.com/docs/"><code>gym</code>’s documentation</a> but it is quite scarce unfortunately. No worries though, <a href="https://github.com/openai/gym/blob/master/gym/envs/toy_text/frozen_lake.py#L10">we can check the source code on GitHub</a> to understand what these numbers mean. It’s actually very straightforward:</p>
 <pre><code>◀️ LEFT = 0
 🔽 DOWN = 1
 ▶️ RIGHT = 2
@@ -440,8 +440,8 @@ HFFG</code></pre>
 
 </video>
 </center>
-<p>Okay, now that <strong>we understand how <code>gym</code> connects numbers to directions</strong>, let’s try to use it to <strong>move our agent to the right</strong> ▶️. This time, it can be performed using the <code>step(action)</code> method. We can try to <strong>directly provide it the number 2</strong>, corresponding to the direction we chose (right), and check if the agent moved.</p>
-<div class="cell" data-outputid="e5d7a424-fa91-45e0-9bb1-9b3d026d520c" data-execution_count="6">
+<p>Okay, now that we understand how <code>gym</code> connects numbers to directions, let’s try to use it to move our agent to the right ▶️. This time, it can be performed using the <code>step(action)</code> method. We can try to directly provide it the number 2, corresponding to the direction we chose (right), and check if the agent moved.</p>
+<div class="cell" data-outputid="e5d7a424-fa91-45e0-9bb1-9b3d026d520c" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>environment.step(<span class="dv">2</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>environment.render()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -452,19 +452,19 @@ FFFH
 HFFG</code></pre>
 </div>
 </div>
-<p><strong>Huzzah</strong>! The red square moved from the initial state <strong>S</strong> to the right: <strong>our prediction was correct</strong>. And that’s all we need to know in order to interact with the environment:</p>
+<p>Huzzah! The red square moved from the initial state <strong>S</strong> to the right: our prediction was correct. And that’s all we need to know in order to interact with the environment:</p>
 <ol type="1">
-<li>How to <strong>randomly choose an action</strong> using <code>action_space.sample()</code>;</li>
-<li>How to <strong>implement this action and move our agent in the desired direction</strong> with <code>step(action)</code>.</li>
+<li>How to randomly choose an action using <code>action_space.sample()</code>;</li>
+<li>How to implement this action and move our agent in the desired direction with <code>step(action)</code>.</li>
 </ol>
-<p>To be completely exhaustive, we can add:</p>
+<p>To be exhaustive, we can add:</p>
 <ol start="3" type="1">
-<li>How to <strong>display the current map to see what we’re doing</strong> with <code>render()</code>;</li>
-<li>How to <strong>restart the game</strong> when the agent falls into a hole or reaches the goal <strong>G</strong> with <code>reset()</code>.</li>
+<li>How to display the current map to see what we’re doing with <code>render()</code>;</li>
+<li>How to restart the game when the agent falls into a hole or reaches the goal <strong>G</strong> with <code>reset()</code>.</li>
 </ol>
-<p>Now that we understand how to interact with our <code>gym</code> environment, let’s go back to our algorithm. In reinforcement learning, <strong>agents are rewarded by the environment when they accomplish a predefined goal</strong>. In ❄️<strong>Frozen Lake</strong>, the agent is only rewarded when it reaches the state <strong>G</strong> (see <a href="https://github.com/openai/gym/blob/master/gym/envs/toy_text/frozen_lake.py#L85">the source code</a>). We cannot control this reward, it is set in the environment: <strong>it’s 1 when the agent reaches G, and 0 otherwise</strong>.</p>
+<p>Now that we understand how to interact with our <code>gym</code> environment, let’s go back to our algorithm. In reinforcement learning, agents are rewarded by the environment when they accomplish a predefined goal. In ❄️Frozen Lake, the agent is only rewarded when it reaches the state <strong>G</strong> (see <a href="https://github.com/openai/gym/blob/master/gym/envs/toy_text/frozen_lake.py#L85">the source code</a>). We cannot control this reward, it is set in the environment: it returns 1 when the agent reaches G, and 0 otherwise.</p>
 <p>Let’s print it every time we implement an action. The reward is given by the method <code>step(action)</code>.</p>
-<div class="cell" data-outputid="7500441b-0b11-434a-cf15-77210c77c79f" data-execution_count="7">
+<div class="cell" data-outputid="7500441b-0b11-434a-cf15-77210c77c79f" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Randomly choose an action using action_space.sample()</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>action <span class="op">=</span> environment.action_space.sample()</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -475,7 +475,7 @@ HFFG</code></pre>
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>environment.render()</span>
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Reward = </span><span class="sc">{</span>reward<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  (Left)
+<pre><code>  (Down)
 SFFF
 FHFH
 FFFH
@@ -483,27 +483,31 @@ HFFG
 Reward = 0.0</code></pre>
 </div>
 </div>
-<p>The reward is indeed 0… 😱 wow, I guess we’re in a pickle, because <strong>only one state can give us a positive reward</strong> in the entire game. How are we supposed to <strong>take the right directions at the very beginning when the only validation we have is at the very end?</strong> If we ever want to see a reward of 1, we’d need to be lucky enough to <strong>find the correct sequence of actions by chance</strong>. Unfortunately, that’s exactly how it works… <strong>the Q-table will remain filled with zeros until the agent randomly reaches the goal G</strong>.</p>
-<p>The problem would be much simpler if we could have intermediate, smaller rewards to guide our path towards the goal <strong>G</strong>. Alas, this is actually one of the <strong>main issues of reinforcement learning</strong>: this phenomenon, called <strong>sparse rewards</strong>, makes agents very difficult to train on problems <strong>where the only reward is at the end of a long sequence of actions</strong>. Different techniques were proposed to mitigate this issue, but we’ll talk about it another time.</p>
+<p>The reward is indeed 0… 😱 wow, I guess we’re in a pickle, because only one state can give us a positive reward in the entire game. How are we supposed to take the right directions at the very beginning when the only validation we have is at the very end? If we ever want to see a reward of 1, we’d need to be lucky enough to find the correct sequence of actions by chance. Unfortunately, that’s exactly how it works… the Q-table will remain filled with zeros until the agent randomly reaches the goal G.</p>
+<p>The problem would be much simpler if we could have intermediate, smaller rewards to guide our path towards the goal <strong>G</strong>. Alas, this is actually one of the main issues of reinforcement learning: this phenomenon, called sparse rewards, makes agents very difficult to train on problems where the only reward is at the end of a long sequence of actions. Different techniques were proposed to mitigate this issue, but we’ll talk about it another time.</p>
 </section>
 <section id="iii.-q-learning" class="level2">
 <h2 class="anchored" data-anchor-id="iii.-q-learning">🤖 III. Q-learning</h2>
-<p>Let’s go back to our problem. Okay, we need to be lucky enough to find the goal <strong>G</strong> by accident. But once it’s done, how to backpropagate the information to the initial state? The 🤖<strong>Q-learning algorithm offers a clever solution</strong> to this issue. We need to update the value of our state-action pairs (each cell in the Q-table) considering 1/ the <strong>reward</strong> for reaching the next state, and 2/ the <strong>highest possible value in the next state</strong>.</p>
+<p>Let’s go back to our problem. Okay, we need to be lucky enough to find the goal <strong>G</strong> by accident. But once it’s done, how to backpropagate the information to the initial state? The Q-learning algorithm offers a clever solution to this issue. We need to update the value of our state-action pairs (each cell in the Q-table) considering 1/ the <strong>reward</strong> for reaching the next state, and 2/ the <strong>highest possible value in the next state</strong>.</p>
 <center class="dark-bg">
 <video autoplay="" loop="" muted="" width="483" height="483" class="drop-shadow">
 <source src="../images/qlearning/frozenlake_spread.mp4" type="video/mp4">
 
 </video>
 </center>
-<p>We know we get a reward of 1 when we move to <strong>G</strong>. As we just said, the value of <strong>the state next to G</strong> (let’s call it <strong>G-1</strong>) with <strong>the relevant action to reach G</strong> is increased thanks to the reward. Okay good, end of the episode: the agent won and we restart the game. Now, the next time the agent is in <strong>a state next to G-1</strong>, it will increase the value of this state (let’s call it <strong>G-2</strong>) with <strong>the relevant action to reach G-1</strong>. The next time the agent is in a state next to <strong>G-2</strong>, it will do the same. Rinse and repeat, until the update reaches the initial state <strong>S</strong>.</p>
-<p>Let’s try to find the <strong>update formula</strong> to backpropagate the values from <strong>G</strong> to <strong>S</strong>. Remember: values denote the <strong>quality</strong> of <strong>an action in a specific state</strong> (0 if it’s terrible, 1 if it’s the best action possible in this state). We try to <strong>update the value</strong> of the action <span class="math inline">a_t</span> (for example, <span class="math inline">a_t = 0</span> if the action is left) in the state <span class="math inline">s_t</span> (for example, <span class="math inline">s_t = 0</span> when the agent is in the initial state <strong>S</strong>). This <strong>value is just a cell in our Q-table</strong>, corresponding to the <strong>row number <span class="math inline">s_t</span> and the column number <span class="math inline">a_t</span></strong>: this value is formally called <span class="math inline">Q(s_t, a_t)</span>.</p>
+<p>We know we get a reward of 1 when we move to <strong>G</strong>. As we just said, the value of the state next to <strong>G</strong> (let’s call it G-1) with the relevant action to reach <strong>G</strong> is increased thanks to the reward. Okay good, end of the episode: the agent won and we restart the game. Now, the next time the agent is in a state next to G-1, it will increase the value of this state (let’s call it G-2) with the relevant action to reach G-1. The next time the agent is in a state next to G-2, it will do the same. Rinse and repeat, until the update reaches the initial state <strong>S</strong>.</p>
+<p>Let’s try to find the update formula to backpropagate the values from <strong>G</strong> to <strong>S</strong>. Remember: values denote the quality of <strong>an action in a specific state</strong> (0 if it’s terrible, 1 if it’s the best action possible in this state). We try to <strong>update the value</strong> of the action <span class="math inline">a_t</span> (for example, <span class="math inline">a_t = 0</span> if the action is left) in the state <span class="math inline">s_t</span> (for example, <span class="math inline">s_t = 0</span> when the agent is in the initial state <strong>S</strong>). This <strong>value is just a cell in our Q-table</strong>, corresponding to the <strong>row number <span class="math inline">s_t</span> and the column number <span class="math inline">a_t</span></strong>: this value is formally called <span class="math inline">Q(s_t, a_t)</span>.</p>
 <p>As we said previously, we need to update it using 1/ <strong>the reward for the next state</strong> (formally noted <span class="math inline">r_t</span>), and 2/ <strong>the maximum possible value in the next state</strong> (<span class="math inline">max_aQ(s_{t+1},a)</span>). Therefore, the update formula must look like:</p>
 <p><span class="math display">Q_{new}(s_t, a_t) = Q(s_t, a_t) + r_t + max_aQ(s_{t+1}, a)</span></p>
-<p>The new value is the current one + the reward + the highest value in the next state. We can manually try our formula to check if it looks correct: let’s pretend our agent is <strong>in the state G-1 next to the goal G for the first time</strong>. We can update the value corresponding to the winning action in this state <strong>G-1</strong> with <span class="math inline">Q_{new}(G-1, a_t) = Q(G-1, a_t) + r_t + max_aQ(G, a)</span>, where <span class="math inline">Q(G-1, a_t) = 0</span> and <span class="math inline">max_aQ(G, a) = 0</span> because the Q-table is empty, and <span class="math inline">r_t = 1</span> because we get the only reward in this environment. We obtain <span class="math inline">Q_{new}(G-1, a_t) = 1</span>. The next time the agent is in a state next to this one (<strong>G-2</strong>), we update it too using the formula and get the same result: <span class="math inline">Q_{new}(G-2, a_t) = 1</span>. In the end, <strong>we backpropagate ones in the Q-table</strong> from <strong>G</strong> to <strong>S</strong>. Okay it works, but the result is <strong>binary</strong>: either it’s the <strong>wrong state-action pair or the best one</strong>. We would like more nuance…</p>
-<p>Actually, we almost <strong>found the true Q-learning update formula</strong> with common sense. The nuance we’re looking for adds two parameters: * <span class="math inline">\alpha</span> is the 💡<strong>learning rate</strong> (between <span class="math inline">0</span> and <span class="math inline">1</span>), which is how much we should change the original <span class="math inline">Q(s_t, a_t)</span> value. If <span class="math inline">\alpha = 0</span>, the value <strong>never changes</strong>, but if <span class="math inline">\alpha = 1</span>, the value <strong>changes extremely fast</strong>. In our attempt, we didn’t limit the learning rate so <span class="math inline">\alpha = 1</span>. But this is too fast in reality: the reward and the maximum value in the next state quickly <strong>overpower the current value</strong>. We need to find a <strong>balance between the importance of past and new knowledge</strong>. * <span class="math inline">\gamma</span> is the 📉<strong>discount factor</strong> (between <span class="math inline">0</span> and <span class="math inline">1</span>), which determines how much the agent cares about future rewards compared to immediate ones (as the saying goes, “a bird in the hand is worth two in the bush”). If <span class="math inline">\gamma = 0</span>, the agent only focuses on <strong>immediate rewards</strong> , but if <span class="math inline">\gamma = 1</span>, any <strong>potential future reward has the same value than current ones</strong>. In ❄️<strong>Frozen Lake</strong>, we want a high discount factor since there’s only one possible reward at the very end of the game.</p>
+<p>The new value is the current one + the reward + the highest value in the next state. We can manually try our formula to check if it looks correct: let’s pretend our agent is <strong>in the state G-1 next to the goal G for the first time</strong>. We can update the value corresponding to the winning action in this state G-1 with <span class="math inline">Q_{new}(G-1, a_t) = Q(G-1, a_t) + r_t + max_aQ(G, a)</span>, where <span class="math inline">Q(G-1, a_t) = 0</span> and <span class="math inline">max_aQ(G, a) = 0</span> because the Q-table is empty, and <span class="math inline">r_t = 1</span> because we get the only reward in this environment. We obtain <span class="math inline">Q_{new}(G-1, a_t) = 1</span>. The next time the agent is in a state next to this one (<strong>G-2</strong>), we update it too using the formula and get the same result: <span class="math inline">Q_{new}(G-2, a_t) = 1</span>. In the end, we backpropagate ones in the Q-table from <strong>G</strong> to <strong>S</strong>. Okay it works, but the result is binary: either it’s the wrong state-action pair or the best one. We would like more nuance…</p>
+<p>Actually, we almost found the true Q-learning update formula with common sense. The nuance we’re looking for adds two parameters:</p>
+<ul>
+<li><span class="math inline">\alpha</span> is the 💡<strong>learning rate</strong> (between <span class="math inline">0</span> and <span class="math inline">1</span>), which is how much we should change the original <span class="math inline">Q(s_t, a_t)</span> value. If <span class="math inline">\alpha = 0</span>, the value never changes, but if <span class="math inline">\alpha = 1</span>, the value changes extremely fast. In our attempt, we didn’t limit the learning rate so <span class="math inline">\alpha = 1</span>. But this is too fast in reality: the reward and the maximum value in the next state quickly overpower the current value. We need to find a balance between the importance of past and new knowledge.</li>
+<li><span class="math inline">\gamma</span> is the 📉<strong>discount factor</strong> (between <span class="math inline">0</span> and <span class="math inline">1</span>), which determines how much the agent cares about future rewards compared to immediate ones (as the saying goes, “a bird in the hand is worth two in the bush”). If <span class="math inline">\gamma = 0</span>, the agent only focuses on immediate rewards , but if <span class="math inline">\gamma = 1</span>, any potential future reward has the same value than current ones. In ❄️Frozen Lake, we want a high discount factor since there’s only one possible reward at the very end of the game.</li>
+</ul>
 <p>With the real Q-learning algorithm, the new value is calculated as follows:</p>
 <p><span class="math display">Q_{new}(s_t, a_t) = Q(s_t, a_t) + \alpha \cdot (r_t + \gamma \cdot max_aQ(s_{t+1},a) - Q(s_t, a_t))</span></p>
-<p>Okay, let’s try this new formula before implementing it. Once again, we can pretend that our agent is <strong>next to the goal G for the first time</strong>. We can update the state-action pair to win the game using our formula: <span class="math inline">Q_{new}(G-1, a_t) = 0 + \alpha \cdot (1 + \gamma \cdot 0 - 0)</span>. We can assign arbitrary values to <span class="math inline">\alpha</span> and <span class="math inline">\gamma</span> to calculate the result. With <span class="math inline">\alpha = 0.5</span> and <span class="math inline">\gamma = 0.9</span>, we get <span class="math inline">Q_{new}(G-1, a_t) = 0 + 0.5 \cdot (1 + 0.9 \cdot 0 - 0) = 0.5</span>. The second time the agent is in this state, we would get: <span class="math inline">Q_{new}(G-1, a_t) = 0.5 + 0.5 \cdot (1 + 0.9 \cdot 0 - 0.5) = 0.75</span>, then <span class="math inline">0.875</span>, <span class="math inline">0.9375</span>, <span class="math inline">0.96875</span>, etc.</p>
+<p>Okay, let’s try this new formula before implementing it. Once again, we can pretend that our agent is next to the goal G for the first time. We can update the state-action pair to win the game using our formula: <span class="math inline">Q_{new}(G-1, a_t) = 0 + \alpha \cdot (1 + \gamma \cdot 0 - 0)</span>. We can assign arbitrary values to <span class="math inline">\alpha</span> and <span class="math inline">\gamma</span> to calculate the result. With <span class="math inline">\alpha = 0.5</span> and <span class="math inline">\gamma = 0.9</span>, we get <span class="math inline">Q_{new}(G-1, a_t) = 0 + 0.5 \cdot (1 + 0.9 \cdot 0 - 0) = 0.5</span>. The second time the agent is in this state, we would get: <span class="math inline">Q_{new}(G-1, a_t) = 0.5 + 0.5 \cdot (1 + 0.9 \cdot 0 - 0.5) = 0.75</span>, then <span class="math inline">0.875</span>, <span class="math inline">0.9375</span>, <span class="math inline">0.96875</span>, etc.</p>
 <center class="dark-bg">
 <video autoplay="" loop="" muted="" width="483" height="483" class="drop-shadow">
 <source src="../images/qlearning/frozenlake_update.mp4" type="video/mp4">
@@ -512,12 +516,12 @@ Reward = 0.0</code></pre>
 </center>
 <p>So training our agent in code means:</p>
 <ol type="1">
-<li><strong>Choosing a random action</strong> (using <code>action_space.sample()</code>) if the values in the current state are just zeros. Otherwise, we take the <strong>action with the highest value</strong> in the current state with the function <code>np.argmax()</code>;</li>
+<li><strong>Choosing a random action</strong> (using <code>action_space.sample()</code>) if the values in the current state are just zeros. Otherwise, we take the action with the highest value in the current state with the function <code>np.argmax()</code>;</li>
 <li><strong>Implementing this action</strong> by moving in the desired direction with <code>step(action)</code>;</li>
 <li><strong>Updating the value</strong> of the original state with the action we took, using information about the new state and the reward given by <code>step(action)</code>;</li>
 </ol>
-<p>We keep repeating these 3 steps until the agent <strong>gets stuck in a hole</strong> or <strong>reaches the goal G</strong>. When it happens, we just <strong>restart the environment</strong> with <code>reset()</code> and start a new episode until we hit 1,000 episodes. Additionally, we can plot the <strong>outcome of each run</strong> (failure if it didn’t reach the goal, success otherwise) to <strong>observe the progress</strong> of our agent.</p>
-<div class="cell" data-outputid="b3aeef0b-ddf9-40f8-ae8d-cb778c9bcb9e" data-execution_count="8">
+<p>We keep repeating these 3 steps until the agent gets stuck in a hole or reaches the goal G. When it happens, we just restart the environment with <code>reset()</code> and start a new episode until we hit 1,000 episodes. Additionally, we can plot the outcome of each run (failure if it didn’t reach the goal, success otherwise) to observe the progress of our agent.</p>
+<div class="cell" data-outputid="b3aeef0b-ddf9-40f8-ae8d-cb778c9bcb9e" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import matplotlib to plot the outcomes</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>plt.rcParams[<span class="st">'figure.dpi'</span>] <span class="op">=</span> <span class="dv">300</span></span>
@@ -579,9 +583,8 @@ Reward = 0.0</code></pre>
 <span id="cb16-59"><a href="#cb16-59" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Run number"</span>)</span>
 <span id="cb16-60"><a href="#cb16-60" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Outcome"</span>)</span>
 <span id="cb16-61"><a href="#cb16-61" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> plt.gca()</span>
-<span id="cb16-62"><a href="#cb16-62" aria-hidden="true" tabindex="-1"></a>ax.set_facecolor(<span class="st">'#efeeea'</span>)</span>
-<span id="cb16-63"><a href="#cb16-63" aria-hidden="true" tabindex="-1"></a>plt.bar(<span class="bu">range</span>(<span class="bu">len</span>(outcomes)), outcomes, color<span class="op">=</span><span class="st">"#0A047A"</span>, width<span class="op">=</span><span class="fl">1.0</span>)</span>
-<span id="cb16-64"><a href="#cb16-64" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-62"><a href="#cb16-62" aria-hidden="true" tabindex="-1"></a>plt.bar(<span class="bu">range</span>(<span class="bu">len</span>(outcomes)), outcomes, width<span class="op">=</span><span class="fl">1.0</span>)</span>
+<span id="cb16-63"><a href="#cb16-63" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Q-table before training:
 [[0. 0. 0. 0.]
@@ -603,30 +606,30 @@ Reward = 0.0</code></pre>
 
 ===========================================
 Q-table after training:
-[[0.         0.         0.59049    0.        ]
- [0.         0.         0.6561     0.        ]
- [0.         0.729      0.         0.        ]
- [0.         0.         0.         0.        ]
- [0.         0.02050313 0.         0.        ]
- [0.         0.         0.         0.        ]
- [0.         0.81       0.         0.        ]
- [0.         0.         0.         0.        ]
- [0.         0.         0.17085938 0.        ]
- [0.         0.         0.49359375 0.        ]
- [0.         0.9        0.         0.        ]
- [0.         0.         0.         0.        ]
- [0.         0.         0.         0.        ]
- [0.         0.         0.         0.        ]
- [0.         0.         1.         0.        ]
- [0.         0.         0.         0.        ]]</code></pre>
+[[0.        0.59049   0.        0.       ]
+ [0.        0.        0.        0.       ]
+ [0.        0.0455625 0.        0.       ]
+ [0.        0.        0.        0.       ]
+ [0.        0.6561    0.        0.       ]
+ [0.        0.        0.        0.       ]
+ [0.        0.3796875 0.        0.       ]
+ [0.        0.        0.        0.       ]
+ [0.        0.        0.729     0.       ]
+ [0.        0.        0.81      0.       ]
+ [0.        0.9       0.        0.       ]
+ [0.        0.        0.        0.       ]
+ [0.        0.        0.        0.       ]
+ [0.        0.        0.        0.       ]
+ [0.        0.        1.        0.       ]
+ [0.        0.        0.        0.       ]]</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <p><img src="2022-02-13-Q_learning_files/figure-html/cell-9-output-2.png" class="img-fluid"></p>
 </div>
 </div>
-<p>The agent is trained! Each blue bar on the figure corresponds to a win, so we can see that the agent had a <strong>hard time finding the goal at the beginning</strong> of the training. But once it found it several times in a row, it began to <strong>consistently win</strong>. 🥳 The trained Q-table is also very interesting: these values indicate the <strong>unique sequence of actions the agent learned to reach the goal</strong>.</p>
-<p>Now let’s see how it performs by evaluating it on 100 episodes. We consider that the training is over, so <strong>we don’t need to update the Q-table anymore</strong>. To see how the agent performs, we can <strong>calculate the percentage of times the it managed to reach the goal</strong> (success rate).</p>
-<div class="cell" data-outputid="166bf5bd-5c14-4712-9d41-bd16857eb3e7" data-execution_count="9">
+<p>The agent is trained! Each blue bar on the figure corresponds to a win, so we can see that the agent had a hard time finding the goal at the beginning of the training. But once it found it several times in a row, it began to consistently win. The trained Q-table is also very interesting: these values indicate the unique sequence of actions the agent learned to reach the goal.</p>
+<p>Now let’s see how it performs by evaluating it on 100 episodes. We consider that the training is over, so <strong>we don’t need to update the Q-table anymore</strong>. To see how the agent performs, we can calculate the percentage of times the it managed to reach the goal (success rate).</p>
+<div class="cell" data-outputid="166bf5bd-5c14-4712-9d41-bd16857eb3e7" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>episodes <span class="op">=</span> <span class="dv">100</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>nb_success <span class="op">=</span> <span class="dv">0</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -660,9 +663,9 @@ Q-table after training:
 <pre><code>Success rate = 100.0%</code></pre>
 </div>
 </div>
-<p>Not only our agent has been trained, but it manages to hit a <strong>100% success rate</strong>. Great job everyone, the non-slippery ❄️<strong>Frozen Lake</strong> is solved!</p>
-<p>We can even <strong>visualize the agent moving on the map</strong> by executing the code below and print the <strong>sequence of actions it took</strong> to check if it’s the best one.</p>
-<div class="cell" data-outputid="1e8cb710-e3e2-42b4-f77f-3a00be83ae30" data-execution_count="10">
+<p>Not only our agent has been trained, but it manages to hit a <strong>100% success rate</strong>. Great job everyone, the non-slippery ❄️Frozen Lake is solved!</p>
+<p>We can even visualize the agent moving on the map by executing the code below and print the sequence of actions it took to check if it’s the best one.</p>
+<div class="cell" data-outputid="1e8cb710-e3e2-42b4-f77f-3a00be83ae30" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> clear_output</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time </span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -700,29 +703,33 @@ SFFF
 FHFH
 FFFH
 HFFG
-Sequence = [2, 2, 1, 1, 1, 2]</code></pre>
+Sequence = [1, 1, 2, 2, 1, 2]</code></pre>
 </div>
 </div>
-<p>The agent can learn several correct sequence of actions: [2, 2, 1, 1, 1, 2], [1, 1, 2, 2, 1, 2], etc. The good thing is there’s <strong>only 6 actions in our sequence</strong>, which was the <strong>minimum possible number of actions we counted</strong>: it means that our agent learned to solve the game in an optimal way. In the case of [2, 2, 1, 1, 1, 2], which corresponds to RIGHT <span class="math inline">\to</span> RIGHT <span class="math inline">\to</span> DOWN <span class="math inline">\to</span> DOWN <span class="math inline">\to</span> DOWN <span class="math inline">\to</span> RIGHT, it’s exactly the sequence we predicted at the very beginning of the article. 📣</p>
+<p>The agent can learn several correct sequence of actions: [2, 2, 1, 1, 1, 2], [1, 1, 2, 2, 1, 2], etc. The good thing is there’s only 6 actions in our sequence, which was the minimum possible number of actions we counted: it means that our agent learned to solve the game in an optimal way. In the case of [2, 2, 1, 1, 1, 2], which corresponds to RIGHT <span class="math inline">\to</span> RIGHT <span class="math inline">\to</span> DOWN <span class="math inline">\to</span> DOWN <span class="math inline">\to</span> DOWN <span class="math inline">\to</span> RIGHT, it’s exactly the sequence we predicted at the very beginning of the article. 📣</p>
 </section>
 <section id="iv.-epsilon-greedy-algorithm" class="level2">
 <h2 class="anchored" data-anchor-id="iv.-epsilon-greedy-algorithm">📐 IV. Epsilon-Greedy algorithm</h2>
-<p>Despite this success, there’s something that bothers me with our previous approach: the agent always chooses the action with the <strong>highest</strong> value. So whenever a state-action pair <strong>starts having a non-zero value, the agent will always choose it</strong>. The other actions will never be taken, which means we’ll never update their value… But what if one of these actions was <strong>better than the one the agent always takes</strong>? Shouldn’t we encourage the agent to try news things from time to time and see if it can improve?</p>
-<p>In other words, we want to allow our agent to either: * <strong>Take the action with the highest value</strong> (exploitation); * <strong>Choose a random action to try to find even better ones</strong> (exploration).</p>
-<p>A tradeoff between these two behaviors is important: if the agent only focuses on <strong>exploitation</strong>, it cannot try new solutions and thus <strong>doesn’t learn anymore</strong>. On the other hand, if the agent only takes <strong>random actions</strong>, the <strong>training is pointless</strong> since it doesn’t use the Q-table. So we want to <strong>change this parameter over time</strong>: at the beginning of the training, we want to <strong>explore the environment as much as possible</strong>. But exploration becomes less and less interesting, as <strong>the agent already knows every possible state-action pairs</strong>. This parameter represents the <strong>amount of randomness in the action selection</strong>.</p>
-<p>This technique is commonly called the <strong>epsilon-greedy algorithm</strong>, where epsilon is our parameter. It is a <strong>simple but extremely efficient</strong> method to find a good tradeoff. Every time the agent has to take an action, it has a <strong>probability <span class="math inline">ε</span> of choosing a random one</strong>, and a <strong>probability <span class="math inline">1-ε</span> of choosing the one with the highest value</strong>. We can decrease the value of epsilon <strong>at the end of each episode</strong> by a fixed amount (<strong>linear decay</strong>), or based on the current value of epsilon (<strong>exponential decay</strong>).</p>
+<p>Despite this success, there’s something that bothers me with our previous approach: the agent always chooses the action with the highest value. So whenever a state-action pair starts having a non-zero value, the agent will always choose it. The other actions will never be taken, which means we’ll never update their value… But what if one of these actions was better than the one the agent always takes? Shouldn’t we encourage the agent to try new things from time to time and see if it can improve?</p>
+<p>In other words, we want to allow our agent to either:</p>
+<ul>
+<li><strong>Take the action</strong> with the highest value (exploitation);</li>
+<li><strong>Choose a random action</strong> to try to find even better ones (exploration).</li>
+</ul>
+<p>We want a tradeoff between these two behaviors: if the agent only focuses on exploitation, it cannot try new solutions and thus doesn’t learn anymore. On the other hand, if the agent only takes random actions, the training is pointless since it doesn’t use the Q-table. So we want to change this parameter over time: at the beginning of the training, we want to explore the environment as much as possible. But exploration becomes less and less interesting, as the agent already knows every possible state-action pairs. This parameter represents the amount of randomness in the action selection.</p>
+<p>This technique is commonly called the <strong>epsilon-greedy algorithm</strong>, where epsilon is our parameter. It is a simple but extremely efficient method to find a good tradeoff. Every time the agent has to take an action, it has a probability <span class="math inline">ε</span> of choosing a random one, and a probability <span class="math inline">1-ε</span> of choosing the one with the highest value. We can decrease the value of epsilon at the end of each episode by a fixed amount (linear decay), or based on the current value of epsilon (exponential decay).</p>
 <center class="dark-bg">
 <video autoplay="" loop="" muted="" width="800" class="no-margin">
 <source src="../images/qlearning/frozenlake_epsilon.mp4" type="video/mp4">
 
 </video>
 </center>
-<p>Let’s implement a <strong>linear decay</strong>. Beforehand, I’d like to see how the curve looks like with arbitrary parameters. We’ll start with <span class="math inline">ε = 1</span> to be in full exploration mode, and decrease this value by <span class="math inline">0.001</span> after each episode.</p>
+<p>Let’s implement a linear decay. Beforehand, I’d like to see how the curve looks like with arbitrary parameters. We’ll start with <span class="math inline">ε = 1</span> to be in full exploration mode, and decrease this value by <span class="math inline">0.001</span> after each episode.</p>
 <center>
 <img alt="Illustration of linear decay" src="https://i.imgur.com/F7hXEyY.png" loading="lazy" class="figure">
 </center>
-<p>Okay now that we have a sound understanding of it, we can implement it for real and see <strong>how it changes the agent’s behavior</strong>.</p>
-<div class="cell" data-outputid="d3c66f2e-2eb1-479d-8925-08a15fca2af2" data-execution_count="11">
+<p>Okay now that we have a sound understanding of it, we can implement it for real and see how it changes the agent’s behavior.</p>
+<div class="cell" data-outputid="d3c66f2e-2eb1-479d-8925-08a15fca2af2" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We re-initialize the Q-table</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>qtable <span class="op">=</span> np.zeros((environment.observation_space.n, environment.action_space.n))</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -786,9 +793,8 @@ Sequence = [2, 2, 1, 1, 1, 2]</code></pre>
 <span id="cb22-61"><a href="#cb22-61" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Run number"</span>)</span>
 <span id="cb22-62"><a href="#cb22-62" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Outcome"</span>)</span>
 <span id="cb22-63"><a href="#cb22-63" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> plt.gca()</span>
-<span id="cb22-64"><a href="#cb22-64" aria-hidden="true" tabindex="-1"></a>ax.set_facecolor(<span class="st">'#efeeea'</span>)</span>
-<span id="cb22-65"><a href="#cb22-65" aria-hidden="true" tabindex="-1"></a>plt.bar(<span class="bu">range</span>(<span class="bu">len</span>(outcomes)), outcomes, color<span class="op">=</span><span class="st">"#0A047A"</span>, width<span class="op">=</span><span class="fl">1.0</span>)</span>
-<span id="cb22-66"><a href="#cb22-66" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-64"><a href="#cb22-64" aria-hidden="true" tabindex="-1"></a>plt.bar(<span class="bu">range</span>(<span class="bu">len</span>(outcomes)), outcomes, width<span class="op">=</span><span class="fl">1.0</span>)</span>
+<span id="cb22-65"><a href="#cb22-65" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Q-table before training:
 [[0. 0. 0. 0.]
@@ -811,19 +817,19 @@ Sequence = [2, 2, 1, 1, 1, 2]</code></pre>
 ===========================================
 Q-table after training:
 [[0.531441   0.59049    0.59049    0.531441  ]
- [0.531441   0.         0.6561     0.56396466]
- [0.58333574 0.729      0.56935151 0.65055117]
- [0.65308668 0.         0.33420534 0.25491326]
+ [0.531441   0.         0.6561     0.59049   ]
+ [0.59049    0.729      0.59049    0.6561    ]
+ [0.6561     0.         0.59048879 0.59047491]
  [0.59049    0.6561     0.         0.531441  ]
  [0.         0.         0.         0.        ]
- [0.         0.81       0.         0.65519631]
+ [0.         0.81       0.         0.6561    ]
  [0.         0.         0.         0.        ]
  [0.6561     0.         0.729      0.59049   ]
- [0.6561     0.81       0.81       0.        ]
- [0.72899868 0.9        0.         0.72711067]
+ [0.65609944 0.80999966 0.81       0.        ]
+ [0.729      0.9        0.         0.729     ]
  [0.         0.         0.         0.        ]
  [0.         0.         0.         0.        ]
- [0.         0.81       0.9        0.729     ]
+ [0.         0.60548384 0.9        0.72407524]
  [0.81       0.9        1.         0.81      ]
  [0.         0.         0.         0.        ]]</code></pre>
 </div>
@@ -831,9 +837,9 @@ Q-table after training:
 <p><img src="2022-02-13-Q_learning_files/figure-html/cell-12-output-2.png" class="img-fluid"></p>
 </div>
 </div>
-<p>Hey, <strong>the agent takes more time to consistently win the game</strong> now! And the Q-table has <strong>a lot more non-zero values</strong> than the previous one, which means the agent has learned <strong>several sequences of actions</strong> to reach the goal. It is understandable, since this new agent is <strong>forced to explore state-action pairs instead of always exploiting ones with non-zero values</strong>.</p>
-<p>Let’s see if it’s <strong>as successful as the previous one</strong> to win the game. In evaluation mode, we <strong>don’t want exploration anymore</strong> because the agent is trained now.</p>
-<div class="cell" data-outputid="8db4a374-6cc2-476f-a721-dfbb7d2d28c1" data-execution_count="12">
+<p>Hey, the agent takes more time to consistently win the game now! And the Q-table has a lot more non-zero values than the previous one, which means the agent has learned several sequences of actions to reach the goal. It is understandable, since this new agent is forced to explore state-action pairs instead of always exploiting ones with non-zero values.</p>
+<p>Let’s see if it’s as successful as the previous one to win the game. In evaluation mode, we <strong>don’t want exploration anymore</strong> because the agent is trained now.</p>
+<div class="cell" data-outputid="8db4a374-6cc2-476f-a721-dfbb7d2d28c1" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>episodes <span class="op">=</span> <span class="dv">100</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>nb_success <span class="op">=</span> <span class="dv">0</span></span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -862,12 +868,12 @@ Q-table after training:
 <pre><code>Success rate = 100.0%</code></pre>
 </div>
 </div>
-<p>Phew, it’s another 100% success rate! We didn’t degrade the model. 😌 The benefits of this approach might not be obvious in this example, but our model became <strong>less static</strong> and <strong>more flexible</strong>. It learned different paths (sequences of actions) from <strong>S</strong> to <strong>G</strong> instead of just one as in the previous approach. More exploration <strong>can degrade performance</strong> but it’s necessary to train agents that can <strong>adapt to new environments</strong>.</p>
+<p>Phew, it’s another 100% success rate! We didn’t degrade the model. The benefits of this approach might not be obvious in this example, but our model became <strong>less static</strong> and <strong>more flexible</strong>. It learned different paths (sequences of actions) from <strong>S</strong> to <strong>G</strong> instead of just one as in the previous approach. More exploration can degrade performance but it’s necessary to train agents that can adapt to new environments.</p>
 </section>
 <section id="iv.-challenge-slippery-frozen-lake" class="level2">
 <h2 class="anchored" data-anchor-id="iv.-challenge-slippery-frozen-lake">❄️ IV. Challenge: slippery Frozen Lake</h2>
-<p>We didn’t solve the <strong>entire ❄️Frozen Lake environment</strong>: we only trained an agent on the non-slippery version, using <code>is_slippery = False</code> during initialization. In the slippery variant, the action the agent takes only has <strong>33% chance of succeeding</strong>. In case of failure, one of the three other actions is randomly taken instead. This feature adds a lot of randomness to the training, which makes things more difficult for our agent. Let’s see how well our code is doing in this new environment…</p>
-<div class="cell" data-outputid="3a8b8a8a-ee53-4e7f-97d3-9ca3ff0dff8a" data-execution_count="13">
+<p>We didn’t solve the entire Frozen Lake environment: we only trained an agent on the non-slippery version, using <code>is_slippery = False</code> during initialization. In the slippery variant, the action the agent takes only has <strong>33% chance of succeeding</strong>. In case of failure, one of the three other actions is randomly taken instead. This feature adds a lot of randomness to the training, which makes things more difficult for our agent. Let’s see how well our code is doing in this new environment…</p>
+<div class="cell" data-outputid="3a8b8a8a-ee53-4e7f-97d3-9ca3ff0dff8a" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize the slippery Frozen Lake</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>environment <span class="op">=</span> gym.make(<span class="st">"FrozenLake-v1"</span>, is_slippery<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>environment.reset()</span>
@@ -935,34 +941,33 @@ Q-table after training:
 <span id="cb26-65"><a href="#cb26-65" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Run number"</span>)</span>
 <span id="cb26-66"><a href="#cb26-66" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Outcome"</span>)</span>
 <span id="cb26-67"><a href="#cb26-67" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> plt.gca()</span>
-<span id="cb26-68"><a href="#cb26-68" aria-hidden="true" tabindex="-1"></a>ax.set_facecolor(<span class="st">'#efeeea'</span>)</span>
-<span id="cb26-69"><a href="#cb26-69" aria-hidden="true" tabindex="-1"></a>plt.bar(<span class="bu">range</span>(<span class="bu">len</span>(outcomes)), outcomes, color<span class="op">=</span><span class="st">"#0A047A"</span>, width<span class="op">=</span><span class="fl">1.0</span>)</span>
-<span id="cb26-70"><a href="#cb26-70" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb26-71"><a href="#cb26-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-72"><a href="#cb26-72" aria-hidden="true" tabindex="-1"></a>episodes <span class="op">=</span> <span class="dv">100</span></span>
-<span id="cb26-73"><a href="#cb26-73" aria-hidden="true" tabindex="-1"></a>nb_success <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb26-74"><a href="#cb26-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-75"><a href="#cb26-75" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluation</span></span>
-<span id="cb26-76"><a href="#cb26-76" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">100</span>):</span>
-<span id="cb26-77"><a href="#cb26-77" aria-hidden="true" tabindex="-1"></a>    state <span class="op">=</span> environment.reset()</span>
-<span id="cb26-78"><a href="#cb26-78" aria-hidden="true" tabindex="-1"></a>    done <span class="op">=</span> <span class="va">False</span></span>
-<span id="cb26-79"><a href="#cb26-79" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb26-80"><a href="#cb26-80" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Until the agent gets stuck or reaches the goal, keep training it</span></span>
-<span id="cb26-81"><a href="#cb26-81" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="kw">not</span> done:</span>
-<span id="cb26-82"><a href="#cb26-82" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Choose the action with the highest value in the current state</span></span>
-<span id="cb26-83"><a href="#cb26-83" aria-hidden="true" tabindex="-1"></a>        action <span class="op">=</span> np.argmax(qtable[state])</span>
-<span id="cb26-84"><a href="#cb26-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-85"><a href="#cb26-85" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Implement this action and move the agent in the desired direction</span></span>
-<span id="cb26-86"><a href="#cb26-86" aria-hidden="true" tabindex="-1"></a>        new_state, reward, done, info <span class="op">=</span> environment.step(action)</span>
-<span id="cb26-87"><a href="#cb26-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-88"><a href="#cb26-88" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Update our current state</span></span>
-<span id="cb26-89"><a href="#cb26-89" aria-hidden="true" tabindex="-1"></a>        state <span class="op">=</span> new_state</span>
-<span id="cb26-90"><a href="#cb26-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-91"><a href="#cb26-91" aria-hidden="true" tabindex="-1"></a>        <span class="co"># When we get a reward, it means we solved the game</span></span>
-<span id="cb26-92"><a href="#cb26-92" aria-hidden="true" tabindex="-1"></a>        nb_success <span class="op">+=</span> reward</span>
-<span id="cb26-93"><a href="#cb26-93" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-94"><a href="#cb26-94" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's check our success rate!</span></span>
-<span id="cb26-95"><a href="#cb26-95" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span> (<span class="ss">f"Success rate = </span><span class="sc">{</span>nb_success<span class="op">/</span>episodes<span class="op">*</span><span class="dv">100</span><span class="sc">}</span><span class="ss">%"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb26-68"><a href="#cb26-68" aria-hidden="true" tabindex="-1"></a>plt.bar(<span class="bu">range</span>(<span class="bu">len</span>(outcomes)), outcomes, width<span class="op">=</span><span class="fl">1.0</span>)</span>
+<span id="cb26-69"><a href="#cb26-69" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb26-70"><a href="#cb26-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-71"><a href="#cb26-71" aria-hidden="true" tabindex="-1"></a>episodes <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb26-72"><a href="#cb26-72" aria-hidden="true" tabindex="-1"></a>nb_success <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb26-73"><a href="#cb26-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-74"><a href="#cb26-74" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluation</span></span>
+<span id="cb26-75"><a href="#cb26-75" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">100</span>):</span>
+<span id="cb26-76"><a href="#cb26-76" aria-hidden="true" tabindex="-1"></a>    state <span class="op">=</span> environment.reset()</span>
+<span id="cb26-77"><a href="#cb26-77" aria-hidden="true" tabindex="-1"></a>    done <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb26-78"><a href="#cb26-78" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb26-79"><a href="#cb26-79" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Until the agent gets stuck or reaches the goal, keep training it</span></span>
+<span id="cb26-80"><a href="#cb26-80" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="kw">not</span> done:</span>
+<span id="cb26-81"><a href="#cb26-81" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Choose the action with the highest value in the current state</span></span>
+<span id="cb26-82"><a href="#cb26-82" aria-hidden="true" tabindex="-1"></a>        action <span class="op">=</span> np.argmax(qtable[state])</span>
+<span id="cb26-83"><a href="#cb26-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-84"><a href="#cb26-84" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Implement this action and move the agent in the desired direction</span></span>
+<span id="cb26-85"><a href="#cb26-85" aria-hidden="true" tabindex="-1"></a>        new_state, reward, done, info <span class="op">=</span> environment.step(action)</span>
+<span id="cb26-86"><a href="#cb26-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-87"><a href="#cb26-87" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Update our current state</span></span>
+<span id="cb26-88"><a href="#cb26-88" aria-hidden="true" tabindex="-1"></a>        state <span class="op">=</span> new_state</span>
+<span id="cb26-89"><a href="#cb26-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-90"><a href="#cb26-90" aria-hidden="true" tabindex="-1"></a>        <span class="co"># When we get a reward, it means we solved the game</span></span>
+<span id="cb26-91"><a href="#cb26-91" aria-hidden="true" tabindex="-1"></a>        nb_success <span class="op">+=</span> reward</span>
+<span id="cb26-92"><a href="#cb26-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-93"><a href="#cb26-93" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's check our success rate!</span></span>
+<span id="cb26-94"><a href="#cb26-94" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span> (<span class="ss">f"Success rate = </span><span class="sc">{</span>nb_success<span class="op">/</span>episodes<span class="op">*</span><span class="dv">100</span><span class="sc">}</span><span class="ss">%"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Q-table before training:
 [[0. 0. 0. 0.]
@@ -984,35 +989,43 @@ Q-table after training:
 
 ===========================================
 Q-table after training:
-[[0.06208723 0.02559574 0.02022059 0.01985828]
- [0.01397208 0.01425862 0.01305446 0.03333396]
- [0.01318348 0.01294602 0.01356014 0.01461235]
- [0.01117016 0.00752795 0.00870601 0.01278227]
- [0.08696239 0.01894036 0.01542694 0.02307306]
- [0.         0.         0.         0.        ]
- [0.09027682 0.00490451 0.00793372 0.00448314]
- [0.         0.         0.         0.        ]
- [0.03488138 0.03987256 0.05172554 0.10780482]
- [0.12444437 0.12321815 0.06462294 0.07084008]
- [0.13216145 0.09460133 0.09949734 0.08022573]
- [0.         0.         0.         0.        ]
- [0.         0.         0.         0.        ]
- [0.1606242  0.18174032 0.16636549 0.11444442]
- [0.4216631  0.42345944 0.40825367 0.74082329]
- [0.         0.         0.         0.        ]]
-Success rate = 17.0%</code></pre>
+[[1.05252351e-01 3.78423474e-02 3.62199013e-02 2.23498832e-02]
+ [2.61798645e-02 4.26276348e-03 8.64731745e-03 5.53546712e-02]
+ [5.85998622e-02 7.72357953e-03 4.80325107e-03 1.07726690e-02]
+ [3.67626921e-03 4.35241422e-03 2.52407133e-03 2.06007352e-02]
+ [1.19691783e-01 4.25479653e-03 2.31618416e-02 1.22786174e-02]
+ [0.00000000e+00 0.00000000e+00 0.00000000e+00 0.00000000e+00]
+ [1.24380078e-03 1.58879391e-03 3.22089381e-02 5.75193585e-04]
+ [0.00000000e+00 0.00000000e+00 0.00000000e+00 0.00000000e+00]
+ [3.93362525e-02 2.49045571e-02 2.96786309e-02 1.52367294e-01]
+ [1.21022336e-01 3.11776736e-01 9.27730765e-02 8.23315493e-02]
+ [2.70878170e-01 9.02280152e-02 5.70375682e-02 5.47929688e-02]
+ [0.00000000e+00 0.00000000e+00 0.00000000e+00 0.00000000e+00]
+ [0.00000000e+00 0.00000000e+00 0.00000000e+00 0.00000000e+00]
+ [8.23969532e-02 6.18706046e-02 4.71186580e-01 2.43109188e-01]
+ [2.96197582e-01 9.02165586e-01 3.35387729e-01 2.46850733e-01]
+ [0.00000000e+00 0.00000000e+00 0.00000000e+00 0.00000000e+00]]
+Success rate = 76.0%</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <p><img src="2022-02-13-Q_learning_files/figure-html/cell-14-output-2.png" class="img-fluid"></p>
 </div>
 </div>
-<p>Oof it’s not so good. But can you improve the performance by tweaking the different parameters we talked about? I encourage you to take this <strong>little challenge</strong> and do it on your own to <strong>have fun with reinforcement learning</strong> and check if you understood <strong>everything we said about Q-learning</strong>. And why not implementing <strong>exponential decay</strong> for the epsilon-greedy algorithm too? During this quick exercise, you might realise that <strong>slightly modifying the hyperparameters can completely destroy the results</strong>. This is another quirk of reinforcement learning: hyperparameters are quite moody, and it is important to understand their meaning if you want to tweak them. It’s always good to test and try new combinations to <strong>build your intuition and become more efficient</strong>. Good luck and have fun!</p>
+<p>It’s not so good. But can you improve the performance by tweaking the different parameters we talked about? I encourage you to take this little challenge and do it on your own to have fun with reinforcement learning and check if you understood everything we said about Q-learning. And why not implementing <strong>exponential decay</strong> for the epsilon-greedy algorithm too?</p>
+<p>During this quick exercise, you might realize that slightly modifying the hyperparameters can completely destroy the results. This is another quirk of reinforcement learning: hyperparameters are quite moody, and it is important to understand their meaning if you want to tweak them. It’s always good to test and try new combinations to build your intuition and become more efficient. Good luck and have fun!</p>
 </section>
 <section id="v.-conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="v.-conclusion">🔚 V. Conclusion</h2>
-<p>Q-learning is a <strong>simple yet powerful algorithm</strong> at the core of reinforcement learning. In this article, * We learned to <strong>interact with the <code>gym</code> environment</strong> to choose actions and move our agent; * We introduced the idea of a <strong>Q-table</strong>, where <strong>rows are states</strong>, <strong>columns are actions</strong>, and <strong>cells are the value</strong> of an action in a given state; * We experimentally recreated the <strong>Q-learning update formula</strong> to tackle the <strong>sparse reward problem</strong>; * We implemented an entire training and evaluation process, that solved the <strong>❄️Frozen Lake</strong> environment with 100% success rate; * We implemented the famous <strong>epsilon-greedy algorithm</strong> in order to create a tradeoff between the <strong>exploration of unknown state-action pairs</strong> and the <strong>exploitation of the most successful ones</strong>.</p>
-<p>The <strong>❄️Frozen Lake</strong> is a very simple environment, but others can have <strong>so many states and actions that it becomes impossible to store the Q-table in memory</strong>. This is especially the case in environments where events are <strong>not discrete, but continuous</strong> (like Super Mario Bros.&nbsp;or Minecraft). When the problem arises, a popular technique consists of training a <strong>deep neural network to approximate the Q-table</strong>. This method adds several layers of complexity, since the neural networks are <strong>not very stable</strong>. But I will cover it in another tutorial with different techniques to stabilize them.</p>
-<p>Until then, <strong>share this article</strong> if it helped you and <a href="https://twitter.com/maximelabonne"><strong>follow me on Twitter</strong></a> and <a href="https://medium.com/@mlabonne"><strong>Medium</strong></a> for more <strong>practical content</strong> around machine learning and deep learning. 📣</p>
+<p>Q-learning is a simple yet powerful algorithm at the core of reinforcement learning. In this article,</p>
+<ul>
+<li>We learned to <strong>interact with the <code>gym</code> environment</strong> to choose actions and move our agent;</li>
+<li>We introduced the idea of a <strong>Q-table</strong>, where rows are states, columns are actions, and cells are the value of an action in a given state;</li>
+<li>We experimentally recreated the <strong>Q-learning update formula</strong> to tackle the sparse reward problem;</li>
+<li>We implemented an entire training and evaluation process, that solved the Frozen Lake environment with 100% success rate;</li>
+<li>We implemented the famous <strong>epsilon-greedy algorithm</strong> in order to create a tradeoff between the exploration of unknown state-action pairs and the exploitation of the most successful ones.</li>
+</ul>
+<p>The Frozen Lake is a very simple environment, but others can have so many states and actions that it becomes impossible to store the Q-table in memory. This is especially the case in environments where events are not discrete, but continuous (like Super Mario Bros.&nbsp;or Minecraft). When the problem arises, a popular technique consists of training a deep neural network to approximate the Q-table. This method adds several layers of complexity, since the neural networks are not very stable. But I will cover it in another tutorial with different techniques to stabilize them.</p>
+<p>Until then, share this article if it helped you and <a href="https://twitter.com/maximelabonne">follow me on Twitter</a> and <a href="https://medium.com/@mlabonne">Medium</a> for more practical content around machine learning and deep learning. 📣</p>
 
 
 </section>
