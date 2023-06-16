@@ -1,0 +1,41 @@
+---
+aliases:
+- /publications/
+layout: page
+title: Publications
+description: List of scientific papers
+permalink: /publications/
+title-block-banner: true
+toc: false
+---
+
+<h2>📜 Thesis</h2>
+*  **[Anomaly-based network intrusion detection using machine learning](https://tel.archives-ouvertes.fr/tel-02988296/document)
+<br/>Maxime Labonne**
+<br/>*Polytechnic Institute of Paris (Institut Polytechnique de Paris), 2020*
+
+<h2>📝 Proceedings</h2>
+* **[Spam-T5: Benchmarking Large Language Models for Few-Shot Email Spam Detection](https://arxiv.org/abs/2304.01238)
+<br/>Maxime Labonne, Sean Moran**
+<br/>*Arxiv*
+* **[Toward Formal Data Set Verification for Building Effective Machine Learning Models](https://arxiv.org/abs/2108.11220)
+<br/>Jorge López, Maxime Labonne, Claude Poletti**
+<br/>*KDIR 2021 - 13th International Conference on Knowledge Discovery and Information Retrieval*
+* **[Short-Term Flow-Based Bandwidth Forecasting using Machine Learning](https://arxiv.org/abs/2011.14421)
+<br/>Maxime Labonne, Jorge López, Claude Poletti, Jean-Baptiste Munier**
+<br/>*2021 IEEE 22nd International Symposium on a World of Wireless, Mobile and Multimedia Networks (WoWMoM)*
+* **[Priority flow admission and routing in sdn: Exact and heuristic approaches](https://arxiv.org/abs/2009.10822)
+<br/>Jorge López, Maxime Labonne, Claude Poletti, Dallal Belabed**
+<br/>*2020 IEEE 19th International Symposium on Network Computing and Applications (NCA)*
+* **[Predicting Bandwidth Utilization on Network Links Using Machine Learning](https://arxiv.org/abs/2112.02417)
+<br/>Maxime Labonne, Charalampos Chatzinakis, Alexis Olivereau**
+<br/>*2020 European Conference on Networks and Communications (EuCNC)*
+* **[Unsupervised protocol-based intrusion detection for real-world networks](https://ieeexplore.ieee.org/abstract/document/9049796/)
+<br/>Maxime Labonne, Alexis Olivereau, Baptise Polvé, Djamal Zeghlache**
+<br/>*2020 International Conference on Computing, Networking and Communications (ICNC)*
+* **[A Cascade-structured Meta-Specialists Approach for Neural Network-based Intrusion Detection](https://ieeexplore.ieee.org/abstract/document/8651856)
+<br/>Maxime Labonne, Alexis Olivereau, Baptiste Polvé, Djamal Zeghlache**
+<br/>*2019 16th IEEE Annual Consumer Communications & Networking Conference (CCNC)*
+* **[Anomaly detection in vehicle-to-infrastructure communications](https://hal-cea.archives-ouvertes.fr/cea-01888831/file/Russo2018.pdf)
+<br/>Michele Russo, Maxime Labonne, Alexis Olivereau, Mohammad Rmayti**
+<br/>*2018 IEEE 87th Vehicular Technology Conference (VTC Spring)*

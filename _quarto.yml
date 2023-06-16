@@ -1,0 +1,51 @@
+project:
+  type: website
+
+website:
+  title: "Maxime Labonne"
+  description: "Illustrated machine learning and deep learning tutorials with Python and PyTorch for programmers."
+  site-url: https://mlabonne.github.io/blog
+  navbar:
+    left:
+      - text: "Hands-On GNNs"
+        file: book.qmd
+      - text: "Research notes"
+        file: notes.qmd
+      - publications.qmd
+      - text: "About"
+        file: about.qmd
+    right:
+      - text: "@maximelabonne"
+        icon: twitter
+        href: https://twitter.com/maximelabonne
+      - icon: github
+        href: https://github.com/mlabonne
+      - icon: medium
+        href: https://medium.com/@mlabonne
+      - icon: linkedin
+        href: https://linkedin.com/in/maxime-labonne/
+    pinned: false
+  google-analytics: "G-4DWYJM47PC"
+  favicon: images/favicon.ico
+  twitter-card:
+    creator: "@maximelabonne"
+  open-graph: true
+
+format:
+  html:
+    page-layout: article
+    theme: [minty, styles.scss]
+    toc: true
+    toc-depth: 2
+    toc-title: Contents
+    css: styles.css
+    html-math-method: katex
+    code-overflow: wrap
+    highlight-style: breeze
+    code-block-background: true
+    link-external-newwindow: true
+    embed-resources: true
+
+comments:
+  utterances:
+    repo: https://github.com/mlabonne/blog

@@ -1,0 +1,18 @@
+---
+title: "Blog"
+description: "Technical articles about graph neural networks, large language models, and convex optimization."
+listing:
+  contents: posts
+  sort: "date desc"
+  type: default
+  image-align: left
+  categories: cloud
+  feed: true
+  sort-ui: false
+  filter-ui: false
+  fields: [image, date, title, description, reading-time]
+# page-layout: full
+title-block-banner: true
+---
+
+

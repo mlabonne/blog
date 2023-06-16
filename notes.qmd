@@ -1,0 +1,17 @@
+---
+title: "Research notes"
+description: "Personal notes I take when reading research papers. Might not be very useful. :)"
+listing:
+  contents: notes
+  sort: "date desc"
+  type: grid
+  image-align: left
+  feed: true
+  sort-ui: false
+  filter-ui: false
+  fields: [title, reading-time]
+page-layout: full
+title-block-banner: true
+---
+
+
