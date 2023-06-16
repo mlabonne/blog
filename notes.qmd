@@ -1,5 +1,5 @@
 ---
-title: "Research notes"
+title: "{{< fa pen >}} Research notes"
 description: "Personal notes I take when reading research papers. Might not be very useful. :)"
 listing:
   contents: notes

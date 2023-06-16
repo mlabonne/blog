@@ -7,12 +7,13 @@ website:
   site-url: https://mlabonne.github.io/blog
   navbar:
     left:
-      - text: "Hands-On GNNs"
+      - text: "{{< fa book >}} Hands-On GNNs"
         file: book.qmd
-      - text: "Research notes"
+      - text: "{{< fa pen >}} Notes"
         file: notes.qmd
-      - publications.qmd
-      - text: "About"
+      - text: "{{< fa paperclip >}} Publications"
+        file: publications.qmd
+      - text: "{{< fa address-card >}} About"
         file: about.qmd
     right:
       - text: "@maximelabonne"
@@ -28,6 +29,7 @@ website:
   google-analytics: "G-4DWYJM47PC"
   favicon: images/favicon.ico
   twitter-card:
+    card-style: summary_large_image
     creator: "@maximelabonne"
   open-graph: true
 
