@@ -32,6 +32,7 @@ website:
     card-style: summary_large_image
     creator: "@maximelabonne"
   open-graph: true
+  page-footer: "Copyright 2023, Maxime Labonne" 
 
 format:
   html:
@@ -43,7 +44,7 @@ format:
     css: styles.css
     html-math-method: katex
     code-overflow: wrap
-    highlight-style: breeze
+    highlight-style: oblivion
     code-block-background: true
     link-external-newwindow: true
     embed-resources: true

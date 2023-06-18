@@ -6,12 +6,12 @@ listing:
   sort: "date desc"
   type: default
   image-align: left
-  categories: cloud
+  # categories: cloud
   feed: true
   sort-ui: false
   filter-ui: false
-  fields: [image, date, title, description, reading-time]
-# page-layout: full
+  fields: [image, date, title, subtitle, reading-time]
+page-layout: full
 title-block-banner: true
 ---
 

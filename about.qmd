@@ -18,9 +18,17 @@ about:
 
 👋 **Greetings!** My name is Maxime Labonne, and I am currently a senior applied researcher at [JPMorgan Chase](https://www.jpmorganchase.com/). I hold a M.Sc. degree in computer science from [INSA CVL](https://www.insa-centrevaldeloire.fr/en), and a Ph.D. in machine learning and cyber security from the [Polytechnic Institute of Paris](https://www.ip-paris.fr/en).
 
+I applied mac on intrusion detection
+
 In this blog, I aim to provide **practical tutorials and guides** on AI and machine learning. I believe in starting with implementation and practice, and then diving into explanations. By retracing the thought process of the original authors of the algorithms we use every day, we can gain a deeper understanding of their design and the importance of each component.
 
 I hope we can have fun together and learn a few things along the way!
+
+<!-- Maxime Labonne is a senior applied researcher at J.P. Morgan with a Ph.D. in machine learning and cyber security from the Polytechnic Institute of Paris.
+
+During his Ph.D., Maxime worked on developing machine learning algorithms for anomaly detection in computer networks. He then joined the AI Connectivity Lab at Airbus, where he applied his expertise in machine learning to improve the security and performance of computer networks. He then joined J.P. Morgan, where he develops techniques to solve a variety of challenging problems in finance and other domains.
+
+In addition to his research work, Maxime is passionate about sharing his knowledge and experience with others through Twitter (@maximelabonne) and his personal blog. -->
 
 If you want to contact me, feel free to send a mail at <a href="mailto:labonne.maxime&commat;gmail.com">this address</a>.
 

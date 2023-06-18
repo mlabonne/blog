@@ -6,6 +6,7 @@ listing:
   sort: "date desc"
   type: grid
   image-align: left
+  image-placeholder: images/
   feed: true
   sort-ui: false
   filter-ui: false
