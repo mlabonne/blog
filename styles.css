@@ -97,6 +97,10 @@ div.quarto-post .thumbnail img {
     margin-top: 0px;
 }
 
+div.quarto-post {
+    margin-bottom: 0px;
+}
+
 .thumbnail {
     margin: 0px;
 }
@@ -107,10 +111,7 @@ div.quarto-post .thumbnail img {
 
 div.quarto-post .body {
     flex-basis: 50%;
-}
-
-div.quarto-post .metadata {
-    margin: 0px;
+    font-size: 120%;
 }
 
 .quarto-title .quarto-categories .quarto-category {
@@ -123,12 +124,11 @@ div.quarto-post .metadata {
 }
 
 div.quarto-post .metadata {
+    margin-bottom: 0.5em;
     font-size: 95%;
-    flex-direction: row-reverse;
-}
-
-div.quarto-post .body {
-    font-size: 120%;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: baseline;
 }
 
 #title-block-header {
@@ -137,11 +137,6 @@ div.quarto-post .body {
 
 main {
     margin-top: 0px !important;
-}
-
-div.quarto-post {
-    gap: 1em;
-    margin-bottom: 1em;
 }
 
 #Amazon {
@@ -178,4 +173,20 @@ div#quarto-toc-toggle {
 
 .nav-link {
     color: #1e2124;
+}
+
+.listing-date::before {
+    content: '📅';
+}
+
+.listing-reading-time::before {
+    content: '🕒';
+}
+
+.metadata-value.listing-colab {
+    margin-top: 0.3em;
+}
+
+.metadata img {
+    margin: 0px;
 }

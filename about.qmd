@@ -24,12 +24,6 @@ In this blog, I aim to provide **practical tutorials and guides** on AI and mach
 
 I hope we can have fun together and learn a few things along the way!
 
-<!-- Maxime Labonne is a senior applied researcher at J.P. Morgan with a Ph.D. in machine learning and cyber security from the Polytechnic Institute of Paris.
-
-During his Ph.D., Maxime worked on developing machine learning algorithms for anomaly detection in computer networks. He then joined the AI Connectivity Lab at Airbus, where he applied his expertise in machine learning to improve the security and performance of computer networks. He then joined J.P. Morgan, where he develops techniques to solve a variety of challenging problems in finance and other domains.
-
-In addition to his research work, Maxime is passionate about sharing his knowledge and experience with others through Twitter (@maximelabonne) and his personal blog. -->
-
 If you want to contact me, feel free to send a mail at <a href="mailto:labonne.maxime&commat;gmail.com">this address</a>.
 
 <hr>

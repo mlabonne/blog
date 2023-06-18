@@ -10,8 +10,9 @@ listing:
   feed: true
   sort-ui: false
   filter-ui: false
-  fields: [image, date, title, subtitle, reading-time]
+  fields: [image, title, subtitle, colab, date, reading-time, categories]
 page-layout: full
+sidebar: false
 title-block-banner: true
 ---
 
