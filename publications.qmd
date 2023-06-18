@@ -6,6 +6,7 @@ title: Publications
 description: List of scientific papers
 permalink: /publications/
 title-block-banner: true
+sidebar: false
 toc: false
 ---
 

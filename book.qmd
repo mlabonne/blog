@@ -5,6 +5,7 @@ description: Practical techniques and architectures for building powerful graph 
 permalink: /gnnbook/
 image: images/gnnbook/cover.png
 title-block-banner: true
+sidebar: false
 toc: false
 ---
 

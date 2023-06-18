@@ -63,7 +63,7 @@ website:
               href: 2023-05-21-Nonlinear_optimization.ipynb
         - section: "🗣️ **Large Language Models**"
           contents:
-            - text: "Decoding strategies"
+            - text: "Decoding Strategies"
               href: 2022-06-07-Decoding_strategies.ipynb
         - section: "🤖 **Reinforcement Learning**"
           contents:

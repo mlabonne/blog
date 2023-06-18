@@ -2,13 +2,13 @@
 title: "Tart – A plug-and-play Transformer module for task-agnostic reasoning"
 ---
 
-📝 **Paper**: [https://arxiv.org/abs/2306.07536](https://arxiv.org/abs/2306.07536)
-
-💻 **GitHub**: [https://github.com/HazyResearch/TART](https://github.com/HazyResearch/TART)
-
 ::: {.callout-tip}
 Tart combines the performance of fine-tuning with the ease-of-use of in-context learning. It is a general framework that leverages embeddings produced by LLMs with an improved task-agnostic reasoning module.
 :::
+
+📝 **Paper**: [https://arxiv.org/abs/2306.07536](https://arxiv.org/abs/2306.07536)
+
+💻 **GitHub**: [https://github.com/HazyResearch/TART](https://github.com/HazyResearch/TART)
 
 ## Task Adaptation Techniques
 

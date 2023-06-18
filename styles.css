@@ -98,7 +98,7 @@ div.quarto-post .thumbnail img {
 }
 
 div.quarto-post {
-    margin-bottom: 0px;
+    margin-bottom: 0px !important;
 }
 
 .thumbnail {
@@ -181,6 +181,10 @@ div#quarto-toc-toggle {
 
 .listing-reading-time::before {
     content: '🕒';
+}
+
+.listing-description {
+    font-size: 90%;
 }
 
 .metadata-value.listing-colab {

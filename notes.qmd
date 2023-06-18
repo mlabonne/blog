@@ -10,6 +10,7 @@ listing:
   feed: true
   sort-ui: false
   filter-ui: false
+  max-description-length: 110
   fields: [image, title, description, reading-time]
 page-layout: full
 sidebar: false
