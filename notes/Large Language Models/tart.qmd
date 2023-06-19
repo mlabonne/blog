@@ -1,5 +1,6 @@
 ---
 title: "Tart – A plug-and-play Transformer module for task-agnostic reasoning"
+categories: Large Language Models
 ---
 
 ::: {.callout-tip}

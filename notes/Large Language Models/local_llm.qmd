@@ -1,0 +1,142 @@
+---
+title: "Local Large Language Models – Int8"
+categories:
+- Large Language Models
+- Quantization
+---
+
+📝 **Article**: [https://int8.io/local-large-language-models-beginners-guide/](https://int8.io/local-large-language-models-beginners-guide/)
+
+## LoRA in PEFT
+
+Summarizes the [LoRA – Low-Rank Adaptation of Large Language Models](https://mlabonne.github.io/blog/notes/Large%20Language%20Models/lora.html) paper to reduce the number of trainable parameters during fine-tuning.
+
+It does it by freezing the original weights and injecting **low-rank trainable matrix deltas to the original weights**. These low-rank matrices are the product of two smaller matrices (factorization), which reduces the number of trained parameters.
+
+![](https://i.imgur.com/o2fpLK3.png)
+
+This is done as follows:
+$$W_0 = W_0 + \Delta W = W_0 + AB$$
+It is much more efficient to train these smaller matrices $A$ and $B$, while the original $W_0$ remains unchanged.
+
+It is implemented in the PEFT library, where you can specify the rank of these matrices (height of A, width of B).
+
+```python
+roberta_for_sc = AutoModelForSequenceClassification.from_pretrained("roberta-base")
+
+config = LoraConfig(
+	r=8,
+	lora_dropout=0.1,
+	lora_alpha=32,
+	target_modules=['query', 'key', 'value']
+	)
+	
+peft_model = get_peft_model(
+	roberta_for_sc,
+	peft_config=config
+	)
+```
+
+We can print information about the parameters using `peft_model.print_trainable_parameters()`: it shows that the number of trainable parameters corresponds to 1% of the original size.
+
+However, this doesn't translate into a training that would be 100x faster. We only save resources during the backward pass (backpropagation) as gradients will only need to update the new LoRA layers. This doesn't change the forward pass, where we still need to use the original weights.
+
+LoRA's authors report **25% speedup during training** on GPT-3 175B compared to full fine-tuning and **VRAM usage drop by up to 2/3**. It doesn't bring a big performance boost to single forward pass/inference.
+
+## LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale
+
+During training, most of the computation is dedicated to matrix multiplication. The storage requirement for each matrix is determined by its size and the precision of its values. LoRA reduces the size of these matrices, and LLM.int8(), introduced by [Dettmers et al. (2022)](https://arxiv.org/abs/2208.07339), reduces the precision.
+
+### Absolute maximum 8-bit quantization
+
+Step-by-step process:
+
+1. Identify the absolute maximum value in the vector $v$
+2. Calculate the **scaling factor** $\frac{127}{\text{absmax}(v)}$
+3. Multiply each value in $v$ by this factor
+4. Dequantization uses divides each value by this factor instead
+
+![](https://i.imgur.com/Qg3tM1b.png)
+
+### Int-8 matrix multiplication
+
+The simplest approach to quantize matrices would consist of using a global scaling factor.
+
+Unfortunately, absolute maximum 8-bit quantization is sensitive to outliers. Imagine we have a vector $v = [0.3, 0.4, 0.5, 0.6, 512.0]$. Because of the outlier $512.0$, we would get a scaling factor of $0.24$, which would give the **following quantized vector** $q_v = [0,0,0,0,1]$.
+
+Instead, the authors propose treating each row of an input matrix ($X$) and each column of a weight matrix ($W$) as separate blocks and quantize them independently.
+
+![](https://i.imgur.com/Gl2m6ro.png)
+
+Even with this scheme, we still find outliers in these vectors. The authors treat any value with an absmax value greater than 6 as an outlier. Instead of INT8, they use a FP16 precision to handle it (mixed-precision decomposition).
+
+Outlier values are kept with high precision, so they don't interfere with the rest of the weights. The authors show that the blocking strategy + outlier handling yields close-to-zero degradation of the performance. More than 99.9% of values are still multiplied in efficient 8-bit.
+
+The main advantage of using LLM.int8() is around **50% memory reduction** compared to 16-bit.
+
+## 8-bit Optimizers
+
+[Dettmers et al. (2021)](https://arxiv.org/abs/2110.02861) introduces the following problem: optimizer states also consume a lot of GPU memory.
+
+Weights + batch of input data + loss function $\rightarrow$ Optimizer $\rightarrow$ updated weights
+
+For example, the momentum use in modern optimizers like Adam calculates weight updates as a linear combination of all historical updates, forgetting historical value exponentially. This is why they need to store these historical values.
+
+> _Whenever you fine-tune a model using a modern optimizer you will need extra memory to store some historical weights updates, too. **Modern optimizers use up to 75% of total memory used during training.**_
+
+The authors introduce **8-bit optimizers** that use less memory to store their inner states.
+
+### 8-bit Optimizers: Dynamic Tree Quantization
+
+The core building block of 8-bit optimizers is dynamic tree quantization. It's another way of representing a vector/matrix of float numbers with 8 bits, like absmax quantization.
+
+Let's take the bfloat16 as an example first:
+
+![](https://i.imgur.com/uFn5lXY.png)
+
+It uses 16 bits, where the first bit corresponds to the **sign**, the following 8 bits are the **exponent** bits (magnitude), and the last 7 bits are the **fraction** bits (precision). The value in the previous example is:
+$$\text{value} = 1 \cdot 2 \cdot ( 1 + \frac{1}{2} + \frac{1}{16} + \frac{1}{128}) = 3.140625$$
+Dynamic Tree Quantization uses an 8-bit representation that is designed to represent numbers between -1 and 1. It has an indicator bit to dynamically determine exponent and linear quantization sizes.
+
+![](https://i.imgur.com/2BtdI0p.png)
+
+The first bit indicates the sign, the consecutive zeros give the exponent, and the first 1 after that is the indicator bit.
+
+This indicator bit makes the representation **dynamic**: exponent size and bits for linear quantization are **not fixed,** like in bfloat16. Using the previous example, we have:
+$$\text{value} = 1 \cdot e^{-2} \cdot \frac{9}{15} = 0.08120$$
+The authors also introduce a variant of dynamic tree quantization, called dynamic quantization, specifically design for the Adam optimizer, where one of the internal states stored by Adam is positive and doesn't require a sign bit (this extra bit is added to the linear quantization part instead).
+
+### 8-bit Optimizers: Block-wise quantization
+
+Same idea than in LLM.int8(). Block-wise quantization partition tensors into blocks to reduce the effects of outliers to a single block instead of the entire tensor.
+
+![](https://i.imgur.com/E9BJ2oO.png)
+
+### 8-bit Optimizers: Stable Embedding Layer
+
+The authors noticed that using classical embedding layer leads to instability problems with 8-bit optimizers. They proposed a stable embedding layer, which is a new composition of previously known ideas.
+
+LLM.int8() and 8-bit optimizers are implemented in [bitsandbytes](https://github.com/TimDettmers/bitsandbytes) and can be used in HuggingFace libraries.
+
+## 4-bit Quantization: GPTQ and GGML
+
+[Frantar et al. (2023)](https://arxiv.org/abs/2210.17323) introduced GPTQ, which uses 4 bits (16 distinct values) to represent a floating point. This technique is specifically designed for GPT models.
+
+It is formalized as an independent optimization problem for each layer. We have a single linear layer to quantize and its corresponding weight matrix $W$. We also have a small amount of $m$ example inputs organized in a matrix $X$. We want to find the 4-bit matrix $\hat{W}$ such as:
+$$\arg \min_{\hat{W}} \parallel WX - \hat{W}X \parallel$$
+This is solved using the Optimal Brain Compression technique, by [Frantar et al. (2023)](https://arxiv.org/abs/2208.11580).
+
+A popular implementation of this framework for CPUs can be found in [ggml](https://github.com/ggerganov/ggml), which is described as a [hacky version](https://github.com/ggerganov/ggml) of 4-bit quantization.
+
+## QLoRA = Quantization + LoRA
+
+[Dettmers et al. (2023)](https://arxiv.org/abs/2305.14314) introduced a combination between LoRA and 4-bit quantization for efficient fine-tuning.
+
+One of the core components is the 4-bit NormalFloat Quantization to compress matrix weights into 4-bit precision. It is designed to yield uniform distribution over bin counts that each 4-bit vector represents, making NF4 an information-theoretically optimal data type.
+
+A second contribution is the double quantization, which quantizes quantization constants themselves. This makes sense because thanks to the limited size of NF4.
+
+In QLoRA, only the frozen weights of the base LoRA model are 4-bit quantized, while the weights of the LoRA matrices (deltas) are kept in BF16. During both the forward and backward passes, the 4-bit weights are dequantized to BF16 for computations.
+
+QLoRA significantly reduces the memory requirement for fine-tuning LLMs, lowering the bar by an **additional 50%** and allowing even larger models to be trained locally. This makes 33B parameter models trainable on GPUs with 24GB of VRAM.
+

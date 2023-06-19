@@ -1,0 +1,60 @@
+---
+title: "LoRA – Low-Rank Adaptation of Large Language Models"
+categories: Large Language Models
+---
+
+::: {.callout-tip}
+PEFT approach based on matrix factorization.
+:::
+
+📝 **Paper**: [https://arxiv.org/pdf/2106.09685.pdf](https://arxiv.org/pdf/2106.09685.pdf)
+
+💻 **GItHub**: [https://github.com/microsoft/LoRA](https://github.com/microsoft/LoRA)
+
+**Idea**: freeze the pretrained model weights and inject trainable rank decomposition matrices into each layer of the Transformer architecture.
+
+## I. Introduction
+
+The problem with traditional fine-tuning is that the new model contains as many parameters as in the original model. This is challenging with LLMs like GPT-3 (175B trainable parameters).
+
+Previous methods: adapting only some parameters or learning external modules for new tasks. This allows us to store and load a small number of parameters for specific tasks. However, it also introduces **inference latency** and/or **reduces the model's usable sequence length**.
+
+Previous work from [Li et al.](https://arxiv.org/abs/1804.08838) (2018) and [Aghajanyan et al.](https://arxiv.org/abs/2012.13255) (2020) show that the learned over-parametrized models reside in a low intrinsic dimensions. The authors assume that the finetuned weights also have a low "intrinsic rank".
+
+Advantages:
+
+* The same pretrained model can be used to build several LoRA modules
+* Improves training efficiency
+* Trainable matrices can be merged with the frozen weights when deployed (no inference latency)
+* Can be combined with prior methods
+
+## II. Problem Statement
+
+When finetuning a model like an autoregressive language model $P_{\Phi}(y|x)$ parametrized by $\Phi$ for a specific task, we update the pretrained weights $\Phi_0$ to $\Phi_0 + \Delta \Phi$.
+
+The issue is that the dimension of $\Delta\Phi$ is equal to the dimension of $\Phi_0$, so storing and deploying many independent isntances of fine-tuned models can be challenging.
+
+In this paper, the authors propose a more parameter-efficient approach where $\Delta \Phi$ is further encoded by a much smaller-sized set of parameters $\Theta$ with $|\Theta| \ll |\Phi_0|$ (can be as small as 0.01%).
+
+## III. Aren't existing solutions good enough?
+
+* **Adapter layers introduce inference latency**: there are many variants of adapters. The original design has two adapter layers per Transformer block, a more recent one has only one block + LayerNorm per block. This layers have few parameters but they have to be processed sequentially, unlike the rest of the architecture which is built for parallelism. This is especially problematic at inference time with a batch size of 1.
+* **Directly optimizing the prompts is hard**: prefix tunign is difficult to optimize and its performance changes non-monotonically in trainable parameters. Reserving a part of the sequence length for adaptation also reduces the sequence length.
+
+## IV. Our method
+
+[Aghajanyan et al.](https://arxiv.org/abs/2012.13255) (2020) showed that pre-trained language models have a low "intrinsic dimensions" and can still learn efficiently despite a random projection to a smaller subspace.
+
+For a pre-trained matrix $W_0$, they constrain the update by representing it with a low-rank decomposition $$h = W_0x + \Delta Wx = W_0x + BAx$$
+During training, $W_0$ is frozen and does not receive gradient updates. Note that both $W_0$ and $\Delta W$ are multiplied by the input during the forward pass.
+
+![](https://i.imgur.com/P5n6n3N.png)
+
+* Use a random Gaussian initialization for $A$ and zero for $B$ so $\Delta W = BA$ is zero at the beginning of training.
+* Scale $\Delta W x$ by $\frac{\alpha}{r}$ during training
+
+**A generalization of full fine-tuning**: as we increase the number of trainable parameters, LoRA converges to training the original, unlike adapter-based methods that converge to an MLP and prefix-based methods to a model that cannot take long input sequence.
+
+**No additional inference latency**: when deployed in production, we can explicitly compute and store $W = W_0 + BA$ and perform inference as usual. 
+
+**Practical benefits and limitations**: reduction in memory (~2/3) and storage usage, speeds up training (25%). However, it is difficult to use different tasks in the same batch of inputs with LoRA.

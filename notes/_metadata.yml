@@ -1,4 +1,4 @@
 # Enable banner style title blocks
 title-block-banner: true
-
+sidebar: notes
 author: "Maxime Lbonne"

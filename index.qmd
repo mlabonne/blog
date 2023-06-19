@@ -1,5 +1,5 @@
 ---
-title: "Blog"
+title: "Articles"
 description: "Technical articles about graph neural networks, large language models, and convex optimization."
 listing:
   contents: posts

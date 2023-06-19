@@ -1,0 +1,87 @@
+---
+title: "Inference Optimization – Lil'Log"
+categories:
+- Large Language Models
+- Quantization
+---
+
+📝 **Article**: [https://lilianweng.github.io/posts/2023-01-10-inference-optimization/](https://lilianweng.github.io/posts/2023-01-10-inference-optimization/)
+
+## Introduction
+
+Two main approaches to weight quantization:
+
+* **Post-Training Quantization (PTQ)**: naïve approach, where a trained model's weights are converted to lower precision without retraining.
+* **Quantization-Aware Training (QAT)**: the model's weights are converted to lower precision during pre-training or further fine-tuning. It brings better performance, but is also more expensive and requires “representative training data”.
+
+There is an emphasis on “representative training data” because the quantization process optimizes the model on the training data distribution. If this distribution changes, there will be a **drop in accuracy**.
+
+This is not intrinsically different from regular training without quantization, where we also want a training set that is a good representation of the test set. In the case of quantization, these errors will simply have a much bigger impact.
+
+## Challenges
+
+A simple 8-bit post-training quantization on both weights and activation leads to significant performance drop.
+
+In this context, “activation” refers to the output values of a layer – it corresponds to internal calculations in the transformer. It has been observed that quantizing activation is particularly harmful. A better strategy consists of only quantizing the weights to 8-bit and keep activation at full precision (FP32).
+
+![](https://lilianweng.github.io/posts/2023-01-10-inference-optimization/quantization-experiment-table.png)
+
+[Bondarenko et al. (2021)](https://arxiv.org/abs/2109.12948) proposed an explanation based on observations performed on a small BERT model. They note that the FNN's input and output have very different dynamic ranges due to strong outliers in the output tensor. This is why the per-tensor quantization for the FFN's residual sum is likely to cause a notable error.
+
+The “residual” refers to residual connections, which connect the output of one earlier convolutional layer to the input of another future convolutional layer several layers later.
+
+For bigger models, we find outliers of high magnitude in all layers (~100x larger than the mean), which is why simple low-but quantization does not work.
+
+## Post-training quantization (PTQ)
+
+### Mixed-precision quantization
+
+To address this challenge, we can implement quantization at different precision for weights vs. activation.
+
+[Zadeh et al. (2020)](https://arxiv.org/abs/2005.03842) proposed GOBO, a small BERT model that applies post-training quantization. It assumes that model weights of each layer follow a Gaussian distribution and therefore detects outliers by tracking mean and standard deviation per layer. It stores these outliers in their original form. For the other values, it splits them into multiple bins and only corresponding bin indices of weights and the centroid values are stored.
+
+[Bondarenko et al. (2021)](https://arxiv.org/abs/2109.12948) refined this approach by using 16-but quantization on problematic activations (e.g., residual connections after FFN) but 8-bit on others.
+
+[Dettmers et al. (2022)](https://arxiv.org/abs/2208.07339) proposed `LLM.int8()`, which implements two mixed-precision decompositions:
+
+1. **Vector-wise quantization**: during matrix multiplication, each row and column is independently scaled by the absolute maximum values and quantized to INT8.
+2. **16-bit decomposition**: outlier activation features remain in FP16 but they represent only a tiny fraction of total weights. They are defined empirically, e.g., values 20x larger than other dimensions.
+
+![](https://lilianweng.github.io/posts/2023-01-10-inference-optimization/LLM-int8.png)
+
+## Quantization at fine-grained granularity
+
+![](https://lilianweng.github.io/posts/2023-01-10-inference-optimization/quantization-granularity.png)
+<center>d is the model size / hidden state dimension and h is the number of heads in one MHSA (multi-head self-attention) component</center>
+
+There are many levels that can be quantized. Fore example, quantizing the entire weight matrix ("per-tensor"/"per-layer" quantization) is easy to implement but does not lead to good granularity of quantization.
+
+[Shen, Dong & Ye, et al. (2020)](https://arxiv.org/abs/1909.05840) proposed Q-BERT, which applies group-wise quantization to a fine-tuned BERT model. It applies a Hessian Aware Quantization (HAWQ) quantization to each individual matrix $W$ with repsect to each head in MHSA.
+
+HAWQ is a technique to identify outliers based on the idea is that parameters with higher Hessian spectrum (larger top eigenvalues) are more sensitive to quantization and thus require higher precision.
+
+[Bondarenko et al. (2021)](https://arxiv.org/abs/2109.12948) observed that outlier values only appear in a few values out of $d$ (hidden state / model size) dimensions. This is why they proposed a per-embedding group activation quantization, where activation tensors are splitted into several evenly sized groups along the embedding dimension where elements in the same group share quantization parameters. 
+
+[Yao et al. (2022)](https://arxiv.org/abs/2206.01861) introduced ZeroQuant, which combines group-wise quantization for weights (like Q-BERT) and token-wise quantization for activation. They buil a customized kernel to fuse quantization operation with its previous operator in order to avoid expensive quantization and de-quantization computation.
+
+[Frantar et al. (2022)](https://arxiv.org/abs/2210.17323) reformulates the problem of quantization as an optimization problem. Given a weight matrix $\mathbf{W}$ and an input matrix $\mathbf{X}$, we want to find a quantized weight matrix $\mathbf{\hat{W}}$ to minimize the MSE:
+$$\mathbf{\hat{W}*} = \arg \min_{\mathbf{\hat{W}}} \parallel\mathbf{W X} - \mathbf{\hat{W} X}\parallel_2^2$$
+Their model, GPTQ, independently applies quantization to each row vector $\mathbf{w}$ in the weight matrix $\mathbf{W}$. It iteratively quantizes more weights that are selected greedily to minimize the quantization error. The update on selected weights has a closed-form formula, using Hessian matrices. A similar method is proposed by [Frantar & Alistarh (2022)](https://arxiv.org/abs/2208.11580) with Optimal Brain Quantization (OBQ).
+
+### Outlier smoothing
+
+[Xiao & Lin (2022)](https://arxiv.org/abs/2211.10438) proposed SmoothQuant, a smart solution to smooth outlier features from activations to weights via mathematically equivalent transformation and then enable quantization on both weights and activations (W8A8).
+
+![](https://lilianweng.github.io/posts/2023-01-10-inference-optimization/SmoothQuant.png)
+
+The smoothing factor can be fused into the layers's parameters offline.
+
+## Quantization-aware training (QAT)
+
+In QAT, the quantization operation happens in the pre-training/fine-tuning process so the weights are directly learned in a low-bit representation. It leads to better performance but is more costly in terms of training time and computation.
+
+A direct approach consists of fune-tuning the model after quantization on a training set that is the same or representative of the pre-training set. The training objective can e the same as the one for pre-training (e.g., NLL/MLM in general language model training) or specific to a downstream task of interest (e.g., cross-entropy for classification).
+
+Distillation is another popular approach, with the full-precision model acting as the teacher and the lower-precision model as the student. It doesn't need to use the original dataset: the Wikipedia data set or even random tokens can give decent performance gain.
+
+[Yao et al. (2022)](https://arxiv.org/abs/2206.01861) proposed a layer-by-layer knowledge distillation (LKD) to quantize the model layer by layer and uses its original, unquantized version as the teacher model. Given the same inputs, LKD minimizes the MSE between the multiplication with layer weights and the multiplication of quantized layer weights.

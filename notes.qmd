@@ -11,7 +11,7 @@ listing:
   sort-ui: false
   filter-ui: false
   max-description-length: 110
-  fields: [image, title, description, reading-time]
+  fields: [image, title, description, categories, reading-time]
 page-layout: full
 sidebar: false
 title-block-banner: true

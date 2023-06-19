@@ -84,6 +84,7 @@ code {
 
 .quarto-title-banner, .navbar-light, .navbar-dark {
     background: linear-gradient(90deg, rgba(254,200,16,1) 0%, rgba(255,128,237,1) 100%);
+    /* background: linear-gradient(90deg, rgba(59,112,254,1) 0%, rgba(49,195,135,1) 100%); */
 }
 
 .quarto-post {
@@ -188,7 +189,7 @@ div#quarto-toc-toggle {
 }
 
 .metadata-value.listing-colab {
-    margin-top: 0.3em;
+    margin-top: 0.2em;
 }
 
 .metadata img {

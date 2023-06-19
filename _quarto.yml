@@ -2,7 +2,7 @@ project:
   type: website
 
 website:
-  title: "Maxime Labonne"
+  title: "ML Blog"
   description: "Illustrated machine learning and deep learning tutorials with Python and PyTorch for programmers."
   site-url: https://mlabonne.github.io/blog
   navbar:
@@ -44,39 +44,48 @@ website:
         - section: "🌐 **GNN Course**"
           contents:
             - text: "1. Graph Convolution Network"
-              href: posts/2022-02-20-Graph_Convolution_Network.ipynb
+              href: posts/2022-02-20-Graph_Convolution_Network.html
             - text: "2. Graph Attention Network"
-              href: posts/2022-03-09-Graph_Attention_Network.ipynb
+              href: posts/2022-03-09-Graph_Attention_Network.html
             - text: "3. GraphSAGE"
-              href: posts/2022-04-06-GraphSAGE.ipynb
+              href: posts/2022-04-06-GraphSAGE.html
             - text: "4. Graph Isomorphism Network"
-              href: posts/2022-04-25-Graph_Isomorphism_Network.ipynb
+              href: posts/2022-04-25-Graph_Isomorphism_Network.html
         - section: "🥇 **Linear programming**"
           contents:
             - text: "1. Linear Programming"
-              href: 2022-03-02-Linear_Programming.ipynb
+              href: posts/2022-03-02-Linear_Programming.html
             - text: "2. Integer Programming"
-              href: 2022-03-05-Integer_Programming.ipynb
+              href: posts/2022-03-05-Integer_Programming.html
             - text: "3. Constraint Programming"
-              href: 2022-05-02-Constraint_Programming.ipynb
+              href: posts/2022-05-02-Constraint_Programming.html
             - text: "4. Nonlinear Programming"
-              href: 2023-05-21-Nonlinear_optimization.ipynb
+              href: posts/2023-05-21-Nonlinear_optimization.html
         - section: "🗣️ **Large Language Models**"
           contents:
             - text: "Decoding Strategies"
-              href: 2022-06-07-Decoding_strategies.ipynb
+              href: posts/2023-06-07-Decoding_strategies.html
         - section: "🤖 **Reinforcement Learning**"
           contents:
             - text: "Q-learning"
-              href: 2022-02-13-Q_learning.ipynb
+              href: posts/2022-02-13-Q_learning.html
             - text: "Minecraft Bot"
-              href: 2022-05-25-Minecraft.ipynb
+              href: posts/2022-05-25-Minecraft.html
         - section: "📊 **Data Science**"
           contents:
             - text: "Loops in Pandas"
-              href: 2022-03-21-Efficiently_iterating_over_rows_in_a_Pandas_DataFrame.ipynb
+              href: posts/2022-03-21-Efficiently_iterating_over_rows_in_a_Pandas_DataFrame.html
             - text: "What is a Tensor"
-              href: 2022-03-28-What_is_a_Tensor_in_Deep_Learning.ipynb
+              href: posts/2022-03-28-What_is_a_Tensor_in_Deep_Learning.html
+
+    - id: notes
+      title: "Notes"
+      style: "floating"
+      collapse-level: 2
+      align: left
+      contents:
+        - section: "🗣️ **Large Language Models**"
+          contents: "notes/Large Language Models/*"
 
 format:
   html:
@@ -84,7 +93,7 @@ format:
     theme: [minty, styles.scss]
     toc: true
     toc-depth: 2
-    toc-title: In this article
+    toc-title: "**Sections**"
     css: styles.css
     html-math-method: katex
     code-overflow: wrap
