@@ -44,41 +44,160 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "ML Blog",
+    "title": "Articles",
     "section": "",
     "text": "Decoding Strategies in Large Language Models\n\n\nA Guide to Text Generation From Beam Search to Nucleus Sampling\n\n\n\n\nLarge Language Models\n\n\n \n\n\n\n\nJun 7, 2023\n\n\n11 min\n\n\n\n\n\n\n\n\n\n  \n\n\n\n\nOptimize Your Marketing Budget with Nonlinear Programming\n\n\nIntroduction to CVXPY to maximize marketing ROI\n\n\n\n\nlinear programming\n\n\n \n\n\n\n\nMay 21, 2023\n\n\n8 min\n\n\n\n\n\n\n\n\n\n  \n\n\n\n\nCreate a Bot to Find Diamonds in Minecraft\n\n\nReinforcement Learning and Behavior Cloning in Python with MineRL\n\n\n\n\nreinforcement learning\n\n\n \n\n\n\n\nMay 25, 2022\n\n\n8 min\n\n\n\n\n\n\n\n\n\n  \n\n\n\n\nIntroduction to Constraint Programming in Python\n\n\nThe Programming Paradigm to Find One Solution Among 8,080,104 Candidates\n\n\n\n\nlinear programming\n\n\n \n\n\n\n\nMay 2, 2022\n\n\n8 min\n\n\n\n\n\n\n\n\n\n  \n\n\n\n\nGIN: How to Design the Most Powerful Graph Neural Network\n\n\nGraph Neural Network Course: Chapter 4\n\n\n\n\ngraph neural networks\n\n\n \n\n\n\n\nApr 25, 2022\n\n\n9 min\n\n\n\n\n\n\n\n\n\n  \n\n\n\n\nGraphSAGE: Scaling up Graph Neural Networks\n\n\nGraph Neural Network Course: Chapter 3\n\n\n\n\ngraph neural networks\n\n\n \n\n\n\n\nApr 6, 2022\n\n\n10 min\n\n\n\n\n\n\n\n\n\n  \n\n\n\n\nWhat is a Tensor in Machine Learning?\n\n\nThe difference between tensors, arrays, and matrices\n\n\n\n\ndata science\n\n\n \n\n\n\n\nMar 28, 2022\n\n\n5 min\n\n\n\n\n\n\n\n\n\n  \n\n\n\n\nEfficiently iterating over rows in a Pandas DataFrame\n\n\nNever use iterrows and itertuples again!\n\n\n\n\ndata science\n\n\n \n\n\n\n\nMar 21, 2022\n\n\n6 min\n\n\n\n\n\n\n\n\n\n  \n\n\n\n\nGraph Attention Networks: Self-Attention for GNNs\n\n\nGraph Neural Network Course: Chapter 2\n\n\n\n\ngraph neural networks\n\n\n \n\n\n\n\nMar 9, 2022\n\n\n9 min\n\n\n\n\n\n\n\n\n\n  \n\n\n\n\nInteger vs. Linear Programming in Python\n\n\nMixed Integer Programming for optimization with Google OR-Tools\n\n\n\n\nlinear programming\n\n\n \n\n\n\n\nMar 5, 2022\n\n\n9 min\n\n\n\n\n\n\n\n\n\n  \n\n\n\n\nIntroduction to Linear Programming in Python\n\n\nA guide to mathematical optimization with Google OR-Tools\n\n\n\n\nlinear programming\n\n\n \n\n\n\n\nMar 2, 2022\n\n\n8 min\n\n\n\n\n\n\n\n\n\n  \n\n\n\n\nGraph Convolutional Networks: Introduction to GNNs\n\n\nGraph Neural Network Course: Chapter 1\n\n\n\n\ngraph neural networks\n\n\n \n\n\n\n\nFeb 20, 2022\n\n\n11 min\n\n\n\n\n\n\n  \n\n\n\n\nQ-learning for beginners\n\n\nTrain an AI to solve the Frozen Lake environment\n\n\n\n\nreinforcement learning\n\n\n \n\n\n\n\nFeb 13, 2022\n\n\n20 min\n\n\n\n\n\n\nNo matching items"
   },
   {
-    "objectID": "notes/tart.html",
-    "href": "notes/tart.html",
+    "objectID": "notes/Large Language Models/inference_optimization.html",
+    "href": "notes/Large Language Models/inference_optimization.html",
+    "title": "Inference Optimization – Lil’Log",
+    "section": "",
+    "text": "📝 Article: https://lilianweng.github.io/posts/2023-01-10-inference-optimization/"
+  },
+  {
+    "objectID": "notes/Large Language Models/inference_optimization.html#introduction",
+    "href": "notes/Large Language Models/inference_optimization.html#introduction",
+    "title": "Inference Optimization – Lil’Log",
+    "section": "Introduction",
+    "text": "Introduction\nTwo main approaches to weight quantization:\n\nPost-Training Quantization (PTQ): naïve approach, where a trained model’s weights are converted to lower precision without retraining.\nQuantization-Aware Training (QAT): the model’s weights are converted to lower precision during pre-training or further fine-tuning. It brings better performance, but is also more expensive and requires “representative training data”.\n\nThere is an emphasis on “representative training data” because the quantization process optimizes the model on the training data distribution. If this distribution changes, there will be a drop in accuracy.\nThis is not intrinsically different from regular training without quantization, where we also want a training set that is a good representation of the test set. In the case of quantization, these errors will simply have a much bigger impact."
+  },
+  {
+    "objectID": "notes/Large Language Models/inference_optimization.html#challenges",
+    "href": "notes/Large Language Models/inference_optimization.html#challenges",
+    "title": "Inference Optimization – Lil’Log",
+    "section": "Challenges",
+    "text": "Challenges\nA simple 8-bit post-training quantization on both weights and activation leads to significant performance drop.\nIn this context, “activation” refers to the output values of a layer – it corresponds to internal calculations in the transformer. It has been observed that quantizing activation is particularly harmful. A better strategy consists of only quantizing the weights to 8-bit and keep activation at full precision (FP32).\n\nBondarenko et al. (2021) proposed an explanation based on observations performed on a small BERT model. They note that the FNN’s input and output have very different dynamic ranges due to strong outliers in the output tensor. This is why the per-tensor quantization for the FFN’s residual sum is likely to cause a notable error.\nThe “residual” refers to residual connections, which connect the output of one earlier convolutional layer to the input of another future convolutional layer several layers later.\nFor bigger models, we find outliers of high magnitude in all layers (~100x larger than the mean), which is why simple low-but quantization does not work."
+  },
+  {
+    "objectID": "notes/Large Language Models/inference_optimization.html#post-training-quantization-ptq",
+    "href": "notes/Large Language Models/inference_optimization.html#post-training-quantization-ptq",
+    "title": "Inference Optimization – Lil’Log",
+    "section": "Post-training quantization (PTQ)",
+    "text": "Post-training quantization (PTQ)\n\nMixed-precision quantization\nTo address this challenge, we can implement quantization at different precision for weights vs. activation.\nZadeh et al. (2020) proposed GOBO, a small BERT model that applies post-training quantization. It assumes that model weights of each layer follow a Gaussian distribution and therefore detects outliers by tracking mean and standard deviation per layer. It stores these outliers in their original form. For the other values, it splits them into multiple bins and only corresponding bin indices of weights and the centroid values are stored.\nBondarenko et al. (2021) refined this approach by using 16-but quantization on problematic activations (e.g., residual connections after FFN) but 8-bit on others.\nDettmers et al. (2022) proposed LLM.int8(), which implements two mixed-precision decompositions:\n\nVector-wise quantization: during matrix multiplication, each row and column is independently scaled by the absolute maximum values and quantized to INT8.\n16-bit decomposition: outlier activation features remain in FP16 but they represent only a tiny fraction of total weights. They are defined empirically, e.g., values 20x larger than other dimensions."
+  },
+  {
+    "objectID": "notes/Large Language Models/inference_optimization.html#quantization-at-fine-grained-granularity",
+    "href": "notes/Large Language Models/inference_optimization.html#quantization-at-fine-grained-granularity",
+    "title": "Inference Optimization – Lil’Log",
+    "section": "Quantization at fine-grained granularity",
+    "text": "Quantization at fine-grained granularity\n\n\nd is the model size / hidden state dimension and h is the number of heads in one MHSA (multi-head self-attention) component\n\nThere are many levels that can be quantized. Fore example, quantizing the entire weight matrix (“per-tensor”/“per-layer” quantization) is easy to implement but does not lead to good granularity of quantization.\nShen, Dong & Ye, et al. (2020) proposed Q-BERT, which applies group-wise quantization to a fine-tuned BERT model. It applies a Hessian Aware Quantization (HAWQ) quantization to each individual matrix W with repsect to each head in MHSA.\nHAWQ is a technique to identify outliers based on the idea is that parameters with higher Hessian spectrum (larger top eigenvalues) are more sensitive to quantization and thus require higher precision.\nBondarenko et al. (2021) observed that outlier values only appear in a few values out of d (hidden state / model size) dimensions. This is why they proposed a per-embedding group activation quantization, where activation tensors are splitted into several evenly sized groups along the embedding dimension where elements in the same group share quantization parameters.\nYao et al. (2022) introduced ZeroQuant, which combines group-wise quantization for weights (like Q-BERT) and token-wise quantization for activation. They buil a customized kernel to fuse quantization operation with its previous operator in order to avoid expensive quantization and de-quantization computation.\nFrantar et al. (2022) reformulates the problem of quantization as an optimization problem. Given a weight matrix \\mathbf{W} and an input matrix \\mathbf{X}, we want to find a quantized weight matrix \\mathbf{\\hat{W}} to minimize the MSE: \\mathbf{\\hat{W}*} = \\arg \\min_{\\mathbf{\\hat{W}}} \\parallel\\mathbf{W X} - \\mathbf{\\hat{W} X}\\parallel_2^2 Their model, GPTQ, independently applies quantization to each row vector \\mathbf{w} in the weight matrix \\mathbf{W}. It iteratively quantizes more weights that are selected greedily to minimize the quantization error. The update on selected weights has a closed-form formula, using Hessian matrices. A similar method is proposed by Frantar & Alistarh (2022) with Optimal Brain Quantization (OBQ).\n\nOutlier smoothing\nXiao & Lin (2022) proposed SmoothQuant, a smart solution to smooth outlier features from activations to weights via mathematically equivalent transformation and then enable quantization on both weights and activations (W8A8).\n\nThe smoothing factor can be fused into the layers’s parameters offline."
+  },
+  {
+    "objectID": "notes/Large Language Models/inference_optimization.html#quantization-aware-training-qat",
+    "href": "notes/Large Language Models/inference_optimization.html#quantization-aware-training-qat",
+    "title": "Inference Optimization – Lil’Log",
+    "section": "Quantization-aware training (QAT)",
+    "text": "Quantization-aware training (QAT)\nIn QAT, the quantization operation happens in the pre-training/fine-tuning process so the weights are directly learned in a low-bit representation. It leads to better performance but is more costly in terms of training time and computation.\nA direct approach consists of fune-tuning the model after quantization on a training set that is the same or representative of the pre-training set. The training objective can e the same as the one for pre-training (e.g., NLL/MLM in general language model training) or specific to a downstream task of interest (e.g., cross-entropy for classification).\nDistillation is another popular approach, with the full-precision model acting as the teacher and the lower-precision model as the student. It doesn’t need to use the original dataset: the Wikipedia data set or even random tokens can give decent performance gain.\nYao et al. (2022) proposed a layer-by-layer knowledge distillation (LKD) to quantize the model layer by layer and uses its original, unquantized version as the teacher model. Given the same inputs, LKD minimizes the MSE between the multiplication with layer weights and the multiplication of quantized layer weights."
+  },
+  {
+    "objectID": "notes/Large Language Models/local_llm.html",
+    "href": "notes/Large Language Models/local_llm.html",
+    "title": "Local Large Language Models – Int8",
+    "section": "",
+    "text": "📝 Article: https://int8.io/local-large-language-models-beginners-guide/"
+  },
+  {
+    "objectID": "notes/Large Language Models/local_llm.html#lora-in-peft",
+    "href": "notes/Large Language Models/local_llm.html#lora-in-peft",
+    "title": "Local Large Language Models – Int8",
+    "section": "LoRA in PEFT",
+    "text": "LoRA in PEFT\nSummarizes the LoRA – Low-Rank Adaptation of Large Language Models paper to reduce the number of trainable parameters during fine-tuning.\nIt does it by freezing the original weights and injecting low-rank trainable matrix deltas to the original weights. These low-rank matrices are the product of two smaller matrices (factorization), which reduces the number of trained parameters.\n\nThis is done as follows: W_0 = W_0 + \\Delta W = W_0 + AB It is much more efficient to train these smaller matrices A and B, while the original W_0 remains unchanged.\nIt is implemented in the PEFT library, where you can specify the rank of these matrices (height of A, width of B).\nroberta_for_sc = AutoModelForSequenceClassification.from_pretrained(\"roberta-base\")\n\nconfig = LoraConfig(\n    r=8,\n    lora_dropout=0.1,\n    lora_alpha=32,\n    target_modules=['query', 'key', 'value']\n    )\n    \npeft_model = get_peft_model(\n    roberta_for_sc,\n    peft_config=config\n    )\nWe can print information about the parameters using peft_model.print_trainable_parameters(): it shows that the number of trainable parameters corresponds to 1% of the original size.\nHowever, this doesn’t translate into a training that would be 100x faster. We only save resources during the backward pass (backpropagation) as gradients will only need to update the new LoRA layers. This doesn’t change the forward pass, where we still need to use the original weights.\nLoRA’s authors report 25% speedup during training on GPT-3 175B compared to full fine-tuning and VRAM usage drop by up to 2/3. It doesn’t bring a big performance boost to single forward pass/inference."
+  },
+  {
+    "objectID": "notes/Large Language Models/local_llm.html#llm.int8-8-bit-matrix-multiplication-for-transformers-at-scale",
+    "href": "notes/Large Language Models/local_llm.html#llm.int8-8-bit-matrix-multiplication-for-transformers-at-scale",
+    "title": "Local Large Language Models – Int8",
+    "section": "LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale",
+    "text": "LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale\nDuring training, most of the computation is dedicated to matrix multiplication. The storage requirement for each matrix is determined by its size and the precision of its values. LoRA reduces the size of these matrices, and LLM.int8(), introduced by Dettmers et al. (2022), reduces the precision.\n\nAbsolute maximum 8-bit quantization\nStep-by-step process:\n\nIdentify the absolute maximum value in the vector v\nCalculate the scaling factor \\frac{127}{\\text{absmax}(v)}\nMultiply each value in v by this factor\nDequantization uses divides each value by this factor instead\n\n\n\n\nInt-8 matrix multiplication\nThe simplest approach to quantize matrices would consist of using a global scaling factor.\nUnfortunately, absolute maximum 8-bit quantization is sensitive to outliers. Imagine we have a vector v = [0.3, 0.4, 0.5, 0.6, 512.0]. Because of the outlier 512.0, we would get a scaling factor of 0.24, which would give the following quantized vector q_v = [0,0,0,0,1].\nInstead, the authors propose treating each row of an input matrix (X) and each column of a weight matrix (W) as separate blocks and quantize them independently.\n\nEven with this scheme, we still find outliers in these vectors. The authors treat any value with an absmax value greater than 6 as an outlier. Instead of INT8, they use a FP16 precision to handle it (mixed-precision decomposition).\nOutlier values are kept with high precision, so they don’t interfere with the rest of the weights. The authors show that the blocking strategy + outlier handling yields close-to-zero degradation of the performance. More than 99.9% of values are still multiplied in efficient 8-bit.\nThe main advantage of using LLM.int8() is around 50% memory reduction compared to 16-bit."
+  },
+  {
+    "objectID": "notes/Large Language Models/local_llm.html#bit-optimizers",
+    "href": "notes/Large Language Models/local_llm.html#bit-optimizers",
+    "title": "Local Large Language Models – Int8",
+    "section": "8-bit Optimizers",
+    "text": "8-bit Optimizers\nDettmers et al. (2021) introduces the following problem: optimizer states also consume a lot of GPU memory.\nWeights + batch of input data + loss function \\rightarrow Optimizer \\rightarrow updated weights\nFor example, the momentum use in modern optimizers like Adam calculates weight updates as a linear combination of all historical updates, forgetting historical value exponentially. This is why they need to store these historical values.\n\nWhenever you fine-tune a model using a modern optimizer you will need extra memory to store some historical weights updates, too. Modern optimizers use up to 75% of total memory used during training.\n\nThe authors introduce 8-bit optimizers that use less memory to store their inner states.\n\n8-bit Optimizers: Dynamic Tree Quantization\nThe core building block of 8-bit optimizers is dynamic tree quantization. It’s another way of representing a vector/matrix of float numbers with 8 bits, like absmax quantization.\nLet’s take the bfloat16 as an example first:\n\nIt uses 16 bits, where the first bit corresponds to the sign, the following 8 bits are the exponent bits (magnitude), and the last 7 bits are the fraction bits (precision). The value in the previous example is: \\text{value} = 1 \\cdot 2 \\cdot ( 1 + \\frac{1}{2} + \\frac{1}{16} + \\frac{1}{128}) = 3.140625 Dynamic Tree Quantization uses an 8-bit representation that is designed to represent numbers between -1 and 1. It has an indicator bit to dynamically determine exponent and linear quantization sizes.\n\nThe first bit indicates the sign, the consecutive zeros give the exponent, and the first 1 after that is the indicator bit.\nThis indicator bit makes the representation dynamic: exponent size and bits for linear quantization are not fixed, like in bfloat16. Using the previous example, we have: \\text{value} = 1 \\cdot e^{-2} \\cdot \\frac{9}{15} = 0.08120 The authors also introduce a variant of dynamic tree quantization, called dynamic quantization, specifically design for the Adam optimizer, where one of the internal states stored by Adam is positive and doesn’t require a sign bit (this extra bit is added to the linear quantization part instead).\n\n\n8-bit Optimizers: Block-wise quantization\nSame idea than in LLM.int8(). Block-wise quantization partition tensors into blocks to reduce the effects of outliers to a single block instead of the entire tensor.\n\n\n\n8-bit Optimizers: Stable Embedding Layer\nThe authors noticed that using classical embedding layer leads to instability problems with 8-bit optimizers. They proposed a stable embedding layer, which is a new composition of previously known ideas.\nLLM.int8() and 8-bit optimizers are implemented in bitsandbytes and can be used in HuggingFace libraries."
+  },
+  {
+    "objectID": "notes/Large Language Models/local_llm.html#bit-quantization-gptq-and-ggml",
+    "href": "notes/Large Language Models/local_llm.html#bit-quantization-gptq-and-ggml",
+    "title": "Local Large Language Models – Int8",
+    "section": "4-bit Quantization: GPTQ and GGML",
+    "text": "4-bit Quantization: GPTQ and GGML\nFrantar et al. (2023) introduced GPTQ, which uses 4 bits (16 distinct values) to represent a floating point. This technique is specifically designed for GPT models.\nIt is formalized as an independent optimization problem for each layer. We have a single linear layer to quantize and its corresponding weight matrix W. We also have a small amount of m example inputs organized in a matrix X. We want to find the 4-bit matrix \\hat{W} such as: \\arg \\min_{\\hat{W}} \\parallel WX - \\hat{W}X \\parallel This is solved using the Optimal Brain Compression technique, by Frantar et al. (2023).\nA popular implementation of this framework for CPUs can be found in ggml, which is described as a hacky version of 4-bit quantization."
+  },
+  {
+    "objectID": "notes/Large Language Models/local_llm.html#qlora-quantization-lora",
+    "href": "notes/Large Language Models/local_llm.html#qlora-quantization-lora",
+    "title": "Local Large Language Models – Int8",
+    "section": "QLoRA = Quantization + LoRA",
+    "text": "QLoRA = Quantization + LoRA\nDettmers et al. (2023) introduced a combination between LoRA and 4-bit quantization for efficient fine-tuning.\nOne of the core components is the 4-bit NormalFloat Quantization to compress matrix weights into 4-bit precision. It is designed to yield uniform distribution over bin counts that each 4-bit vector represents, making NF4 an information-theoretically optimal data type.\nA second contribution is the double quantization, which quantizes quantization constants themselves. This makes sense because thanks to the limited size of NF4.\nIn QLoRA, only the frozen weights of the base LoRA model are 4-bit quantized, while the weights of the LoRA matrices (deltas) are kept in BF16. During both the forward and backward passes, the 4-bit weights are dequantized to BF16 for computations.\nQLoRA significantly reduces the memory requirement for fine-tuning LLMs, lowering the bar by an additional 50% and allowing even larger models to be trained locally. This makes 33B parameter models trainable on GPUs with 24GB of VRAM."
+  },
+  {
+    "objectID": "notes/Large Language Models/lora.html",
+    "href": "notes/Large Language Models/lora.html",
+    "title": "LoRA – Low-Rank Adaptation of Large Language Models",
+    "section": "",
+    "text": "Tip\n\n\n\nPEFT approach based on matrix factorization.\n📝 Paper: https://arxiv.org/pdf/2106.09685.pdf\n💻 GItHub: https://github.com/microsoft/LoRA\nIdea: freeze the pretrained model weights and inject trainable rank decomposition matrices into each layer of the Transformer architecture."
+  },
+  {
+    "objectID": "notes/Large Language Models/lora.html#i.-introduction",
+    "href": "notes/Large Language Models/lora.html#i.-introduction",
+    "title": "LoRA – Low-Rank Adaptation of Large Language Models",
+    "section": "I. Introduction",
+    "text": "I. Introduction\nThe problem with traditional fine-tuning is that the new model contains as many parameters as in the original model. This is challenging with LLMs like GPT-3 (175B trainable parameters).\nPrevious methods: adapting only some parameters or learning external modules for new tasks. This allows us to store and load a small number of parameters for specific tasks. However, it also introduces inference latency and/or reduces the model’s usable sequence length.\nPrevious work from Li et al. (2018) and Aghajanyan et al. (2020) show that the learned over-parametrized models reside in a low intrinsic dimensions. The authors assume that the finetuned weights also have a low “intrinsic rank”.\nAdvantages:\n\nThe same pretrained model can be used to build several LoRA modules\nImproves training efficiency\nTrainable matrices can be merged with the frozen weights when deployed (no inference latency)\nCan be combined with prior methods"
+  },
+  {
+    "objectID": "notes/Large Language Models/lora.html#ii.-problem-statement",
+    "href": "notes/Large Language Models/lora.html#ii.-problem-statement",
+    "title": "LoRA – Low-Rank Adaptation of Large Language Models",
+    "section": "II. Problem Statement",
+    "text": "II. Problem Statement\nWhen finetuning a model like an autoregressive language model P_{\\Phi}(y|x) parametrized by \\Phi for a specific task, we update the pretrained weights \\Phi_0 to \\Phi_0 + \\Delta \\Phi.\nThe issue is that the dimension of \\Delta\\Phi is equal to the dimension of \\Phi_0, so storing and deploying many independent isntances of fine-tuned models can be challenging.\nIn this paper, the authors propose a more parameter-efficient approach where \\Delta \\Phi is further encoded by a much smaller-sized set of parameters \\Theta with |\\Theta| \\ll |\\Phi_0| (can be as small as 0.01%)."
+  },
+  {
+    "objectID": "notes/Large Language Models/lora.html#iii.-arent-existing-solutions-good-enough",
+    "href": "notes/Large Language Models/lora.html#iii.-arent-existing-solutions-good-enough",
+    "title": "LoRA – Low-Rank Adaptation of Large Language Models",
+    "section": "III. Aren’t existing solutions good enough?",
+    "text": "III. Aren’t existing solutions good enough?\n\nAdapter layers introduce inference latency: there are many variants of adapters. The original design has two adapter layers per Transformer block, a more recent one has only one block + LayerNorm per block. This layers have few parameters but they have to be processed sequentially, unlike the rest of the architecture which is built for parallelism. This is especially problematic at inference time with a batch size of 1.\nDirectly optimizing the prompts is hard: prefix tunign is difficult to optimize and its performance changes non-monotonically in trainable parameters. Reserving a part of the sequence length for adaptation also reduces the sequence length."
+  },
+  {
+    "objectID": "notes/Large Language Models/lora.html#iv.-our-method",
+    "href": "notes/Large Language Models/lora.html#iv.-our-method",
+    "title": "LoRA – Low-Rank Adaptation of Large Language Models",
+    "section": "IV. Our method",
+    "text": "IV. Our method\nAghajanyan et al. (2020) showed that pre-trained language models have a low “intrinsic dimensions” and can still learn efficiently despite a random projection to a smaller subspace.\nFor a pre-trained matrix W_0, they constrain the update by representing it with a low-rank decomposition h = W_0x + \\Delta Wx = W_0x + BAx During training, W_0 is frozen and does not receive gradient updates. Note that both W_0 and \\Delta W are multiplied by the input during the forward pass.\n\n\nUse a random Gaussian initialization for A and zero for B so \\Delta W = BA is zero at the beginning of training.\nScale \\Delta W x by \\frac{\\alpha}{r} during training\n\nA generalization of full fine-tuning: as we increase the number of trainable parameters, LoRA converges to training the original, unlike adapter-based methods that converge to an MLP and prefix-based methods to a model that cannot take long input sequence.\nNo additional inference latency: when deployed in production, we can explicitly compute and store W = W_0 + BA and perform inference as usual.\nPractical benefits and limitations: reduction in memory (~2/3) and storage usage, speeds up training (25%). However, it is difficult to use different tasks in the same batch of inputs with LoRA."
+  },
+  {
+    "objectID": "notes/Large Language Models/tart.html",
+    "href": "notes/Large Language Models/tart.html",
     "title": "Tart – A plug-and-play Transformer module for task-agnostic reasoning",
     "section": "",
     "text": "Tip\n\n\n\nTart combines the performance of fine-tuning with the ease-of-use of in-context learning. It is a general framework that leverages embeddings produced by LLMs with an improved task-agnostic reasoning module.\n📝 Paper: https://arxiv.org/abs/2306.07536\n💻 GitHub: https://github.com/HazyResearch/TART"
   },
   {
-    "objectID": "notes/tart.html#task-adaptation-techniques",
-    "href": "notes/tart.html#task-adaptation-techniques",
+    "objectID": "notes/Large Language Models/tart.html#task-adaptation-techniques",
+    "href": "notes/Large Language Models/tart.html#task-adaptation-techniques",
     "title": "Tart – A plug-and-play Transformer module for task-agnostic reasoning",
     "section": "Task Adaptation Techniques",
     "text": "Task Adaptation Techniques\n\nGiven an LLM and limited labeled data for a task, how does one adapt the model to the task? We care about the following properties:\n\nTask-agnostic: We want to use the exact same model for different tasks.\nQuality: Performance should be competitive with task-specific methods.\nData-scalable: The more data, the better the performance.\n\nExisting methods:\n\nIn-context learning: Based on input, no parameter update. It is task-agnostic, but doesn’t have the same level of performance and is constrained by the context length.\nFine-tuning: Updates all the parameters. It is task-dependent.\nAdapters: Additional set of parameters that are updated for a given task. Performance is competitive, but it is task-dependent too."
   },
   {
-    "objectID": "notes/tart.html#representation-vs.-reasoning",
-    "href": "notes/tart.html#representation-vs.-reasoning",
+    "objectID": "notes/Large Language Models/tart.html#representation-vs.-reasoning",
+    "href": "notes/Large Language Models/tart.html#representation-vs.-reasoning",
     "title": "Tart – A plug-and-play Transformer module for task-agnostic reasoning",
     "section": "Representation vs. Reasoning",
     "text": "Representation vs. Reasoning\nWhy ICL underperforms other methods? The authors assume it is either because:\n\nLLMs cannot generate good representations for the specific task.\nLLMs cannot perform probabilistic inference or reasoning using these representations.\n\nThe researchers use linear probing, a method that involves training a task-specific linear classifier using the representations generated by the LLM, to evaluate the information content of the representations.\nThey then decompose the performance gap between FT and ICL into two components: Δrep, which represents the performance gap due to insufficient representation capacity, and Δreas, which represents the performance gap due to insufficient reasoning abilities. \\begin{align}\n\\Delta_{\\text{perf}} &= \\text{Acc}_{\\text{FT}} - \\text{Acc}_{\\text{ICL}} \\\\\n&= \\text{Acc}_{\\text{FT}} - \\text{Acc}_{\\text{LR}} + \\text{Acc}_{\\text{LR}} - \\text{Acc}_{\\text{ICL}} \\\\\n&= \\Delta_{\\text{rep}} + \\Delta_{\\text{reas}}\n\\end{align}\n\n\nUsing the experiments from the previous figure, they make the following observations:\n\nLLMs lack reasoning abilities, despite having sufficient information in their representations (Figure a).\nFine-tuning improves task-specific reasoning, accounting for 73.06% of the improvements (Figure b).\nAdapters only learn task-specific reasoning abilities."
   },
   {
-    "objectID": "notes/tart.html#tart-task-agnostic-reasoning-transformers",
-    "href": "notes/tart.html#tart-task-agnostic-reasoning-transformers",
+    "objectID": "notes/Large Language Models/tart.html#tart-task-agnostic-reasoning-transformers",
+    "href": "notes/Large Language Models/tart.html#tart-task-agnostic-reasoning-transformers",
     "title": "Tart – A plug-and-play Transformer module for task-agnostic reasoning",
     "section": "Tart: Task-Agnostic Reasoning Transformers",
     "text": "Tart: Task-Agnostic Reasoning Transformers\nTart learns an LLM and task-agnostic reasoning module without any task-specific training. It has two components:\n\nA genetic task-agnostic reasoning module, training on synthetic data (Gaussian logistic regression problems) with the objective of performing probabilistic inference.\nEmbeddings from the base LLM, aggregated to use as input along with the class label.\n\n\n\n\n\n\n\nNote\n\n\n\nGaussian logistic regression consists of regressing a given feature vector to a discrete binary label.\n\n\n\n1. Reasoning module\nThis module is based on GPT-2 and taught to predict the next item in a sequence (autoregressive).\nWe denote the input sequence with labeled examples (x_1, y_1), (x_2, y_2), \\dots , (x_k, y_k), with each example z_i = (x_i, y_i) using only two tokens (one for x, one for y). In comparison, standard LLMs would use multiple tokens to encode x, limiting the number of samples in the context window.\nTraining-wise, gradient descent is used to minimize a loss calculated using the cross-entropy function. The training sequences each represent a unique logistic regression problem, with parameters and features drawn from standard normal distributions.\nThe logistic output y is computed using a sigmoid function applied to a scaled dot product of feature vector and parameters, where the scaling factor represents the noise level.\nModel hyperparameters are set to a 16-dimensional input space, with labels encoded in this space using one-hot encoding. Interestingly, the paper reduces the high dimensionality of output embeddings by performing PCA using only the training points available for the specific task at hand.\n\n64 different logistic regression problems were tested by comparing logistic regression classifiers vs. their reasoning module (Figure a). The error of the reasoning module was found to decrease with the increase in the number of examples, and was within 2% of the task-specific logistic function.\nThe noise level in logistic regression problems is an indicator of the problem’s difficulty, with lower values of α signifying more difficult problems. The reasoning module was found to handle easier problems (with higher noise levels) without any drop in accuracy. However, for harder problems, the module’s error increased progressively (Figure b).\n\n\n2. Embeddings\n\nThe authors compared two types of embeddings:\n\nVanilla embeddings: They use all training examples and get the averaged embedding vectors. However, performance is degraded when there are too many samples in the context window.\nLeave-One-Out (LOO): The embedding for each training point is created by placing all other training examples before it in the prompt and averaging the embeddings over the final example’s tokens."
   },
   {
-    "objectID": "notes/tart.html#experiments",
-    "href": "notes/tart.html#experiments",
+    "objectID": "notes/Large Language Models/tart.html#experiments",
+    "href": "notes/Large Language Models/tart.html#experiments",
     "title": "Tart – A plug-and-play Transformer module for task-agnostic reasoning",
     "section": "Experiments",
     "text": "Experiments\n\nTart was validated on different binary classification tasks in NLP, vision, and audio. It is used with GPT-Neo (125M).\nAveraged over all tasks and model families, Tart improves upon base in-context learning performance by 18.4 points, improves upon adapter heads by 3.4 points, and is within 3.1 points of full fine-tuning."
@@ -88,7 +207,7 @@
     "href": "notes.html",
     "title": " Research notes",
     "section": "",
-    "text": "Tart – A plug-and-play Transformer module for task-agnostic reasoning\n\n\n\n\n\n\n\n\n\n\n\n\n4 min\n\n\n\n\n\n\nNo matching items"
+    "text": "Inference Optimization – Lil’Log\n\n\n\n\n\n\n\nLarge Language Models\n\n\nQuantization\n\n\n\n\n\n\n\n\n\n\n\n5 min\n\n\n\n\n\n\n  \n\n\n\n\nLocal Large Language Models – Int8\n\n\n\n\n\n\n\nLarge Language Models\n\n\nQuantization\n\n\n\n\n\n\n\n\n\n\n\n6 min\n\n\n\n\n\n\n  \n\n\n\n\nLoRA – Low-Rank Adaptation of Large Language Models\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n3 min\n\n\n\n\n\n\n  \n\n\n\n\nTart – A plug-and-play Transformer module for task-agnostic reasoning\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n4 min\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/2022-02-13-Q_learning.html",
