@@ -57,8 +57,6 @@ p a:hover, p a:active, p a:visited {
 }
 
 div.sourceCode {
-    /* background-color: rgba(247,247,249,1); */
-    /* border: 1px solid rgba(247,247,249,1); */
     border-radius: 10px;
 }
 
@@ -176,6 +174,10 @@ div#quarto-toc-toggle {
     color: #1e2124;
 }
 
+.sidebar-navigation a {
+    color: #1e2124;
+}
+
 .listing-date::before {
     content: '📅';
 }
@@ -194,4 +196,12 @@ div#quarto-toc-toggle {
 
 .metadata img {
     margin: 0px;
+}
+
+.zindex-over-content {
+    display: none;
+}
+
+nav.quarto-secondary-nav {
+    display: none;
 }

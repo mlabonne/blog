@@ -3,6 +3,7 @@ title: "Inference Optimization – Lil'Log"
 categories:
 - Large Language Models
 - Quantization
+date: 10-01-2023
 ---
 
 📝 **Article**: [https://lilianweng.github.io/posts/2023-01-10-inference-optimization/](https://lilianweng.github.io/posts/2023-01-10-inference-optimization/)

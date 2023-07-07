@@ -1,6 +1,6 @@
 ---
 title: "{{< fa pen >}} Research notes"
-description: "Personal notes I take when reading research papers."
+description: "Personal summaries and insights gathered from reading various research papers and articles."
 listing:
   contents: notes
   sort: "date desc"

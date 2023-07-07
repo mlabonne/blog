@@ -3,6 +3,7 @@ title: "Local Large Language Models – Int8"
 categories:
 - Large Language Models
 - Quantization
+date: 31-05-2023
 ---
 
 📝 **Article**: [https://int8.io/local-large-language-models-beginners-guide/](https://int8.io/local-large-language-models-beginners-guide/)

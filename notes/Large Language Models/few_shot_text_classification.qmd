@@ -1,0 +1,36 @@
+---
+title: "Report – Few-Shot Text Classification"
+categories: Large Language Models
+date: 01-01-2020
+---
+
+📝 **Article**: [https://few-shot-text-classification.fastforwardlabs.com/](https://few-shot-text-classification.fastforwardlabs.com/) (2020)
+
+## Embedding models
+
+* **Static**: Bag-of-words and tf-idf vectors
+* **Static**: [word2vec](https://arxiv.org/pdf/1301.3781.pdf) and [GloVe](https://nlp.stanford.edu/projects/glove/)
+* **Dynamic**: [ELMo](https://arxiv.org/pdf/1802.05365.pdf) and [BERT](https://arxiv.org/abs/1810.04805)
+* **Sentence/paragraphs**: [Doc2Vec](https://arxiv.org/pdf/1405.4053.pdf), [InferSent](https://arxiv.org/pdf/1705.02364.pdf), [Universal Sentence Encoder](https://arxiv.org/pdf/1803.11175.pdf)
+
+## Problem with BERT
+
+BERT outputs an embedding vector for each input token, like the CLS token for “classification”. [Experiments](https://arxiv.org/pdf/1908.10084.pdf) have shown that using the CLS token as sentence-level feature representation drastically underperforms aggregated GloVe embeddings in semantic similarity tests.
+
+Instead, we can pool together the individual embedding vectors for each word token (like we pool word2vec vectors). However, these embeddings are not optimized for similarity, nor can they be expected to capture the semantic meaning of full sentences or paragraphs.
+
+Another solution consists of training BERT to specifically learn semantic similarity between sentences. This procedure provides good results but is not efficient, as BERT can only compare two text segments at a time (very slow).
+
+## Sentence-BERT
+
+**[Sentence-BERT](https://arxiv.org/abs/1908.10084) (SBERT)** addresses these issues (2019). It adds a pooling operation to the output of BERT to derive fixed sentence embeddings, followed by fine-tuning with a triplet network, in order to produce embeddings with semantically meaningful relationships. It outperforms aggregated word2vec and BERT embeddings in similarity tasks. 
+
+## Zmap
+
+The authors want to perform multi-class text classification using the embeddings of the labels. This has several interesting features that are detailed in the report, such as a dynamic number of classes (they're no long fixed by the training process).
+
+The problem is that the embeddings produced by SBERT are good for sentences and paragraphs, but quite poor for individual words. On the contrary, this is where simpler embedding techniques, such as word2vec and GloVe, perform best. Unfortunately, we cannot naively compare (e.g., using a cosine similarity) embeddings from SBERT and those from word2vec.
+
+![](https://i.imgur.com/XJe8FVV.png)
+
+The idea is learning a mapping between words in SBERT space and the same words in word2vec space. It is performed by selecting a large vocabulary of words and obtain SBERT and word2vec representations for each one. We can then learn a matrix $Z$ using the least-squares linear regression with l2 regularization between these representations.

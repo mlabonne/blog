@@ -2,8 +2,8 @@
 aliases:
 - /publications/
 layout: page
-title: Publications
-description: List of scientific papers
+title: "{{< fa flask >}} Publications"
+description: List of scientific papers.
 permalink: /publications/
 title-block-banner: true
 sidebar: false

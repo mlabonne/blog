@@ -1,0 +1,85 @@
+---
+title: "LIMA – Less Is More for Alignment"
+categories: Large Language Models
+date: 07-07-2023
+---
+
+::: {.callout-tip}
+LIMA is a 65B parameter LLaMA model fine-tuned (supervised learning) using 1,000 samples, which outperforms DaVinci003.
+:::
+
+📝 **Paper**: [https://arxiv.org/abs/2305.11206](https://arxiv.org/abs/2305.11206)
+
+**Superficial Alignement Hypothesis**: alignement is a process where the model learns to leverage knowledge and capabilities that were acquired during pre-training.
+
+::: {.callout-tip}
+Although I find this hypothesis credible, I do not feel like the paper truly proves it. Proving it would require a much more in-depth analysis based on OOD tasks and information.
+:::
+
+![](https://i.imgur.com/IMHho4v.png)
+
+The model is fine-tuned on 1,000 examples that approximate user prompts and high-quality responses (750 from forums + 250 manually written examples), optimized for **quality** and **diversity**.
+
+## Alignment Data
+
+::: {.callout-tip}
+Training models is easy but building high-quality datasets is **hard**. This is the most interesting part of the paper to me.
+:::
+
+The authors collect data from three popular QA websites:
+
+* **Stack Exchange**:
+	* Divide the exchanges into 75 STEM exchanges + 99 other (English, cooking, travel, etc.) + discard 5 nice exchanges.
+	* Sample 200 QAs from each set (= exchange or STEM/other?).
+	* Wthin each exchange, take the questions with the highest score (needs to self-contained in the title = no body).
+	* Select the top answer for each question with score >= 10, 1200 characters < length < 4096 characters, not written in the first person, and without reference to other answers.
+	* Links, images, and other HTML tags (except code blocks and lists) are also removed rom the answers.
+	* They randomly select the title or the description as questions since Stack Exchange has both.
+* **wikiHow**:
+	* Sample 200 articles while ensuring a diversity of categories.
+	* Prompt = title ("How to cook an omelette?") and response = article's body.
+	* Replace "This article..." with "The following answer..."
+	* Remove links, images, and certain sections of the text.
+* **Pushshift Reddit Dataset**:
+	* Restricted to two subreddits: r/AskReddit and r/WritingPrompts.
+	* Manually select examples fro within the most upvoted posts.
+	* QAs from r/AskReddit are deemed not necessarily reliable, which is why they are used as a test set.
+
+The authors also manually authored examples. They created two groups (A and B) to create 250 prompts each, based on personal interests. They selected 200 prompts from Group A and (50 prompts as a held-out development set) + 230 prompts from Group B (for test only).
+
+They also manually wrote high-quality answers, with a uniform tone and some acknowledgement of the question, followed by the answer. In this data, they include 13 **adversarial** training prompts (toxic, malevolent) + a rejection in the corresponding answers.
+
+They also add 50 samples from Super-Natural Instructions, which are modified to correspond to the style of the 200 manual examples.
+
+## Training LIMA
+
+They trained a 65B parameter LLaMA model on 1,000 samples. To distinguish user and assistant, they introduce an **end-of-turn token (EOT)** at the end of each utterance.
+
+**Hyperparameters**:
+
+* 15 epochs using AdamW ($\beta_1 = 0.9$, $\beta_2 = 0.95$, and weght decay of 0.1).
+* No warmup steps, initial learning rate = $1e-5$, linearly decaying to $1e-6$ by the end of training.
+* Batch size of 32 examples (64 for smaller models).
+* Texts longer than 2048 tokens (LLaMA's context window) are trimmed.
+
+They also apply dropout over residual connections, starting at $p_d = 0.0$ at the bottom layer and linearly raising the rate to $p_d = 0.3$ at the last layer ($p_d = 0.2$ for smaller models).
+
+They manually selected checkpoints between the 5th and the 10th epochs using the held-out 50 samples (not based on perplexity).
+
+::: {.callout-tip}
+There are two interesting improvements/modifications over the original model: EOT and residual dropout.
+:::
+
+## Human Evaluation
+
+**Baselines**: Alpaca 65B, DaVinci003, Bard, Claude, GPT-4.
+
+![](https://i.imgur.com/MUZ7AcC.png)
+
+Generation's parameters: nucleus sampling ($p=0.9$), temperature of 0.7, repetition penalty of previous tokens of 1.2, max token length = 2048.
+
+## Multi-Turn Dialogue
+
+The authors created a smal multi-turn dialogue dataset with 30 samples (10 manual, 20 based on modified comments from Stack Exchange).
+
+They train a LIMA model on the 1,000 original samples + 30 multi-turn dialogue examples and show the performance of the model greatly improves (from 45.2% to 76.1% excellent responses).

@@ -1,0 +1,113 @@
+---
+title: "Training Data Influence Analysis and Estimation A Survey"
+categories:
+- Machine Learning
+---
+📝 **Paper**: [https://arxiv.org/pdf/2212.04612.pdf](https://arxiv.org/pdf/2212.04612.pdf)
+
+Survey of methods to calculate the influence of training samples.
+
+![](https://i.imgur.com/o9mQ4jM.png)
+
+## Pointwise Training Data Influence
+
+Quantifies how a single training instance affects the model's prediction on a single test instance according to some quality measure (e.g., test loss).
+$$θ^∗ := \text{arg min} \frac{1}{|D|} \sum_{(x_i, y_i) \in D} (y_i − θ^\top x_i)^2$$
+Early pointwise influence analysis shows that a single outlier can completely shift the parameters of a least-squares regression. Thus, this model is completely non-robust. Different models have been proposed to increase the breakdown point, including changing the average function with a median function.
+
+Modern methods can be categorized into two classes:
+
+* **Retraining-based methods**: measure the training data's influence by repeatedly retraining a model $f$ using different subsets of training set $D$.
+* **Gradient-based influence estimators**: estimate influence via the alignment of training and test instance gradients, either throughout or at the end of training.
+
+### Alternative perspectives on influence
+
+The concept of influence is not clearly standardized:
+
+* **Group influence**: think batches of training data
+* **Joint influence**: consider multiple test instances collectively
+* **Memorization**: defined as the self-influence $I(z_i, z_i)$
+* **Cook's distance**: measures the effect of training instances on the model parameters themselves $I_{Cook}(z_i) := \theta^{(T)} - \theta^{(T)}_{D^{\backslash i}}$
+* **Expected influence**: average influence across different instantiations and retrainings of a model class
+* **Influence ranking** orders training instances from most positively influential to most negatively influential
+
+## Retraining-Based Influence Analysis
+
+Measures influence by training a model with and without some instance. Influence is then defined as the difference in these two models’ behavior.
+
+### Leave-On-Out Influence
+
+Leave-one-out (LOO) is the simplest influence measure described in this work. LOO is also the oldest, dating back to Cook and Weisberg [CW82] who term it case deletion diagnostics.
+$$I_{LOO}(z_i, z_{te}) := L(z_{te}; θ^{(T)}_{D^{\backslash i}}) − L(z_{te}; θ^{(T)} ),$$
+Measuring the entire training set’s LOO influence requires training $(n + 1)$ models.
+
+### Downsampling
+
+Mitigates leave-one-out influence’s two primary weaknesses: (1) computational complexity dependent on $n$ and (2) instability due to stochastic training variation.
+
+Relies on an ensemble of $K$ submodels, each trained on a subset $D^k$ or the full training set $D$.
+
+![](https://i.imgur.com/RWv0ce9.png)
+
+Intuitively, it corresponds to $z_{te}$’s average risk when $z_i$ is not used in submodel training.
+
+By holding out multiple instances simultaneously and then averaging, each Downsampling submodel provides insight into the influence of all training instances. This allows Downsampling to require (far) fewer retrainings than LOO.
+
+### Shapley Value
+
+Intuitively, SV is the weighted change in $z_{te}$’s risk when $z_i$ is added to a random training subset.
+
+It can be viewed as generalizing the leave-one-out influence, where rather than considering only the full training set $D$, Shapley value averages the LOO influence across all possible subsets of $D$.
+
+The main problem is that SV is computationally intractable for non-trivial datasets, which led to numerous speed-ups in the literature:
+
+* **Truncated Monte Carlo Shapley (TMC-Shapley)**: relies on randomized subset sampling from training set $D$.
+* **Gradient Shapley (G-Shapley)**: even faster SV estimator that assumes models are trained in just one gradient step (at the expense of lower accuracy).
+* **$k$-NN-SV** and **$k$-NN Shapley
+
+## Gradient-Based Influence Estimation
+
+In models trained using **gradient descent**, the influence of training instances can be assessed through training gradients.
+
+There are two types of gradient-based methods:
+
+* **Static methods** estimate the effect of retraining by examining gradients with respect to final model parameters, but this approach typically requires stronger assumptions due to the limited insight a single set of parameters can provide into the optimization landscape.
+* **Dynamic methods** analyze model parameters throughout training, which while being more computationally demanding, allows for fewer assumptions.
+
+However, both share a common limitation: they can potentially overlook highly influential training instances.
+
+### Static Estimators
+
+There are two main static estimators: **influence functions** (more general) and **representer point** (more scalable).
+
+#### Influence Functions
+
+Analyze how a model changes when the weight of a training instance is **slightly perturbed**:
+$$\theta^{(T)}_{+ \epsilon_i} = \arg \min_{\theta} \frac{1}{n} \sum_{z \in D} L(z; \theta) + \epsilon_i L(z_i; \theta).$$
+Assuming the model and loss function are twice-differentiable and strictly convex, Cook and Weisberg demonstrated that an infinitesimal perturbation's impact could be calculated using a first-order Taylor expansion:
+$$\frac{d\theta^{(T)}_{+\epsilon_i}}{d\epsilon_i} \bigg|_{\epsilon_i=0} = - (H^{(T)}_\theta)^{-1} \nabla_\theta L(z_i; \theta^{(T)}),$$
+where the empirical risk Hessian $H^{(T)}_\theta := \frac{1}{n} \sum_{z \in D} \nabla^2_\theta L(z; \theta^{(T)})$ is assumed to be positive definite.
+
+Koh and Liang extend this result to consider the effect of this infinitesimal perturbation on $z_{te}$'s risk, whereby applying the chain rule, we get:
+
+\begin{align*}
+\frac{dL(z_{te}; \theta^{(T)})}{d\epsilon_i} \bigg|_{\epsilon_i=0} 
+
+&= \frac{dL(z_{te}; \theta^{(T)})}{d\theta^{(T)}_{+\epsilon_i}}^\top {\frac{d\theta^{(T)}_{+\epsilon_i}}{d\epsilon_i}} \bigg|_{\epsilon_i=0} \\
+
+&= - \nabla_\theta L(z_{te}; \theta^{(T)})^\top (H^{(T)}_\theta)^{-1} \nabla_\theta L(z_i; \theta^{(T)}).
+\end{align*}
+
+Removing training instance $z_i$ from $D$ is equivalent to $\epsilon_i = -\frac{1}{n}$, resulting in the pointwise influence functions estimator
+$$\hat{I}_{IF}(z_i, z_{te}) := \frac{1}{n} \nabla_\theta L(z_{te}; \theta^{(T)})^\top (H^{(T)}_\theta)^{-1} \nabla_\theta L(z_i; \theta^{(T)})$$
+Intuitively, it represents the influence functions' estimate of the leave-one-out influence of $z_i$ on $z_{te}$.
+
+#### Representer Point Methods
+
+Representer-based methods rely on kernels, which are functions that measure the similarity between two vectors. They decompose the predictions of specific model classes into the individual contributions (i.e., influence) of each training instance.
+
+### Dynamic Estimators
+
+#### TracIn – Tracing Gradient Descent
+
+#### HyDRA – Hypergradient Data Relevance Analysis

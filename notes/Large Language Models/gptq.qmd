@@ -1,0 +1,106 @@
+---
+title: "GPTQ – Accurate Post-Training Quantization for Generative Pre-trained Transformers"
+categories: Large Language Models
+date: 07-07-2023
+---
+
+::: {.callout-tip}
+This paper introduces GPTQ, the first reliable quantization technique to peform 4- and even 3-bit quantization on very large language models.
+:::
+
+📝 **Paper**: https://arxiv.org/abs/2210.17323
+
+**Problem**: LLMs demonstrated breakthrough performance across complex language modelings tasks, but also extremely high computational and storage costs. Even inference requires multiple GPUs for big LLMs. For example, GPT3-175B takes 326GB of memory in FP16.
+
+**Solution**: GPTQ, one-shot weight quantization based on approximate second-order information. With this technique, you can quantize 175B parameters model in ~4 GPU hours.
+
+Standard approach = model compression. Little is known about compressing such models for inference. One reason is that you need model retraining for more complex methods or model pruning. This makes post-training methods appealing because you don't need an expensive re-training stage.
+
+First to show quantization to 3-4 bits/component for very large LLMs.
+
+## Related work
+
+**Optimal Brain Quantization** generalizes the classic **Optimal Brain Surgeon** second-order weight pruning framework to apply to quantization. OBQ quantizes weights one-by-one, in order of quantization error, always adjusting the remaining weights. It produces good results up to 100 million parameters in a few GPU hours.
+
+Large-model Quantization. Existing methods: ZeroQuant, LLM.int8(), nuQmm carefully select quantization granularity, e.g., vector-wise, and round weights to the nearest quantization level.
+
+* **ZeroQuant** proposes layer-wise knowledge distillation, similar to AdaQuant but larger model it can apply this approach has 1.3B parameters (takes 3 hours).
+* **LLM.int8()** observes that activation outliers in a few feature dimensions break the quantization of larger models, and proposes to fix this problem by keeping these dimensions in higher precision.
+* **nuQmm** develops efficient GPU kernels for a specific binary-coding based quantization scheme.
+
+## Background
+
+**Layer-Wise Quantization.** Performs quantization layer-by-layer, solving a reconstruction problem for each layer. Given a weight matrix $\mathbf{W}$ and an input matrix $\mathbf{X}$, we want to find a quantized weight matrix $\mathbf{\hat{W}}$ to minimize the MSE:
+$$\mathbf{\hat{W}*} = \arg \min_{\mathbf{\hat{W}}} \parallel\mathbf{W X} - \mathbf{\hat{W} X}\parallel_2^2$$
+We assume that the quantization grid for $\mathbf{\hat{W}}$ is fixed before the process, and that individual weights can move freely.
+
+::: {.callout-tip}
+> [LeCun et al. (1990)](https://proceedings.neurips.cc/paper/1989/file/6c9882bbac1c7093bd25041881277658-Paper.pdf) released a paper to paper weight pruning iteratively as follows:
+> 1. Train a network
+> 2. Estimate the importance of each weight by watching how the loss would change upon perturbing the weight (smaller change means less importance, also called saliency).
+> 3. Remove the weight with low importance
+> 4. Go back to step 1, retrain the network without the removed weights (=0)
+> 
+> They showed you could remove a significant portion of LeNet's weights for MNIST classification without a noticable increase in the loss. However, it requires retraining the model after pruning.
+> 
+> **Other approaches**:
+> * [Frankle and Carbin (2008)](https://arxiv.org/abs/1803.03635) proposed the Lottery Ticket Hypothesis, based on the assumption that a randomly-initialized network contains a subnetwork that, when trained in isolation, can match the accuracy of the original network.
+> * [Tanaka et al. (2020)](https://arxiv.org/abs/2006.05467) introduced SynFlow based on the idea of layer collapse.
+:::
+
+**Optimal Brain Quantization.** The method relies on the OBS method for solving the layer-wise quantization problem.
+
+The OBQ method starts by looking at each row of weights in the weight matrix 𝐖 one by one. It tries to **simplify one weight at a time**, while also updating the remaining weights in that row. The purpose of updating the other weights is to compensate for the changes made by simplifying one weight. This updating process helps to reduce the overall error of the row.
+
+* The corresponding objective is quadratic, whose Hessian if $\mathbf{H}_F = 2 \mathbf{X}_F \mathbf{X}_F^\top$. 
+* $F$ denotes the set of remaining full-precision weights
+* $w_q$ denotes the greedy-optimal weight to quantize next
+* $\mathbf{\delta}_F$ denotes the corresponding optimal update of all weights in $F$
+
+$\text{quant}(w)$ rounds $w$ to the nearest value on the quantization grid:
+
+![](https://i.imgur.com/hw57Jfu.png)
+
+OBQ quantizes weights **iteratively** using these two equations, until all the weights of $\mathbf{w}$ are quantized.
+
+This process could be computationally heavy, especially for LLMs. To deal with this, the OBQ method uses a trick that avoids redoing the entire computation each time a weight is simplified. After quantizing a weight, it adjusts the matrix used in calculations (the Hessian) by **removing the row and column** associated with that weight (using Gaussian elimination).
+
+![](https://i.imgur.com/ThXDcf6.png)
+
+The method also employs vectorization to processes multiple rows of the weight matrix at once. Despite its efficiency, the OBQ's computation time increases significantly as the size of the weight matrix increases. This cubic growth makes it difficult to use OBQ on very large models with billions of parameters.
+
+## The GPTQ Algorithm
+
+The GPTQ algorithm takes inspiration from the OBQ method, but with significant improvements to scale it for large language models.
+
+### Step 1: Arbitrary Order Insight
+
+The OBQ method selects weights (parameters in a model) for quantization in a certain order, determined by which will **add the least additional error**. However, GPTQ observes that for large models, quantizing weights in any fixed order can perform just as well. This is because even though some weights might introduce more error individually, they are quantized later in the process when there are few other weights left that could increase the error. So the order doesn't matter as much as we thought!
+
+Based on this insight, GPTQ aims to quantize all weights in the **same order for all rows** of a matrix. This makes the process faster because certain computations have to be done only once for each column, rather than once for each weight.
+
+### Step 2: Lazy Batch-Updates
+
+Problem: This scheme won't be fast because it requires updating a **huge matrix** with very few computations for each entry. This type of operation can't utilize the full compute capabilities of GPUs and will be slowed down by memory limitations.
+
+To resolve this, GPTQ introduces "lazy batch" updates. It turns out that the final rounding decisions for a given column are only affected by updates performed on that column, not on later columns. Therefore, GPTQ can apply the algorithm to a **batch of columns at a time** (like 128 columns), updating only those columns and a corresponding block of the matrix. After a block is fully processed, the algorithm performs global updates on the entire matrix.
+
+![](https://i.imgur.com/wrQYw5K.png)
+
+### Step 3: Cholesky Reformulation
+
+However, there's one more issue to address. When the algorithm scales up to very large models, numerical inaccuracies can become a problem. Specifically, repeated applications of a certain operation (defined by Equation 5) can **accumulate numerical errors**.
+
+To tackle this, GPTQ uses a Cholesky decomposition, a numerically stable method for solving certain mathematical problems. It involves precomputing some required information from the matrix using the Cholesky method. This approach, combined with a slight "dampening" (adding a small constant to diagonal elements of the matrix), helps the algorithm to avoid numerical issues.
+
+### The Full Algorithm
+
+The full GPTQ algorithm begins with a Cholesky decomposition of the Hessian inverse (a matrix that helps decide how to adjust the weights). It then runs in loops, handling batches of columns at a time. For each column in a batch, it quantizes the weights, calculates the error, and updates the weights in the block accordingly. After processing the batch, it updates all remaining weights based on the block's errors.
+
+## Evaluation
+
+The GPTQ algorithm was tested on various language generation tasks. It was compared with other quantization methods, mainly with the current method of choice, RTN. GPTQ was used with the BLOOM and OPT model families, and models were quantized using a **single NVIDIA A100 GPU**.
+
+GPTQ performed similarly to state-of-the-art methods on small models like ResNet18 and ResNet50. When tested on larger models like BLOOM and OPT, it performed better than RTN and other methods, especially on a 3and 4-bit scale. For example, when tested on the OPT-175B model, GPTQ had a **small decrease in accuracy** at 4-bit, while RTN had a significant drop in accuracy. At 3-bit, RTN couldn't keep up, while GPTQ still had good results.
+
+GPTQ also proved to be faster, able to quantize very large models in **just a few hours** compared to RTN's several hundred hours. The study also showed that larger models seemed to be easier to quantize, which is useful because these are the ones where compression is most needed.
