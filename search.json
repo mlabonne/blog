@@ -126,6 +126,41 @@
     "text": "Quantization-aware training (QAT)\nIn QAT, the quantization operation happens in the pre-training/fine-tuning process so the weights are directly learned in a low-bit representation. It leads to better performance but is more costly in terms of training time and computation.\nA direct approach consists of fune-tuning the model after quantization on a training set that is the same or representative of the pre-training set. The training objective can e the same as the one for pre-training (e.g., NLL/MLM in general language model training) or specific to a downstream task of interest (e.g., cross-entropy for classification).\nDistillation is another popular approach, with the full-precision model acting as the teacher and the lower-precision model as the student. It doesn’t need to use the original dataset: the Wikipedia data set or even random tokens can give decent performance gain.\nYao et al. (2022) proposed a layer-by-layer knowledge distillation (LKD) to quantize the model layer by layer and uses its original, unquantized version as the teacher model. Given the same inputs, LKD minimizes the MSE between the multiplication with layer weights and the multiplication of quantized layer weights."
   },
   {
+    "objectID": "notes/Large Language Models/lima.html",
+    "href": "notes/Large Language Models/lima.html",
+    "title": "LIMA – Less Is More for Alignment",
+    "section": "",
+    "text": "Tip\n\n\n\nLIMA is a 65B parameter LLaMA model fine-tuned (supervised learning) using 1,000 samples, which outperforms DaVinci003.\n📝 Paper: https://arxiv.org/abs/2305.11206\nSuperficial Alignement Hypothesis: alignement is a process where the model learns to leverage knowledge and capabilities that were acquired during pre-training.\nThe model is fine-tuned on 1,000 examples that approximate user prompts and high-quality responses (750 from forums + 250 manually written examples), optimized for quality and diversity."
+  },
+  {
+    "objectID": "notes/Large Language Models/lima.html#alignment-data",
+    "href": "notes/Large Language Models/lima.html#alignment-data",
+    "title": "LIMA – Less Is More for Alignment",
+    "section": "Alignment Data",
+    "text": "Alignment Data\n\n\n\n\n\n\nTip\n\n\n\nTraining models is easy but building high-quality datasets is hard. This is the most interesting part of the paper to me.\n\n\nThe authors collect data from three popular QA websites:\n\nStack Exchange:\n\nDivide the exchanges into 75 STEM exchanges + 99 other (English, cooking, travel, etc.) + discard 5 nice exchanges.\nSample 200 QAs from each set (= exchange or STEM/other?).\nWthin each exchange, take the questions with the highest score (needs to self-contained in the title = no body).\nSelect the top answer for each question with score &gt;= 10, 1200 characters &lt; length &lt; 4096 characters, not written in the first person, and without reference to other answers.\nLinks, images, and other HTML tags (except code blocks and lists) are also removed rom the answers.\nThey randomly select the title or the description as questions since Stack Exchange has both.\n\nwikiHow:\n\nSample 200 articles while ensuring a diversity of categories.\nPrompt = title (“How to cook an omelette?”) and response = article’s body.\nReplace “This article…” with “The following answer…”\nRemove links, images, and certain sections of the text.\n\nPushshift Reddit Dataset:\n\nRestricted to two subreddits: r/AskReddit and r/WritingPrompts.\nManually select examples fro within the most upvoted posts.\nQAs from r/AskReddit are deemed not necessarily reliable, which is why they are used as a test set.\n\n\nThe authors also manually authored examples. They created two groups (A and B) to create 250 prompts each, based on personal interests. They selected 200 prompts from Group A and (50 prompts as a held-out development set) + 230 prompts from Group B (for test only).\nThey also manually wrote high-quality answers, with a uniform tone and some acknowledgement of the question, followed by the answer. In this data, they include 13 adversarial training prompts (toxic, malevolent) + a rejection in the corresponding answers.\nThey also add 50 samples from Super-Natural Instructions, which are modified to correspond to the style of the 200 manual examples."
+  },
+  {
+    "objectID": "notes/Large Language Models/lima.html#training-lima",
+    "href": "notes/Large Language Models/lima.html#training-lima",
+    "title": "LIMA – Less Is More for Alignment",
+    "section": "Training LIMA",
+    "text": "Training LIMA\nThey trained a 65B parameter LLaMA model on 1,000 samples. To distinguish user and assistant, they introduce an end-of-turn token (EOT) at the end of each utterance.\nHyperparameters:\n\n15 epochs using AdamW (\\beta_1 = 0.9, \\beta_2 = 0.95, and weght decay of 0.1).\nNo warmup steps, initial learning rate = 1e-5, linearly decaying to 1e-6 by the end of training.\nBatch size of 32 examples (64 for smaller models).\nTexts longer than 2048 tokens (LLaMA’s context window) are trimmed.\n\nThey also apply dropout over residual connections, starting at p_d = 0.0 at the bottom layer and linearly raising the rate to p_d = 0.3 at the last layer (p_d = 0.2 for smaller models).\nThey manually selected checkpoints between the 5th and the 10th epochs using the held-out 50 samples (not based on perplexity).\n\n\n\n\n\n\nTip\n\n\n\nThere are two interesting improvements/modifications over the original model: EOT and residual dropout."
+  },
+  {
+    "objectID": "notes/Large Language Models/lima.html#human-evaluation",
+    "href": "notes/Large Language Models/lima.html#human-evaluation",
+    "title": "LIMA – Less Is More for Alignment",
+    "section": "Human Evaluation",
+    "text": "Human Evaluation\nBaselines: Alpaca 65B, DaVinci003, Bard, Claude, GPT-4.\n\nGeneration’s parameters: nucleus sampling (p=0.9), temperature of 0.7, repetition penalty of previous tokens of 1.2, max token length = 2048."
+  },
+  {
+    "objectID": "notes/Large Language Models/lima.html#multi-turn-dialogue",
+    "href": "notes/Large Language Models/lima.html#multi-turn-dialogue",
+    "title": "LIMA – Less Is More for Alignment",
+    "section": "Multi-Turn Dialogue",
+    "text": "Multi-Turn Dialogue\nThe authors created a smal multi-turn dialogue dataset with 30 samples (10 manual, 20 based on modified comments from Stack Exchange).\nThey train a LIMA model on the 1,000 original samples + 30 multi-turn dialogue examples and show the performance of the model greatly improves (from 45.2% to 76.1% excellent responses)."
+  },
+  {
     "objectID": "notes/Large Language Models/local_llm.html",
     "href": "notes/Large Language Models/local_llm.html",
     "title": "Local Large Language Models – Int8",
@@ -231,6 +266,41 @@
     "text": "Performance evaluation\nThe authors argue HumanEval’s binary score (code passes the unit tests, or it fails) does not capture the nuances of the model’s performance. They introduce an LLM grading using GPT-4 (between 0 and 10), which does not require tests.\n\nThere’s a concern that CodeExercises might contain samples that are similar to exercises in HumanEval. The authors propose to remove these samples and retrain phi-1 on this decontaminated set.\nThey report no meaningful n-gram overlap between CodeExercises and HumanEval (4 false positives). They then use a combination of embedding and syntax-based distances to find similar code snippets:\n\nSemantics: They use the L2 distance between embeddings produced by CodeGen\nSyntax: They calculate the (string) edit distance between the abstract syntax trees (ASTs) of two code snippets.\n\nDespite this data pruning, the authors claim that phi-1 still outperforms StarCoder on HumanEval."
   },
   {
+    "objectID": "notes/Large Language Models/superhot.html",
+    "href": "notes/Large Language Models/superhot.html",
+    "title": "SuperHOT",
+    "section": "",
+    "text": "📝 Article: https://kaiokendev.github.io/context"
+  },
+  {
+    "objectID": "notes/Large Language Models/superhot.html#problem",
+    "href": "notes/Large Language Models/superhot.html#problem",
+    "title": "SuperHOT",
+    "section": "Problem",
+    "text": "Problem\nProblem: it is hard to extend the sequence length of a model.\n\nAnil et al. (2022): the length extrapolation fails in part because of “distracting tokens” in the input during the PARITY task.\nChi et al. (2022): bias terms in positional encoding (like in ALiBi) replicate the effect of windowed attention by decaying token inter-dependency on long-range receptive fields (the tokens only focus on the tokens closest to them).\nTao et al. (2023) observe that, in long sequences, rear position embeddings are updates much fewer times than front position embeddings. They add random padding to the front patch of the sequence.\nLiu et al. (2023): attention in long sequences starts to drift as we move to later positions and only attends to the most recent tokens."
+  },
+  {
+    "objectID": "notes/Large Language Models/superhot.html#silver-linings",
+    "href": "notes/Large Language Models/superhot.html#silver-linings",
+    "title": "SuperHOT",
+    "section": "Silver Linings",
+    "text": "Silver Linings\nThe attention mechanism seems destabilized in the case of long sequences due to an imbalance of attended tokens (either skewed to the front or the back).\nSeveral solutions have been proposed:\n\nFew-shot chain-of-thought reasoning and marker tokens\nLength generalization/extrapolation can be learned ability to a certain extent (improves performance but not a silver bullet)\nLLaMa 7B has been trained for retrieval over a 32K token window by introducing landmark tokens combined with a windowed-attention (blockwise computation)."
+  },
+  {
+    "objectID": "notes/Large Language Models/superhot.html#potential-solutions",
+    "href": "notes/Large Language Models/superhot.html#potential-solutions",
+    "title": "SuperHOT",
+    "section": "Potential Solutions",
+    "text": "Potential Solutions\n\nChange the attention calculation: log(n) scaling (does help), relacing the softmax with ReLU in the attention equation (does not converge), etc.\nRandom Positional Encoding\nShifted Positional Encodings: shifting the tokens progressively along the desired length during the encoding step (failure)."
+  },
+  {
+    "objectID": "notes/Large Language Models/superhot.html#final-solution",
+    "href": "notes/Large Language Models/superhot.html#final-solution",
+    "title": "SuperHOT",
+    "section": "Final Solution",
+    "text": "Final Solution\nTransformers do not learn how to gauge position based on the relative distance or the rotational factors, but memorize the tokens and their positional scaling factors.\n\nRotary positional embedding to loop the positions around after crossing the max context length (e.g., 2048): position_ids = position_ids % 2048\nBlock repeated positions: repeating the chosen frequency for a block of positions, so [1, 2, 3, 4, 5, …, L] becomes [1, 1, 1, 1, 2, 2, 2, 2, 3, …, L]. This is achieved by changing the frequency update: t *= 1/4.\n\nThis one-liner can be deceptive as"
+  },
+  {
     "objectID": "notes/Large Language Models/tart.html",
     "href": "notes/Large Language Models/tart.html",
     "title": "Tart – A plug-and-play Transformer module for task-agnostic reasoning",
@@ -298,7 +368,7 @@
     "href": "notes.html",
     "title": " Research notes",
     "section": "",
-    "text": "Training Data Influence Analysis and Estimation A Survey\n\n\n\n\n\n\n\nMachine Learning\n\n\n\n\n\n\n\n\n\n\n\n5 min\n\n\n\n\n\n\n  \n\n\n\n\nLocal Large Language Models – Int8\n\n\n\n\n\n\n\nLarge Language Models\n\n\nQuantization\n\n\n\n\n\n\n\n\n\n\n\n6 min\n\n\n\n\n\n\n  \n\n\n\n\nphi-1 – Textbooks Are All You Need\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n4 min\n\n\n\n\n\n\n  \n\n\n\n\nTart – A plug-and-play Transformer module for task-agnostic reasoning\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n4 min\n\n\n\n\n\n\n  \n\n\n\n\nInference Optimization – Lil’Log\n\n\n\n\n\n\n\nLarge Language Models\n\n\nQuantization\n\n\n\n\n\n\n\n\n\n\n\n5 min\n\n\n\n\n\n\n  \n\n\n\n\nLoRA – Low-Rank Adaptation of Large Language Models\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n3 min\n\n\n\n\n\n\n  \n\n\n\n\nReport – Few-Shot Text Classification\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n2 min\n\n\n\n\n\n\nNo matching items"
+    "text": "Training Data Influence Analysis and Estimation A Survey\n\n\n\n\n\n\n\nMachine Learning\n\n\n\n\n\n\n\n\n\n\n\n5 min\n\n\n\n\n\n\n  \n\n\n\n\nLocal Large Language Models – Int8\n\n\n\n\n\n\n\nLarge Language Models\n\n\nQuantization\n\n\n\n\n\n\n\n\n\n\n\n6 min\n\n\n\n\n\n\n  \n\n\n\n\nphi-1 – Textbooks Are All You Need\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n4 min\n\n\n\n\n\n\n  \n\n\n\n\nTart – A plug-and-play Transformer module for task-agnostic reasoning\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n4 min\n\n\n\n\n\n\n  \n\n\n\n\nInference Optimization – Lil’Log\n\n\n\n\n\n\n\nLarge Language Models\n\n\nQuantization\n\n\n\n\n\n\n\n\n\n\n\n5 min\n\n\n\n\n\n\n  \n\n\n\n\nLIMA – Less Is More for Alignment\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n4 min\n\n\n\n\n\n\n  \n\n\n\n\nSuperHOT\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n2 min\n\n\n\n\n\n\n  \n\n\n\n\nLoRA – Low-Rank Adaptation of Large Language Models\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n3 min\n\n\n\n\n\n\n  \n\n\n\n\nReport – Few-Shot Text Classification\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n2 min\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/2022-02-13-Q_learning.html",
