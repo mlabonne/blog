@@ -11,7 +11,7 @@
     "href": "book.html",
     "title": "Hands-On Graph Neural Networks Using Python",
     "section": "",
-    "text": "I am thrilled to introduce my book on graph neural networks, which is the result of almost a year’s worth of hard work, research, and collaboration with fellow experts in the field.\nAs someone who’s passionate about GNNs, I wanted to create a comprehensive guide that could help both beginners and advanced practitioners. This book has been carefully crafted to provide a step-by-step guide for those new to the world of GNNs, while also offering advanced use cases and examples for experienced practitioners. What’s more, the entire code with examples and use cases is freely available on Github, making it easy for you to get started with implementing GNNs in Python.\nIf you’re interested in graph neural networks, I highly recommend checking it out. I’m confident that you’ll find it to be an invaluable resource as you explore this exciting and rapidly growing field."
+    "text": "I am thrilled to introduce my book on graph neural networks, which is the result of almost a year’s worth of hard work, research, and collaboration with fellow experts in the field.\nWhen I started learning about GNNs, resources were particularly scarce. This book is the guide I wish I had back then: it has been carefully crafted to provide a step-by-step guide for those new to the world of GNNs, while also offering advanced use cases and examples for experienced practitioners. What’s more, the entire code with examples and use cases is freely available on  Github, making it easy for you to get started with implementing GNNs in Python.\nIf you’re interested in graph neural networks, I highly recommend checking it out. I’m confident that you’ll find it to be an invaluable resource as you explore this exciting and rapidly growing field.\n\n\n  Get your copy!"
   },
   {
     "objectID": "book.html#key-features",
@@ -39,7 +39,7 @@
     "href": "book.html#who-this-book-is-for",
     "title": "Hands-On Graph Neural Networks Using Python",
     "section": "💡 Who this book is for",
-    "text": "💡 Who this book is for\nThis book is for machine learning practitioners and data scientists interested in learning about graph neural networks and their applications, as well as students looking for a comprehensive reference on this rapidly growing field. Whether you’re new to graph neural networks or looking to take your knowledge to the next level, this book has something for you. Basic knowledge of machine learning and Python programming will help you get the most out of this book."
+    "text": "💡 Who this book is for\nThis book is for machine learning practitioners and data scientists interested in learning about graph neural networks and their applications, as well as students looking for a comprehensive reference on this rapidly growing field. Whether you’re new to graph neural networks or looking to take your knowledge to the next level, this book has something for you. Basic knowledge of machine learning and Python programming will help you get the most out of this book.\n\n  Get your copy!"
   },
   {
     "objectID": "index.html",
