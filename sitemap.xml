@@ -2,122 +2,122 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://mlabonne.github.io/blog/about.html</loc>
-    <lastmod>2023-07-08T21:50:58.225Z</lastmod>
+    <lastmod>2023-07-09T09:38:32.592Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/book.html</loc>
-    <lastmod>2023-07-08T21:51:00.265Z</lastmod>
+    <lastmod>2023-07-09T09:38:34.402Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/index.html</loc>
-    <lastmod>2023-07-08T21:51:03.535Z</lastmod>
+    <lastmod>2023-07-09T09:38:37.839Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mlabonne.github.io/blog/notes/Large Language Models/extending_context.html</loc>
+    <lastmod>2023-07-09T09:38:39.430Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/notes/Large Language Models/few_shot_text_classification.html</loc>
-    <lastmod>2023-07-08T21:51:05.400Z</lastmod>
+    <lastmod>2023-07-09T09:38:40.915Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/notes/Large Language Models/gptq.html</loc>
-    <lastmod>2023-07-08T21:51:07.268Z</lastmod>
+    <lastmod>2023-07-09T09:38:42.626Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/notes/Large Language Models/inference_optimization.html</loc>
-    <lastmod>2023-07-08T21:51:09.836Z</lastmod>
+    <lastmod>2023-07-09T09:38:44.873Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/notes/Large Language Models/lima.html</loc>
-    <lastmod>2023-07-08T21:51:11.657Z</lastmod>
+    <lastmod>2023-07-09T09:38:46.521Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/notes/Large Language Models/local_llm.html</loc>
-    <lastmod>2023-07-08T21:51:13.934Z</lastmod>
+    <lastmod>2023-07-09T09:38:48.482Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/notes/Large Language Models/lora.html</loc>
-    <lastmod>2023-07-08T21:51:15.536Z</lastmod>
+    <lastmod>2023-07-09T09:38:49.944Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/notes/Large Language Models/phi1.html</loc>
-    <lastmod>2023-07-08T21:51:17.405Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mlabonne.github.io/blog/notes/Large Language Models/superhot.html</loc>
-    <lastmod>2023-07-08T21:51:18.881Z</lastmod>
+    <lastmod>2023-07-09T09:38:51.711Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/notes/Large Language Models/tart.html</loc>
-    <lastmod>2023-07-08T21:51:20.793Z</lastmod>
+    <lastmod>2023-07-09T09:38:53.430Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/notes/Machine Learning/data_influence.html</loc>
-    <lastmod>2023-07-08T21:51:22.478Z</lastmod>
+    <lastmod>2023-07-09T09:38:54.982Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/notes.html</loc>
-    <lastmod>2023-07-08T21:51:24.560Z</lastmod>
+    <lastmod>2023-07-09T09:38:56.894Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/2022-02-13-Q_learning.html</loc>
-    <lastmod>2023-07-08T21:51:31.003Z</lastmod>
+    <lastmod>2023-07-09T09:39:03.026Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/2022-02-20-Graph_Convolution_Network.html</loc>
-    <lastmod>2023-07-08T21:51:34.103Z</lastmod>
+    <lastmod>2023-07-09T09:39:05.985Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/2022-03-02-Linear_Programming.html</loc>
-    <lastmod>2023-07-08T21:51:36.636Z</lastmod>
+    <lastmod>2023-07-09T09:39:08.312Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/2022-03-05-Integer_Programming.html</loc>
-    <lastmod>2023-07-08T21:51:38.458Z</lastmod>
+    <lastmod>2023-07-09T09:39:09.948Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/2022-03-09-Graph_Attention_Network.html</loc>
-    <lastmod>2023-07-08T21:51:40.462Z</lastmod>
+    <lastmod>2023-07-09T09:39:12.123Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/2022-03-21-Efficiently_iterating_over_rows_in_a_Pandas_DataFrame.html</loc>
-    <lastmod>2023-07-08T21:51:42.702Z</lastmod>
+    <lastmod>2023-07-09T09:39:14.352Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/2022-03-28-What_is_a_Tensor_in_Deep_Learning.html</loc>
-    <lastmod>2023-07-08T21:51:44.294Z</lastmod>
+    <lastmod>2023-07-09T09:39:15.889Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/2022-04-06-GraphSAGE.html</loc>
-    <lastmod>2023-07-08T21:51:48.000Z</lastmod>
+    <lastmod>2023-07-09T09:39:19.192Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/2022-04-25-Graph_Isomorphism_Network.html</loc>
-    <lastmod>2023-07-08T21:51:50.019Z</lastmod>
+    <lastmod>2023-07-09T09:39:21.046Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/2022-05-02-Constraint_Programming.html</loc>
-    <lastmod>2023-07-08T21:51:51.848Z</lastmod>
+    <lastmod>2023-07-09T09:39:22.890Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/2022-05-25-Minecraft.html</loc>
-    <lastmod>2023-07-08T21:51:55.460Z</lastmod>
+    <lastmod>2023-07-09T09:39:25.352Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/2023-05-21-Nonlinear_optimization.html</loc>
-    <lastmod>2023-07-08T21:51:57.141Z</lastmod>
+    <lastmod>2023-07-09T09:39:26.905Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/2023-06-07-Decoding_strategies.html</loc>
-    <lastmod>2023-07-08T21:51:59.248Z</lastmod>
+    <lastmod>2023-07-09T09:39:28.918Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/Article_Improve_ChatGPT_with_Knowledge_Graphs.html</loc>
-    <lastmod>2023-07-08T21:52:00.845Z</lastmod>
+    <lastmod>2023-07-09T09:39:30.517Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/Introduction_to_Weight_Quantization.html</loc>
-    <lastmod>2023-07-08T21:52:03.298Z</lastmod>
+    <lastmod>2023-07-09T09:39:32.764Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/publications.html</loc>
-    <lastmod>2023-07-08T21:52:04.593Z</lastmod>
+    <lastmod>2023-07-09T09:39:33.970Z</lastmod>
   </url>
 </urlset>

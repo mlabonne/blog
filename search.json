@@ -49,6 +49,41 @@
     "text": "Introduction to Weight Quantization\n\n\nLarge language model optimization using 8-bit quantization\n\n\n\n\nLarge Language Models\n\n\n \n\n\n\n\nJul 6, 2023\n\n\n12 min\n\n\n\n\n\n\n\n\n\n  \n\n\n\n\nImprove ChatGPT with Knowledge Graphs\n\n\nLeveraging knowledge graphs for LLMs using LangChain\n\n\n\n\nLarge Language Models\n\n\n \n\n\n\n\nJun 20, 2023\n\n\n6 min\n\n\n\n\n\n\n\n\n\n  \n\n\n\n\nDecoding Strategies in Large Language Models\n\n\nA Guide to Text Generation From Beam Search to Nucleus Sampling\n\n\n\n\nLarge Language Models\n\n\n \n\n\n\n\nJun 7, 2023\n\n\n11 min\n\n\n\n\n\n\n\n\n\n  \n\n\n\n\nOptimize Your Marketing Budget with Nonlinear Programming\n\n\nIntroduction to CVXPY to maximize marketing ROI\n\n\n\n\nlinear programming\n\n\n \n\n\n\n\nMay 21, 2023\n\n\n8 min\n\n\n\n\n\n\n\n\n\n  \n\n\n\n\nCreate a Bot to Find Diamonds in Minecraft\n\n\nReinforcement Learning and Behavior Cloning in Python with MineRL\n\n\n\n\nreinforcement learning\n\n\n \n\n\n\n\nMay 25, 2022\n\n\n8 min\n\n\n\n\n\n\n\n\n\n  \n\n\n\n\nIntroduction to Constraint Programming in Python\n\n\nThe Programming Paradigm to Find One Solution Among 8,080,104 Candidates\n\n\n\n\nlinear programming\n\n\n \n\n\n\n\nMay 2, 2022\n\n\n8 min\n\n\n\n\n\n\n\n\n\n  \n\n\n\n\nGIN: How to Design the Most Powerful Graph Neural Network\n\n\nGraph Neural Network Course: Chapter 4\n\n\n\n\ngraph neural networks\n\n\n \n\n\n\n\nApr 25, 2022\n\n\n9 min\n\n\n\n\n\n\n\n\n\n  \n\n\n\n\nGraphSAGE: Scaling up Graph Neural Networks\n\n\nGraph Neural Network Course: Chapter 3\n\n\n\n\ngraph neural networks\n\n\n \n\n\n\n\nApr 6, 2022\n\n\n10 min\n\n\n\n\n\n\n\n\n\n  \n\n\n\n\nWhat is a Tensor in Machine Learning?\n\n\nThe difference between tensors, arrays, and matrices\n\n\n\n\ndata science\n\n\n \n\n\n\n\nMar 28, 2022\n\n\n5 min\n\n\n\n\n\n\n\n\n\n  \n\n\n\n\nEfficiently iterating over rows in a Pandas DataFrame\n\n\nNever use iterrows and itertuples again!\n\n\n\n\ndata science\n\n\n \n\n\n\n\nMar 21, 2022\n\n\n6 min\n\n\n\n\n\n\n\n\n\n  \n\n\n\n\nGraph Attention Networks: Self-Attention for GNNs\n\n\nGraph Neural Network Course: Chapter 2\n\n\n\n\ngraph neural networks\n\n\n \n\n\n\n\nMar 9, 2022\n\n\n9 min\n\n\n\n\n\n\n\n\n\n  \n\n\n\n\nInteger vs. Linear Programming in Python\n\n\nMixed Integer Programming for optimization with Google OR-Tools\n\n\n\n\nlinear programming\n\n\n \n\n\n\n\nMar 5, 2022\n\n\n9 min\n\n\n\n\n\n\n\n\n\n  \n\n\n\n\nIntroduction to Linear Programming in Python\n\n\nA guide to mathematical optimization with Google OR-Tools\n\n\n\n\nlinear programming\n\n\n \n\n\n\n\nMar 2, 2022\n\n\n8 min\n\n\n\n\n\n\n\n\n\n  \n\n\n\n\nGraph Convolutional Networks: Introduction to GNNs\n\n\nGraph Neural Network Course: Chapter 1\n\n\n\n\ngraph neural networks\n\n\n \n\n\n\n\nFeb 20, 2022\n\n\n11 min\n\n\n\n\n\n\n  \n\n\n\n\nQ-learning for beginners\n\n\nTrain an AI to solve the Frozen Lake environment\n\n\n\n\nreinforcement learning\n\n\n \n\n\n\n\nFeb 13, 2022\n\n\n20 min\n\n\n\n\n\n\nNo matching items"
   },
   {
+    "objectID": "notes/Large Language Models/extending_context.html",
+    "href": "notes/Large Language Models/extending_context.html",
+    "title": "Extending the Context Window of LLMs",
+    "section": "",
+    "text": "📝 Article: https://kaiokendev.github.io/context"
+  },
+  {
+    "objectID": "notes/Large Language Models/extending_context.html#problem",
+    "href": "notes/Large Language Models/extending_context.html#problem",
+    "title": "Extending the Context Window of LLMs",
+    "section": "Problem",
+    "text": "Problem\nProblem: it is hard to extend the sequence length of a model.\n\nAnil et al. (2022): the length extrapolation fails in part because of “distracting tokens” in the input during the PARITY task.\nChi et al. (2022): bias terms in positional encoding (like in ALiBi) replicate the effect of windowed attention by decaying token inter-dependency on long-range receptive fields (the tokens only focus on the tokens closest to them).\nTao et al. (2023) observe that, in long sequences, rear position embeddings are updates much fewer times than front position embeddings. They add random padding to the front patch of the sequence.\nLiu et al. (2023): attention in long sequences starts to drift as we move to later positions and only attends to the most recent tokens."
+  },
+  {
+    "objectID": "notes/Large Language Models/extending_context.html#silver-linings",
+    "href": "notes/Large Language Models/extending_context.html#silver-linings",
+    "title": "Extending the Context Window of LLMs",
+    "section": "Silver Linings",
+    "text": "Silver Linings\nThe attention mechanism seems destabilized in the case of long sequences due to an imbalance of attended tokens (either skewed to the front or the back).\nSeveral solutions have been proposed:\n\nFew-shot chain-of-thought reasoning and marker tokens\nLength generalization/extrapolation can be learned ability to a certain extent (improves performance but not a silver bullet)\nLLaMa 7B has been trained for retrieval over a 32K token window by introducing landmark tokens combined with a windowed-attention (blockwise computation)."
+  },
+  {
+    "objectID": "notes/Large Language Models/extending_context.html#potential-solutions",
+    "href": "notes/Large Language Models/extending_context.html#potential-solutions",
+    "title": "Extending the Context Window of LLMs",
+    "section": "Potential Solutions",
+    "text": "Potential Solutions\n\nChange the attention calculation: log(n) scaling (does help), relacing the softmax with ReLU in the attention equation (does not converge), etc.\nRandom Positional Encoding\nShifted Positional Encodings: shifting the tokens progressively along the desired length during the encoding step (failure)."
+  },
+  {
+    "objectID": "notes/Large Language Models/extending_context.html#final-solution",
+    "href": "notes/Large Language Models/extending_context.html#final-solution",
+    "title": "Extending the Context Window of LLMs",
+    "section": "Final Solution",
+    "text": "Final Solution\nTransformers do not learn how to gauge position based on the relative distance or the rotational factors, but memorize the tokens and their positional scaling factors.\n\nRotary positional embedding to loop the positions around after crossing the max context length (e.g., 2048): position_ids = position_ids % 2048\nBlock repeated positions: repeating the chosen frequency for a block of positions, so [1, 2, 3, 4, 5, …, L] becomes [1, 1, 1, 1, 2, 2, 2, 2, 3, …, L]. This is achieved by changing the frequency update: t *= 1/4.\n\nIn other words, several tokens (4 in this example) are assigned to the same position. This (surprising) scheme can quadruple the context length with minimal performance degradation (~2%). More information about it in this paper from Meta: https://arxiv.org/abs/2306.15595"
+  },
+  {
     "objectID": "notes/Large Language Models/few_shot_text_classification.html",
     "href": "notes/Large Language Models/few_shot_text_classification.html",
     "title": "Report – Few-Shot Text Classification",
@@ -301,41 +336,6 @@
     "text": "Performance evaluation\nThe authors argue HumanEval’s binary score (code passes the unit tests, or it fails) does not capture the nuances of the model’s performance. They introduce an LLM grading using GPT-4 (between 0 and 10), which does not require tests.\n\nThere’s a concern that CodeExercises might contain samples that are similar to exercises in HumanEval. The authors propose to remove these samples and retrain phi-1 on this decontaminated set.\nThey report no meaningful n-gram overlap between CodeExercises and HumanEval (4 false positives). They then use a combination of embedding and syntax-based distances to find similar code snippets:\n\nSemantics: They use the L2 distance between embeddings produced by CodeGen\nSyntax: They calculate the (string) edit distance between the abstract syntax trees (ASTs) of two code snippets.\n\nDespite this data pruning, the authors claim that phi-1 still outperforms StarCoder on HumanEval."
   },
   {
-    "objectID": "notes/Large Language Models/superhot.html",
-    "href": "notes/Large Language Models/superhot.html",
-    "title": "SuperHOT",
-    "section": "",
-    "text": "📝 Article: https://kaiokendev.github.io/context"
-  },
-  {
-    "objectID": "notes/Large Language Models/superhot.html#problem",
-    "href": "notes/Large Language Models/superhot.html#problem",
-    "title": "SuperHOT",
-    "section": "Problem",
-    "text": "Problem\nProblem: it is hard to extend the sequence length of a model.\n\nAnil et al. (2022): the length extrapolation fails in part because of “distracting tokens” in the input during the PARITY task.\nChi et al. (2022): bias terms in positional encoding (like in ALiBi) replicate the effect of windowed attention by decaying token inter-dependency on long-range receptive fields (the tokens only focus on the tokens closest to them).\nTao et al. (2023) observe that, in long sequences, rear position embeddings are updates much fewer times than front position embeddings. They add random padding to the front patch of the sequence.\nLiu et al. (2023): attention in long sequences starts to drift as we move to later positions and only attends to the most recent tokens."
-  },
-  {
-    "objectID": "notes/Large Language Models/superhot.html#silver-linings",
-    "href": "notes/Large Language Models/superhot.html#silver-linings",
-    "title": "SuperHOT",
-    "section": "Silver Linings",
-    "text": "Silver Linings\nThe attention mechanism seems destabilized in the case of long sequences due to an imbalance of attended tokens (either skewed to the front or the back).\nSeveral solutions have been proposed:\n\nFew-shot chain-of-thought reasoning and marker tokens\nLength generalization/extrapolation can be learned ability to a certain extent (improves performance but not a silver bullet)\nLLaMa 7B has been trained for retrieval over a 32K token window by introducing landmark tokens combined with a windowed-attention (blockwise computation)."
-  },
-  {
-    "objectID": "notes/Large Language Models/superhot.html#potential-solutions",
-    "href": "notes/Large Language Models/superhot.html#potential-solutions",
-    "title": "SuperHOT",
-    "section": "Potential Solutions",
-    "text": "Potential Solutions\n\nChange the attention calculation: log(n) scaling (does help), relacing the softmax with ReLU in the attention equation (does not converge), etc.\nRandom Positional Encoding\nShifted Positional Encodings: shifting the tokens progressively along the desired length during the encoding step (failure)."
-  },
-  {
-    "objectID": "notes/Large Language Models/superhot.html#final-solution",
-    "href": "notes/Large Language Models/superhot.html#final-solution",
-    "title": "SuperHOT",
-    "section": "Final Solution",
-    "text": "Final Solution\nTransformers do not learn how to gauge position based on the relative distance or the rotational factors, but memorize the tokens and their positional scaling factors.\n\nRotary positional embedding to loop the positions around after crossing the max context length (e.g., 2048): position_ids = position_ids % 2048\nBlock repeated positions: repeating the chosen frequency for a block of positions, so [1, 2, 3, 4, 5, …, L] becomes [1, 1, 1, 1, 2, 2, 2, 2, 3, …, L]. This is achieved by changing the frequency update: t *= 1/4.\n\nThis one-liner can be deceptive as"
-  },
-  {
     "objectID": "notes/Large Language Models/tart.html",
     "href": "notes/Large Language Models/tart.html",
     "title": "Tart – A plug-and-play Transformer module for task-agnostic reasoning",
@@ -403,7 +403,7 @@
     "href": "notes.html",
     "title": " Research notes",
     "section": "",
-    "text": "Training Data Influence Analysis and Estimation A Survey\n\n\n\n\n\n\n\nMachine Learning\n\n\n\n\n\n\n\n\n\n\n\n5 min\n\n\n\n\n\n\n  \n\n\n\n\nLocal Large Language Models – Int8\n\n\n\n\n\n\n\nLarge Language Models\n\n\nQuantization\n\n\n\n\n\n\n\n\n\n\n\n6 min\n\n\n\n\n\n\n  \n\n\n\n\nphi-1 – Textbooks Are All You Need\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n4 min\n\n\n\n\n\n\n  \n\n\n\n\nTart – A plug-and-play Transformer module for task-agnostic reasoning\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n4 min\n\n\n\n\n\n\n  \n\n\n\n\nInference Optimization – Lil’Log\n\n\n\n\n\n\n\nLarge Language Models\n\n\nQuantization\n\n\n\n\n\n\n\n\n\n\n\n5 min\n\n\n\n\n\n\n  \n\n\n\n\nGPTQ – Accurate Post-Training Quantization for Generative Pre-trained Transformers\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n7 min\n\n\n\n\n\n\n  \n\n\n\n\nLIMA – Less Is More for Alignment\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n4 min\n\n\n\n\n\n\n  \n\n\n\n\nSuperHOT\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n2 min\n\n\n\n\n\n\n  \n\n\n\n\nLoRA – Low-Rank Adaptation of Large Language Models\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n3 min\n\n\n\n\n\n\n  \n\n\n\n\nReport – Few-Shot Text Classification\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n2 min\n\n\n\n\n\n\nNo matching items"
+    "text": "Training Data Influence Analysis and Estimation A Survey\n\n\n\n\n\n\n\nMachine Learning\n\n\n\n\n\n\n\n\n\n\n\n5 min\n\n\n\n\n\n\n  \n\n\n\n\nLocal Large Language Models – Int8\n\n\n\n\n\n\n\nLarge Language Models\n\n\nQuantization\n\n\n\n\n\n\n\n\n\n\n\n6 min\n\n\n\n\n\n\n  \n\n\n\n\nphi-1 – Textbooks Are All You Need\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n4 min\n\n\n\n\n\n\n  \n\n\n\n\nTart – A plug-and-play Transformer module for task-agnostic reasoning\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n4 min\n\n\n\n\n\n\n  \n\n\n\n\nInference Optimization – Lil’Log\n\n\n\n\n\n\n\nLarge Language Models\n\n\nQuantization\n\n\n\n\n\n\n\n\n\n\n\n5 min\n\n\n\n\n\n\n  \n\n\n\n\nExtending the Context Window of LLMs\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n2 min\n\n\n\n\n\n\n  \n\n\n\n\nGPTQ – Accurate Post-Training Quantization for Generative Pre-trained Transformers\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n7 min\n\n\n\n\n\n\n  \n\n\n\n\nLIMA – Less Is More for Alignment\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n4 min\n\n\n\n\n\n\n  \n\n\n\n\nLoRA – Low-Rank Adaptation of Large Language Models\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n3 min\n\n\n\n\n\n\n  \n\n\n\n\nReport – Few-Shot Text Classification\n\n\n\n\n\n\n\nLarge Language Models\n\n\n\n\n\n\n\n\n\n\n\n2 min\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/2022-02-13-Q_learning.html",
