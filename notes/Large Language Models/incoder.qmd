@@ -1,0 +1,59 @@
+---
+title: "InCoder – A Generative Model for Code Infilling and Synthesis"
+categories: Large Language Models
+date: 26-07-2023
+---
+
+::: {.callout-tip}
+InCoder is a 1.3B parameter LLM that can generate code (left-to-right) as well as editing (via masking and infilling).
+:::
+
+📝 **Paper**: [https://arxiv.org/abs/2204.05999](https://arxiv.org/abs/2204.05999)
+
+
+## Infilling and synthesis via causal masking
+
+Two main approaches for code LLM:
+
+1. **GPT**: left-to-right (causal) autoregressive language modeling objective. The issue is that these models cannot perform infilling since they only consider previous tokens.
+2. **BERT**: masked language modeling objective. These models can use left and right contexts and infill a masked region. However, their training objective is limited to generating only ~15% of a document.
+
+The authors adopt a [causal masking objective](https://arxiv.org/abs/2201.07520) to be able to infill blocks of code conditioned on arbitrary left and right contexts.
+
+### Training
+
+![](https://i.imgur.com/ovr0wRt.png)
+
+1. Sample a number of **spans** of contiguous tokens from a Poisson distribution: the idea is that most spans are very small, but it has a long tail up to 256 spans.
+2. Each span $k$ is replaced with a special **mask sentinel token** `<Mask:k>`. This mask is repeated at the end of the document with a `<EOM>` token at the end so the LLM knows it has to generate the text corresponding to the mask $k$.
+3. The model is trained to maximize the log probability of the masked document.
+
+### Inference
+
+![](https://i.imgur.com/3egXe9J.png)
+
+During inference, the model can be used for left-to-right code generation (autoregressively) or it can insert code using a `<Mask:k>` token. For example, it means it can be used to replace variable names in a function or generate docstrings.
+
+## Models
+
+The main model is InCoder-6.7B, trained on 248 V100 GPUs for 24 days with fully sharding model states (1 epoch). It is based on the Fairseq architecture. Hyperparameters:
+
+* GPU batch size = 8
+* Max token length = 2048
+* Max gradient norm = 1.0
+* Adam optimizer $\beta_1 = 0.9$ and $\beta_2 = 0.98$
+* Learning reate scheduler = polynomial decay
+* Warmup updates = 1500
+
+Models were trained on public code from GitHub and GitLab and StackOverlow questions, answers, and comments. Python was the primary focus but other languages were also added (28 in total). The pre-training corpus contains a total of 159 GB of code (52 GB of Python, 57 GB from StackOverflow).
+
+## Infilling Experiments
+
+The authors present an interesting technique called "left-to-right reranking", where they first generate $K$ possible competions for a given blank region. Then, they select the best candidate by substituting it into the blank and calculting the log probability averaged across the number of tokens in the completed document.
+
+They describe two infilling tasks to perform on HumanEval instead of the traditional code generation:
+
+* **Single-line infilling**: we mask out each non-blank line of code in the canonical functions in turn and try to complete this line.
+* **Multi-lined infilling**: same idea but with $N$ lines that are masked out at each iteration.
+
+The authors also perform experimentations to generate docstrings based on the CodeXGLUE dataset.

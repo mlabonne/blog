@@ -63,10 +63,18 @@ website:
         - text: "---"
         - section: "🗣️ **Large language models**"
           contents:
-            - text: "Decoding Strategies"
+            - text: "1. Fine-tune Llama 2 in Colab"
+              href: posts/Fine_Tune_Your_Own_Llama_2_Model_in_a_Colab_Notebook.html
+            - text: "2. Fine-tune Llama 2 in Axolotl"
+              href: posts/A_Beginners_Guide_to_LLM_Finetuning.html
+            - text: "3. Decoding Strategies"
               href: posts/2023-06-07-Decoding_strategies.html
-            - text: "Weight Quantization"
+            - text: "4. Intro to Quantization"
               href: posts/Introduction_to_Weight_Quantization.html
+            - text: "5. Quantization with GPTQ"
+              href: posts/4_bit_Quantization_with_GPTQ.html
+            - text: "6. Quantization with GGML"
+              href: posts/Quantize_Llama_2_models_using_ggml.html
             - text: "ChatGPT + KG"
               href: posts/Article_Improve_ChatGPT_with_Knowledge_Graphs.html
         - text: "---"

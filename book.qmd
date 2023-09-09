@@ -9,24 +9,85 @@ sidebar: false
 toc: false
 ---
 
-<center><img src="/images/gnnbook/cover.png" alt="Hands-On Graph Neural Networks Using Python" width="400"></center>
+::::: {.column-page}
+
+:::: {.columns}
+
+::: {.column width="50%"}
+<!-- <h1 id="title-book">Hands-On Graph Neural Networks Using Python</h1> -->
+<p id="desc-book">
+I am thrilled to introduce my book on **graph neural networks**, which is the result of almost a year's worth of hard work, research, and collaboration with fellow experts in the field.
+
+When I started learning about GNNs, **resources were particularly scarce**. This book is the guide I wish I had back then: it has been carefully crafted to provide a step-by-step guide for those new to the world of GNNs, while also offering advanced use cases and examples for experienced practitioners. What's more, the entire code with examples and use cases is [freely available on <i class="fa-brands fa-github"></i> **Github**](https://github.com/PacktPublishing/Hands-On-Graph-Neural-Networks-Using-Python), making it easy for you to get started with implementing GNNs in Python.
+
+If you're interested in graph neural networks, I highly recommend **checking it out**. I'm confident that you'll find it to be an invaluable resource as you explore this exciting and rapidly growing field.
+</p>
+
+<center>
+  <a href="https://packt.link/a/9781804617526" target="_blank">
+    <button id="Amazon">
+      Get your copy! <i class="fa-brands fa-amazon"></i>
+    </button>
+  </a>
+</center>
+:::
+
+::: {.column width="50%"}
+<center><img src="/images/gnnbook/cover.png" alt="Hands-On Graph Neural Networks Using Python" width="400" id="gnn-book"></center>
+:::
+
+::::
+
+:::::
+
+
+<!-- ::::: {.column-page}
+
+:::: {.columns}
+
+::: {.column width="55%"}
+<p id="desc-book">
+I am thrilled to introduce my book on **graph neural networks**, which is the result of almost a year's worth of hard work, research, and collaboration with fellow experts in the field.
+
+When I started learning about GNNs, **resources were particularly scarce**. This book is the guide I wish I had back then: it has been carefully crafted to provide a step-by-step guide for those new to the world of GNNs, while also offering advanced use cases and examples for experienced practitioners. What's more, the entire code with examples and use cases is [freely available on <i class="fa-brands fa-github"></i> **Github**](https://github.com/PacktPublishing/Hands-On-Graph-Neural-Networks-Using-Python), making it easy for you to get started with implementing GNNs in Python.
+
+If you're interested in graph neural networks, I highly recommend **checking it out**. I'm confident that you'll find it to be an invaluable resource as you explore this exciting and rapidly growing field.
+</p>
+
+<center>
+  <a href="https://packt.link/a/9781804617526" target="_blank">
+    <button id="Amazon">
+      Get your copy! <i class="fa-brands fa-amazon"></i>
+    </button>
+  </a>
+</center>
+:::
+
+::: {.column width="45%"}
+<center><img src="/images/gnnbook/cover.png" alt="Hands-On Graph Neural Networks Using Python" width="400" id="gnn-book"></center>
+:::
+
+::::
+
+::::: -->
+
+
+
+<!-- <center><img src="/images/gnnbook/cover.png" alt="Hands-On Graph Neural Networks Using Python" width="400" id="gnn-book"></center>
 
 I am thrilled to introduce my book on graph neural networks, which is the result of almost a year's worth of hard work, research, and collaboration with fellow experts in the field.
 
-As someone who's passionate about GNNs, I wanted to create a **comprehensive guide that could help both beginners and advanced practitioners**. This book has been carefully crafted to provide a step-by-step guide for those new to the world of GNNs, while also offering advanced use cases and examples for experienced practitioners. What's more, the entire code with examples and use cases is [freely available on Github](https://github.com/PacktPublishing/Hands-On-Graph-Neural-Networks-Using-Python), making it easy for you to get started with implementing GNNs in Python.
-
-<!-- <center><img src="images/gnnbook/cover.png" alt="Hands-On Graph Neural Networks Using Python" width=400></center> -->
+When I started learning about GNNs, **resources were particularly scarce**. This book is the guide I wish I had back then: it has been carefully crafted to provide a step-by-step guide for those new to the world of GNNs, while also offering advanced use cases and examples for experienced practitioners. What's more, the entire code with examples and use cases is [freely available on <i class="fa-brands fa-github"></i> **Github**](https://github.com/PacktPublishing/Hands-On-Graph-Neural-Networks-Using-Python), making it easy for you to get started with implementing GNNs in Python.
 
 If you're interested in graph neural networks, I highly recommend **checking it out**. I'm confident that you'll find it to be an invaluable resource as you explore this exciting and rapidly growing field.
 
 <center>
-<a href="https://packt.link/a/9781804617526" target="_blank">
-  <button id="Amazon">
-    Get your copy!
-  </button>
-</a>
-</center>
-
+  <a href="https://packt.link/a/9781804617526" target="_blank">
+    <button id="Amazon">
+      Get your copy! <i class="fa-brands fa-amazon"></i>
+    </button>
+  </a>
+</center> -->
 
 ## 📘 Key Features
 
@@ -55,3 +116,11 @@ By the end of this book, you'll have learned to create graph datasets, implement
 ## 💡 Who this book is for
 
 This book is for **machine learning practitioners** and **data scientists** interested in learning about graph neural networks and their applications, as well as **students** looking for a comprehensive reference on this rapidly growing field. Whether you're new to graph neural networks or looking to take your knowledge to the next level, this book has something for you. Basic knowledge of machine learning and Python programming will help you get the most out of this book.
+
+<center>
+  <a href="https://packt.link/a/9781804617526" target="_blank">
+    <button id="Amazon">
+      Get your copy! <i class="fa-brands fa-amazon"></i>
+    </button>
+  </a>
+</center>

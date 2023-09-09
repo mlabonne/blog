@@ -1,0 +1,29 @@
+---
+title: "Multipack Sampler"
+categories: Large Language Models
+date: 26-08-2023
+---
+
+💻 **GitHub**: [https://github.com/imoneoi/multipack_sampler](https://github.com/imoneoi/multipack_sampler)
+
+## What does this code do?
+
+**First-Fit-Decreasing Bin Packing (ffd_check and ffd_with_result)**
+
+This algorithm tries to fit a series of items into bins such that the number of bins is minimized. The items are sorted in decreasing order and then placed in the first bin that has enough space. The ffd_check function checks if the given items can fit into a fixed number of bins with a certain capacity, while the ffd_with_result function returns the actual bins (or groups) formed.
+
+**Dynamic Batch Allocation (allocate)**
+
+It's an algorithm that uses the bin packing method mentioned above. It dynamically allocates batches by trying to fit as many samples as possible into a set number of bins, taking advantage of the first-fit-decreasing strategy. The result is a series of batches that are very efficiently packed, minimizing the space wasted.
+
+**MultipackDistributedBatchSampler**
+
+This is a sampler used in PyTorch's data loading pipeline. Its main job is to generate batches of data indices for distributed training based on the lengths of data samples and the specified batch size. The batches are constructed using the dynamic batch allocation method mentioned above.
+
+The key idea here is to intelligently group samples such that the total "length" of the samples in each batch is as close as possible to the maximum allowed batch length, reducing the amount of padding required.
+
+## Does it use padding?
+
+While the code is designed to create batches that maximize the usage of the available space, there's still a chance for some padding to be needed. This is due to the fact that even after optimal bin packing, the samples within a bin might not perfectly sum up to the bin's capacity. However, the padding is minimized through this strategy.
+
+In simpler terms, imagine you have storage boxes of a fixed size and various items of different sizes. This algorithm is like trying to pack these items into the fewest number of boxes possible by placing the largest items first. The result might still have small empty spaces in the boxes (which is analogous to padding), but the algorithm aims to make this wasted space as small as possible.

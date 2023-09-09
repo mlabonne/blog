@@ -1,0 +1,102 @@
+---
+title: "Orca – Progressive Learning from Complex Explanation Traces of GPT-4"
+categories: Large Language Models
+date: 20-07-2023
+---
+
+::: {.callout-tip}
+Orca is a 13B parameter LLM with ChatGPT level of performance thanks to a huge dataset of 5M samples with step-by-step explanations.
+:::
+
+📝 **Paper**: [https://arxiv.org/abs/2306.02707](https://arxiv.org/abs/2306.02707)
+
+The model will probably never be released by Microsoft, but open-source projects try to replicate it (OpenOrca, Dolphin).
+
+![](https://i.imgur.com/POsvxEO.png)
+
+The authors note that while Vicuna-13B display excellent performance when evaluated with GPT-4, it **performs quite poorly on reasoning benchmarks** like SAT, LSAT, GRE, GMAT.
+
+**Self-Instruct** involves using an initial set of prompts to ask an LLM to create new instructions. Low-quality or overly similar responses are removed, and the remaining instructions are recycled back into the task pool for further iterations. However, the queries generated via Self-Instruct can **lack diversity and complexity**.
+
+* Alpaca and WizardLM use a variant of Self-Instruct.
+* WizardLM introduces the concept of **Evol-Instruct**, which gradually rewrites the initial set of instructions into more complex versions using BFS and DFS.
+* Vicuna and Koala demonstrate impressive performance due to their human-like conversations and natural instructions (ShareGPT).
+
+Problem with natural conversations: LLMs like Vicuna **capture the style but not the reasoning process**. This motivates the creation of a dataset with step-by-step explanations.
+
+Using GPT-4 for auto-evaluation has several drawbacks, such as limited test set sizes (for example, 80 instructions in Vicuna and 218 in WizardLM) and the inherent biases of GPT-4. It tends to favor models that are **instruction-tuned with its own responses**, resulting in a preference for longer texts over shorter ones. It also exhibits a bias in the order of candidate responses and **overestimates** the abilities of smaller models.
+
+**Contributions**:
+
+- **Explanation tuning**: Augmenting query-response pairs with detailed responses from GPT-4 that outline its reasoning process (with system instructions).
+- **Scaling tasks and instructions**: The FLANv2 dataset is used as it offers a wide variety of tasks and instructions. They created a training set of **5 million ChatGPT responses and 1 million GPT-4 responses**.
+- **Evaluation**: The generative, reasoning, and comprehension abilities of Orca are assessed under various settings.
+
+![](https://i.imgur.com/A97YkaH.png)
+
+::: {.callout-tip}
+The authors focus a lot on system instructions and how they can be used to guide the model into adopting the right tone, task, and format. I believe the same effect can be achieved with user instructions (maybe system instructions are slightly more accurate?).
+:::
+
+System instructions are sampled from a diverse instruction set including chain-of-thought reasoning steps, explain like I’m five, being helpful and informative, etc.
+
+## Explanation Tuning
+
+### Dataset Construction
+
+Each training sample is a triplet with system message, user message, and response.
+
+The authors use the FLAN-v2 dataset as raw data. The FLAN-v2 Collection consists of five sub-collections: CoT, NiV2, T0 (training only), Flan 2021, Dialogue:
+
+* The **CoT** is probably the most interesting one and the authors used all of the 150K samples.
+* **Natural Instructions V2** (NIV2), FLAN2021, T0 were randomly sampled (~10% of the data was selected for each).
+* **Dialog** was completely skipped because it lacks context.
+
+The resulting 5M samples are then used as inputs to generate high-quality responses with ChatGPT (5M) and GPT-4 (1M). These models are prompted with the inputs + 16 handcrafted system messages to ensure different kinds of responses:
+
+1. \<empty\>
+2. You are an AI assistant. Provide a detailed answer so user don’t need to search outside to understand the answer.
+3. You are an AI assistant. You will be given a task. You must generate a detailed and long answer.
+4. You are a helpful assistant, who always provide explanation. Think like you are answering to a five year old.
+5. You are an AI assistant that follows instruction extremely well. Help as much as you can.
+6. You are an AI assistant that helps people find information. Provide a detailed answer so user don’t need to search outside to understand the answer.
+7. You are an AI assistant. User will you give you a task. Your goal is to complete the task as faithfully as you can. While performing the task think step-by-step and justify your steps.
+8. You should describe the task and explain your answer. While answering a multiple choice question, first output the correct answer(s). Then explain why other answers are wrong. Think like you are answering to a five year old.
+9. Explain how you used the definition to come up with the answer.
+10. You are an AI assistant. You should describe the task and explain your answer. While answering a multiple choice question, first output the correct answer(s). Then explain why other answers are wrong. You might need to use additional knowledge to answer the question.
+11. You are an AI assistant that helps people find information. User will you give you a question. Your task is to answer as faithfully as you can. While answering think step-by-step and justify your answer.
+12. User will you give you a task with some instruction. Your job is follow the instructions as faithfully as you can. While answering think step-by-step and justify your answer.
+13. You are a teacher. Given a task, you explain in simple steps what the task is asking, any guidelines it provides and how to use those guidelines to find the answer.
+14. You are an AI assistant, who knows every language and how to translate one language to another. Given a task, you explain in simple steps what the task is asking, any guidelines that it provides. You solve the task and show how you used the guidelines to solve the task.
+15. Given a definition of a task and a sample input, break the definition into small parts. Each of those parts will have some instruction. Explain their meaning by showing an example that meets the criteria in the instruction. Use the following format: Part #: a key part of the definition. Usage: Sample response that meets the criteria from the key part. Explain why you think it meets the criteria.
+16. You are an AI assistant that helps people find information.
+
+![](https://i.imgur.com/h3jDfXx.png)
+
+This is motivated by **curriculum learning** (learning with a smaller model first, then with a big model) and **technical reasons** (cost, time).
+
+### Training
+
+They use the LLaMA BPE tokenizer with padding (vocabulary size = 32,001). Multiple input examples are packed into a single sequence to maximize the used context length (2,048 tokens). They use padding tokens to get a uniform size.
+
+It was trained for 160h on 20xA100 GPUs (4 epochs) on the 5M ChatGPT-generated samples + 40h on the 1M GPT-4-generated samples.
+
+## Experiments
+
+**Open-ended generation**:
+
+![](https://i.imgur.com/xf5SagN.png)
+
+Orca is significantly better than Vicuna.
+
+**AGIEval**:
+
+![](https://i.imgur.com/e36pGC1.png)
+
+Orca doesn't perform as well as ChatGPT.
+
+**BigBench-Hard**:
+
+![](https://i.imgur.com/iwgEjAd.png)
+
+Orca is on par with ChatGPT.
