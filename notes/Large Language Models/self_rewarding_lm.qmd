@@ -1,0 +1,70 @@
+---
+title: "Self-Rewarding Language Models"
+categories: Large Language Models
+date: 26-01-2024
+---
+
+::: {.callout-tip}
+This paper introduces Iterative DPO and use it to improve the performance of Llama 2 70B on the AlpacaEval 2.0.
+:::
+
+📝 **Paper**: [https://arxiv.org/abs/2401.10020v1](https://arxiv.org/abs/2401.10020v1)
+
+## 1. Self-Rewarding Language Models
+
+There are two steps in the self-rewarding process:
+
+1. **Instruction following**: Given a user prompt, generate a high-quality answer
+2. **Self-Instruction**: Generate and evaluate new instruction-following examples to add to the training set
+
+![](https://arxiv.org/html/2401.10020v1/x1.png)
+
+More specifically, self-instruction generates candidate responses and asks the model to judge them. This is done iteratively, so a model $M_t$ is DPO fine-tuned into a model $M_{t+1}$, etc.
+
+The entire process follows these steps:
+
+1. SFT a base model using pairs of (instructions, answers). This can be improved using samples of LLM-as-a-Judge instructions.
+2. Once it's trained, use the model generate prompts based on seeds from the SFT data, $N$ candidate responses for every prompt, and ask the model it assign them a score between 0 and 5.
+3. DPO fine-tune the model using the previously created dataset
+
+## 2. Experiments
+
+SFT data = Open Assistant dataset (human-authored examples), 3200 examples (only first conversational turns in English language with rank=0).
+
+The LLM-as-a-Judge instructions come from the same dataset, by reusing prompts with multiple ranked human responses. 1775 train and 531 evaluation samples.
+
+Prompt to evaluate a response:
+
+> Review the user’s question and the corresponding response using the additive 5-point scoring system described below. Points are accumulated based on the satisfaction of each criterion: 
+> 
+> - Add 1 point if the response is relevant and provides some information related to the user’s inquiry, even if it is incomplete or contains some irrelevant content.
+> - Add another point if the response addresses a substantial portion of the user’s question, but does not completely resolve the query or provide a direct answer.
+> - Award a third point if the response answers the basic elements of the user’s question in a useful way, regardless of whether it seems to have been written by an AI Assistant or if it has elements typically found in blogs or search results. 
+> - Grant a fourth point if the response is clearly written from an AI Assistant’s perspective, addressing the user’s question directly and comprehensively, and is well-organized and helpful, even if there is slight room for improvement in clarity, conciseness or focus.
+> - Bestow a fifth point for a response that is impeccably tailored to the user’s question by an AI Assistant, without extraneous information, reflecting expert knowledge, and demonstrating a high-quality, engaging, and insightful answer.
+> 
+> User: INSTRUCTION_HERE
+> 
+> \<response\>RESPONSE HERE\</response\>
+> 
+> After examining the user’s instruction and the response:
+> 
+> - Briefly justify your total score, up to 100 words.
+> - Conclude with the score using the format: “Score: /<total points/>”
+> 
+> Remember to assess from the AI Assistant perspective, utilizing web search knowledge as necessary. To evaluate the response in alignment with this additive scoring model, we’ll systematically attribute points based on the outlined criteria.
+
+The model is evaluated using AlpacaEval. The authors also evaluate the reward modeling using correlation with human rankings on the evaluation set (Spearman correlation and Kendall's tau) in terms of exact matching.
+
+## 3. Results
+
+A few interesting results:
+
+* Adding LLM-as-a-judge instructions doesn't improve the SFT model but improves reward modeling.
+* Iteration 3 > Iteration 2 > Iteration 1 > SFT baseline (but diminishing returns).
+* Each iteration is more verbose than the previous one, which introduces a bias in the evaluation.
+* DPO > SFT to fine-tune a new iteration of the model.
+
+Unsurprisingly, the idea seems to work. It might not be as good as people think as it relies on a large model (70B), costly human-annotated dataset, and a costly process in terms of compute. Generally speaking, it looks difficult (not impossible) to scale properly.
+
+GPT-4 might also be a better generator and a better LLM-as-a-judge, which undermines the usefulness of this process in practice.

@@ -9,6 +9,8 @@ website:
     left:
       - text: "{{< fa book >}} Hands-On GNNs"
         file: book.qmd
+      - text: "{{< fa chalkboard >}} LLM Course"
+        href: https://github.com/mlabonne/llm-course
       - text: "{{< fa pen >}} Notes"
         file: notes.qmd
       - text: "{{< fa flask >}} Publications"
@@ -39,6 +41,34 @@ website:
       collapse-level: 2
       align: left
       contents:
+        - section: "🗣️ **Large Language Models**"
+          contents:
+            - text: "1. Fine-tune Llama 2 in Colab"
+              href: posts/Fine_Tune_Your_Own_Llama_2_Model_in_a_Colab_Notebook.html
+            - text: "2. Fine-tune Llama 2 in Axolotl"
+              href: posts/A_Beginners_Guide_to_LLM_Finetuning.html
+            - text: "3. Fine-tune Mistral-7b with DPO"
+              href: posts/Fine_tune_Mistral_7b_with_DPO.html
+            - text: "4. Merge LLMs with mergekit"
+              href: posts/2024-01-08_Merge_LLMs_with_mergekit.html
+            - text: "5. Create Mixture_of_Experts"
+              href: posts/2024-03-28_Create_Mixture_of_Experts_with_MergeKit.html
+            - text: "6. Decoding Strategies"
+              href: posts/2023-06-07-Decoding_strategies.html
+            - text: "ChatGPT + KG"
+              href: posts/Article_Improve_ChatGPT_with_Knowledge_Graphs.html
+        - text: "---"
+        - section: "⚡ **LLM Quantization**"
+          contents:
+            - text: "1. Intro to Quantization"
+              href: posts/Introduction_to_Weight_Quantization.html
+            - text: "2. Quantization with GPTQ"
+              href: posts/4_bit_Quantization_with_GPTQ.html
+            - text: "3. Quantization with GGML"
+              href: posts/Quantize_Llama_2_models_using_ggml.html
+            - text: "4. Quantization with ExLlamaV2"
+              href: posts/ExLlamaV2_The_Fastest_Library_to_Run%C2%A0LLMs.html
+        - text: "---"
         - section: "🌐 **Graph neural networks**"
           contents:
             - text: "1. Graph Convolution Network"
@@ -61,32 +91,12 @@ website:
             - text: "4. Nonlinear Programming"
               href: posts/2023-05-21-Nonlinear_optimization.html
         - text: "---"
-        - section: "🗣️ **Large language models**"
-          contents:
-            - text: "1. Fine-tune Llama 2 in Colab"
-              href: posts/Fine_Tune_Your_Own_Llama_2_Model_in_a_Colab_Notebook.html
-            - text: "2. Fine-tune Llama 2 in Axolotl"
-              href: posts/A_Beginners_Guide_to_LLM_Finetuning.html
-            - text: "3. Decoding Strategies"
-              href: posts/2023-06-07-Decoding_strategies.html
-            - text: "4. Intro to Quantization"
-              href: posts/Introduction_to_Weight_Quantization.html
-            - text: "5. Quantization with GPTQ"
-              href: posts/4_bit_Quantization_with_GPTQ.html
-            - text: "6. Quantization with GGML"
-              href: posts/Quantize_Llama_2_models_using_ggml.html
-            - text: "ChatGPT + KG"
-              href: posts/Article_Improve_ChatGPT_with_Knowledge_Graphs.html
-        - text: "---"
-        - section: "🤖 **Reinforcement learning**"
+        - section: "🌀 **Miscellaneous**"
           contents:
             - text: "Q-learning"
               href: posts/2022-02-13-Q_learning.html
             - text: "Minecraft Bot"
               href: posts/2022-05-25-Minecraft.html
-        - text: "---"
-        - section: "📊 **Data science**"
-          contents:
             - text: "Loops in Pandas"
               href: posts/2022-03-21-Efficiently_iterating_over_rows_in_a_Pandas_DataFrame.html
             - text: "What is a Tensor"
