@@ -3,17 +3,17 @@ aliases:
 - /merge/
 categories:
 - Large Language Models
-colab: <a href="https://colab.research.google.com/drive/1_JS7JKJAQozD48-LhYdegcuuZ2ddgXfr?usp=sharing"><img src="images/colab.svg" alt="Open In Colab"></a>
+colab: <a href="https://colab.research.google.com/drive/1_JS7JKJAQozD48-LhYdegcuuZ2ddgXfr?usp=sharing"><img src="images/colab.png" alt="Open In Colab"></a>
 date: '2024-01-08'
 image: /images/merge/thumbnail.jpg
-title: "Merge Large Language Models with mergekit"
+title: "Merge Large Language Models with MergeKit"
 subtitle: "Create your own models easily, no GPU required!"
 ---
 
 <center><img src="/images/merge/thumbnail.jpg"></center>
 
 ::: {.column-margin}
-Find more a lot more architectures and applications using graph neural networks in my book, [**Hands-On Graph Neural Networks**](https://mlabonne.github.io/blog/book.html) 👇
+Find many more architectures and applications using graph neural networks in my book, [**Hands-On Graph Neural Networks**](https://mlabonne.github.io/blog/book.html) 👇
 <a href="https://packt.link/a/9781804617526"><img src="/images/gnnbook/cover.png" alt="Hands-On Graph Neural Networks Using Python" id="gnn-book"></a>
 :::
 

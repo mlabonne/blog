@@ -2,8 +2,7 @@
 
 .content img {
     max-width: 100%;
-    margin-top: 1.2rem;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1.0rem;
 }
 
 .content video {
@@ -71,6 +70,10 @@ div.sourceCode {
     margin-bottom: 0px;
 }
 
+.thumbnail > p {
+    display: none;
+}
+
 code {
     padding: 0.5rem;
 }
@@ -80,9 +83,13 @@ code {
     font-size: 220%;
 }
 
-.quarto-title-banner, .navbar-light, .navbar-dark {
+.quarto-title-banner, .navbar-light, .navbar-dark, .navbar, #quarto-header, .fixed-top, .quarto-bannar, .headroom--top {
     background: linear-gradient(90deg, rgba(254,200,16,1) 0%, rgba(255,128,237,1) 100%);
     /* background: linear-gradient(90deg, rgba(59,112,254,1) 0%, rgba(49,195,135,1) 100%); */
+}
+
+.breadcrumb {
+    display: none;
 }
 
 .quarto-post {
@@ -130,6 +137,10 @@ div.quarto-post .metadata {
     align-content: baseline;
 }
 
+.navbar-expand-lg .navbar-nav .nav-link {
+    color: white;
+}
+
 #title-block-header {
     margin-block-end: 0px !important;
 }
@@ -138,10 +149,27 @@ main {
     margin-top: 0px !important;
 }
 
+@media (max-width: 991.98px) {
+    .content .quarto-banner-title-block {
+        margin-top: 20px !important;
+    }
+    #title-block-header.quarto-title-block.default .quarto-title .title {
+        font-size: 200%;
+    }
+    #gnn-book {
+        width: 250px;
+    }
+    div.quarto-post .thumbnail img {
+        margin-bottom: 0.4rem;
+    }
+}
+
 #gnn-book {
     display: block;
-    margin-top: 20px auto;
-    margin-bottom: 20px auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
     
     /* apply shadow effect */
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
@@ -214,12 +242,12 @@ div#quarto-toc-toggle {
     font-size: 90%;
 }
 
-.metadata-value.listing-colab {
-    margin-top: 0.2em;
-}
-
 .metadata img {
     margin: 0px;
+}
+
+.listing-colab {
+    max-width: 8em;
 }
 
 .zindex-over-content {
@@ -228,4 +256,12 @@ div#quarto-toc-toggle {
 
 nav.quarto-secondary-nav {
     display: none;
+}
+
+.navbar-title {
+    display: none;
+}
+
+div.quarto-post .metadata {
+    margin-top: 0px;
 }

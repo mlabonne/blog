@@ -6,7 +6,7 @@ sidebar: false
 about:
   template: trestles
   links:
-    - icon: twitter
+    - icon: twitter-x
       text: Twitter
       href: https://twitter.com/maximelabonne
     - icon: linkedin
@@ -15,15 +15,15 @@ about:
     - icon: github
       text: Github
       href: https://github.com/mlabonne
+    - text: "{{< iconify logos:hugging-face-icon >}} Hugging Face"
+      href: https://huggingface.co/mlabonne
 ---
 
-👋 **Greetings!** My name is Maxime Labonne, and I am currently a senior applied researcher at [JPMorgan Chase](https://www.jpmorganchase.com/). I hold a M.Sc. degree in computer science from [INSA CVL](https://www.insa-centrevaldeloire.fr/en), and a Ph.D. in machine learning and cyber security from the [Polytechnic Institute of Paris](https://www.ip-paris.fr/en).
+Maxime Labonne is a Senior Staff Machine Learning Scientist at [Liquid AI](https://www.liquid.ai/), serving as the head of post-training. He holds a Ph.D. in Machine Learning from the Polytechnic Institute of Paris and is recognized as a Google Developer Expert in AI/ML.
 
-In this blog, I aim to provide **practical tutorials and guides** on AI and machine learning. I believe in starting with implementation and practice, and then diving into explanations. By retracing the thought process of the original authors of the algorithms we use every day, we can gain a deeper understanding of their design and the importance of each component.
+An active blogger, he has made significant contributions to the open-source community, including the [LLM Course](https://github.com/mlabonne/llm-course) on GitHub, tools such as [LLM AutoEval](https://github.com/mlabonne/llm-autoeval), and several state-of-the-art models like [NeuralBeagle](https://huggingface.co/mlabonne/NeuralBeagle14-7B) and [Phixtral](https://huggingface.co/mlabonne/phixtral-4x2_8). He is the author of the best-selling book "Hands-On Graph Neural Networks Using Python," published by Packt.
 
-I hope we can have fun together and learn a few things along the way!
-
-If you want to contact me, feel free to send a mail at <a href="mailto:labonne.maxime&commat;gmail.com">this address</a>.
+Connect with him on [X](https://twitter.com/maximelabonne) and [LinkedIn](https://www.linkedin.com/in/maxime-labonne/) @maximelabonne.
 
 <hr>
 

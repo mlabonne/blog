@@ -3,7 +3,7 @@ aliases:
 - /frankenmoe/
 categories:
 - Large Language Models
-colab: <a href="https://colab.research.google.com/drive/1obulZ1ROXHjYLn6PPZJwRR6GzgQogxxb?usp=sharing"><img src="images/colab.svg" alt="Open In Colab"></a>
+colab: <a href="https://colab.research.google.com/drive/1obulZ1ROXHjYLn6PPZJwRR6GzgQogxxb?usp=sharing"><img src="images/colab.png" alt="Open In Colab"></a>
 date: '2024-03-24'
 image: /images/frankenmoe/thumbnail.jpg
 title: "Create Mixtures of Experts with MergeKit"
@@ -13,7 +13,7 @@ subtitle: "Combine multiple experts into a single frankenMoE"
 <center><img src="/images/frankenmoe/thumbnail.jpg"></center>
 
 ::: {.column-margin}
-Find more a lot more architectures and applications using graph neural networks in my book, [**Hands-On Graph Neural Networks**](https://mlabonne.github.io/blog/book.html) 👇
+Find many more architectures and applications using graph neural networks in my book, [**Hands-On Graph Neural Networks**](https://mlabonne.github.io/blog/book.html) 👇
 <a href="https://packt.link/a/9781804617526"><img src="/images/gnnbook/cover.png" alt="Hands-On Graph Neural Networks Using Python" id="gnn-book"></a>
 :::
 

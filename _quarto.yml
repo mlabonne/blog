@@ -2,34 +2,34 @@ project:
   type: website
 
 website:
-  title: "ML Blog"
+  title: "Maxime Labonne"
   description: "Illustrated tutorials about large language models, graph neural networks, and convex optimization using Python."
   site-url: https://mlabonne.github.io/blog
   navbar:
+    logo: "/images/logo.png"
     left:
-      - text: "{{< fa book >}} Hands-On GNNs"
-        file: book.qmd
       - text: "{{< fa chalkboard >}} LLM Course"
         href: https://github.com/mlabonne/llm-course
-      - text: "{{< fa pen >}} Notes"
-        file: notes.qmd
-      - text: "{{< fa flask >}} Publications"
+      - text: "{{< fa book >}} Hands-On GNNs"
+        file: book.qmd
+      # - text: "{{< fa pen >}} Notes"
+      #   file: notes.qmd
+      - text: "{{< fa flask >}} Research"
         file: publications.qmd
       - text: "{{< fa address-card >}} About"
         file: about.qmd
     right:
-      - text: "@maximelabonne"
-        icon: twitter
+      - icon: twitter-x
         href: https://twitter.com/maximelabonne
-      - icon: github
-        href: https://github.com/mlabonne
-      - icon: medium
-        href: https://medium.com/@mlabonne
       - icon: linkedin
         href: https://linkedin.com/in/maxime-labonne/
+      - icon: github
+        href: https://github.com/mlabonne
+      - text: "![](https://mlabonne.github.io/blog/images/hf-icon.svg)"
+        href: https://huggingface.co/mlabonne
     pinned: false
   google-analytics: "G-4DWYJM47PC"
-  favicon: images/favicon.ico
+  favicon: /images/favicon.ico
   twitter-card: true
   open-graph: true
   page-footer: "{{< fa regular copyright >}} Copyright 2023, Maxime Labonne" 
@@ -49,12 +49,16 @@ website:
               href: posts/A_Beginners_Guide_to_LLM_Finetuning.html
             - text: "3. Fine-tune Mistral-7b with DPO"
               href: posts/Fine_tune_Mistral_7b_with_DPO.html
-            - text: "4. Merge LLMs with mergekit"
+            - text: "4. Fine-tune Llama 3 with ORPO"
+              href: posts/2024-04-19_Fine_tune_Llama_3_with_ORPO.html
+            - text: "5. Merge LLMs with mergekit"
               href: posts/2024-01-08_Merge_LLMs_with_mergekit.html
-            - text: "5. Create Mixture_of_Experts"
+            - text: "6. Create Mixture of Experts"
               href: posts/2024-03-28_Create_Mixture_of_Experts_with_MergeKit.html
-            - text: "6. Decoding Strategies"
+            - text: "7. Decoding Strategies"
               href: posts/2023-06-07-Decoding_strategies.html
+            - text: "8. Uncensor any LLM"
+              href: posts/2024-06-04_Uncensor_any_LLM_with_abliteration.html
             - text: "ChatGPT + KG"
               href: posts/Article_Improve_ChatGPT_with_Knowledge_Graphs.html
         - text: "---"

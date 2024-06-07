@@ -18,7 +18,7 @@ toc: false
 <h2>📝 Proceedings</h2>
 * **[Spam-T5: Benchmarking Large Language Models for Few-Shot Email Spam Detection](https://arxiv.org/abs/2304.01238)
 <br/>Maxime Labonne, Sean Moran**
-<br/>*Arxiv*
+<br/>*IJCAI 2023 - 32nd International Joint Conference on Artificial Intelligence. 19th-25th August 2023. Macao, S.A.R*
 * **[Toward Formal Data Set Verification for Building Effective Machine Learning Models](https://arxiv.org/abs/2108.11220)
 <br/>Jorge López, Maxime Labonne, Claude Poletti**
 <br/>*KDIR 2021 - 13th International Conference on Knowledge Discovery and Information Retrieval*
