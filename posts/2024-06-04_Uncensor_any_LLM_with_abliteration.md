@@ -70,7 +70,7 @@ from collections import defaultdict
 torch.set_grad_enabled(False)
 ```
 
-We need two datasets: one containing harmless instructions, and one containing harmful instructions. We'll use [tatsu-lab/alpaca](https://huggingface.co/datasets/tatsu-lab/alpaca) as well as data from [llm-attacks](https://github.com/llm-attacks/llm-attacks). To make things easier, I repackaged them in two Hugging Face datasets: [mlabonne/harmless_behaviors](https://huggingface.co/datasets/harmless_behaviors) and [mlabonne/harmful_behaviors](https://huggingface.co/datasets/mlabonne/harmful_behaviors). That way, you can easily replace them with your own datasets.
+We need two datasets: one containing harmless instructions, and one containing harmful instructions. We'll use [tatsu-lab/alpaca](https://huggingface.co/datasets/tatsu-lab/alpaca) as well as data from [llm-attacks](https://github.com/llm-attacks/llm-attacks). To make things easier, I repackaged them in two Hugging Face datasets: [mlabonne/harmless_alpaca](https://huggingface.co/datasets/mlabonne/harmless_alpaca) and [mlabonne/harmful_behaviors](https://huggingface.co/datasets/mlabonne/harmful_behaviors). That way, you can easily replace them with your own datasets.
 
 We will load the instructions and reformat them into a list of dictionaries with "role" and "content" keys. This makes it compatible with the `apply_chat_tokenizer()` method, which we will use to follow Llama 3's chat template.
 
