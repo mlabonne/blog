@@ -6,27 +6,31 @@
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/Introduction_to_Weight_Quantization.html</loc>
-    <lastmod>2024-05-19T22:03:20.150Z</lastmod>
+    <lastmod>2024-07-28T21:57:47.634Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/Fine_tune_Mistral_7b_with_DPO.html</loc>
-    <lastmod>2024-05-20T16:27:04.633Z</lastmod>
+    <lastmod>2024-07-28T21:57:47.638Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/A_Beginners_Guide_to_LLM_Finetuning.html</loc>
-    <lastmod>2024-05-19T22:03:20.131Z</lastmod>
+    <lastmod>2024-07-28T21:57:47.638Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/4_bit_Quantization_with_GPTQ.html</loc>
-    <lastmod>2024-05-19T22:03:20.131Z</lastmod>
+    <lastmod>2024-07-28T21:57:47.646Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mlabonne.github.io/blog/posts/2024-07-15_The_Rise_of_Agentic_Data_Generation.html</loc>
+    <lastmod>2024-07-28T21:57:53.428Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/2024-04-19_Fine_tune_Llama_3_with_ORPO.html</loc>
-    <lastmod>2024-05-14T10:43:05.855Z</lastmod>
+    <lastmod>2024-07-28T21:57:47.622Z</lastmod>
   </url>
   <url>
-    <loc>https://mlabonne.github.io/blog/posts/2024-01-08_Merge_LLMs_with_mergekit copy.html</loc>
-    <lastmod>2024-05-19T22:03:20.131Z</lastmod>
+    <loc>https://mlabonne.github.io/blog/posts/2024-01-08_Merge_LLMs_with_mergekit.html</loc>
+    <lastmod>2024-07-28T21:57:47.651Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/2023-05-21-Nonlinear_optimization.html</loc>
@@ -158,30 +162,34 @@
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/2023-06-07-Decoding_strategies.html</loc>
-    <lastmod>2024-05-19T22:03:20.131Z</lastmod>
+    <lastmod>2024-07-28T21:57:47.651Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/2024-03-28_Create_Mixture_of_Experts_with_MergeKit.html</loc>
-    <lastmod>2024-05-19T22:03:20.131Z</lastmod>
+    <lastmod>2024-07-28T21:57:47.648Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/2024-06-04_Uncensor_any_LLM_with_abliteration.html</loc>
-    <lastmod>2024-06-13T11:37:47.685Z</lastmod>
+    <lastmod>2024-07-28T21:57:47.648Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mlabonne.github.io/blog/posts/2024-07-29_Finetune_Llama31.html</loc>
+    <lastmod>2024-07-29T10:01:34.601Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/Article_Improve_ChatGPT_with_Knowledge_Graphs.html</loc>
-    <lastmod>2024-05-19T22:03:20.547Z</lastmod>
+    <lastmod>2024-07-28T21:57:47.927Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/ExLlamaV2_The_Fastest_Library_to_Run LLMs.html</loc>
-    <lastmod>2024-05-19T22:03:20.131Z</lastmod>
+    <lastmod>2024-07-28T21:57:47.638Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/Fine_Tune_Your_Own_Llama_2_Model_in_a_Colab_Notebook.html</loc>
-    <lastmod>2024-05-19T22:03:20.732Z</lastmod>
+    <lastmod>2024-07-28T21:57:48.079Z</lastmod>
   </url>
   <url>
     <loc>https://mlabonne.github.io/blog/posts/Quantize_Llama_2_models_using_ggml.html</loc>
-    <lastmod>2024-05-19T22:03:20.150Z</lastmod>
+    <lastmod>2024-07-28T21:57:47.627Z</lastmod>
   </url>
 </urlset>
